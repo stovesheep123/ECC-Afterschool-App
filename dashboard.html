@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#4facfe">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- VIDEO BACKGROUND -->
+    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline>
+        <source id="videoSource" src="" type="video/mp4">
+    </video>
+
+    <!-- DARK OVERLAY -->
+    <div class="video-overlay"></div>
+
+    <!-- MOBILE MENU BUTTON -->
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <!-- LOGO -->
+            <div class="logo-area">
+                <h2 class="logo">ベストワン</h2>
+                <p id="welcome"></p>
+            </div>
+
+            <!-- MENU -->
+            <nav class="nav-menu">
+
+                <a href="#" class="nav-item active" onclick="showSection('home', this)">
+                    <span class="icon">🏠</span>
+                    <span class="text">Home</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('notifications', this)">
+                    <span class="icon">🔔</span>
+                    <span class="text">Notifications</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('notice', this)">
+                    <span class="icon">📢</span>
+                    <span class="text">Notice</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('chat', this)">
+                    <span class="icon">💬</span>
+                    <span class="text">Chat</span>
+                </a>
+
+                <!-- REPORT NAV -->
+                <a id="reportNav" href="#" class="nav-item" onclick="showSection('report', this)">
+                    <span class="icon">📄</span>
+                    <span class="text">Reports</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('savedReports', this)">
+                    <span class="icon">💾</span>
+                    <span class="text">Saved</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('studentReports', this)">
+                    <span class="icon">📘</span>
+                    <span class="text">My Reports</span>
+                </a>
+
+            </nav>
+
+            <!-- FOOTER -->
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span class="text">Logout</span>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+
+            <!-- HOME -->
+            <div id="home" class="section">
+                <h1>Dashboard</h1>
+
+                <div id="teacherSection" class="role-section">
+                    Teacher Panel
+                </div>
+
+                <div id="studentSection" class="role-section">
+                    Student Panel
+                </div>
+
+                <div id="headmasterSection" class="role-section">
+                    <h2>Headmaster Panel</h2>
+                </div>
+
+                <div id="parentSection" class="role-section">
+                    Parent Panel
+                </div>
+            </div>
+
+            <!-- CHAT -->
+            <div id="chat" class="section" style="display:none;">
+                <h1>💬 Chat</h1>
+
+                <select id="userSelect"></select>
+
+                <div id="chatBox"></div>
+
+                <input type="text" id="messageInput" placeholder="Type message...">
+
+                <button onclick="sendMessage()">Send</button>
+            </div>
+
+            <!-- NOTICE -->
+            <div id="notice" class="section" style="display:none;">
+                <h1>📢 Notice Board</h1>
+
+                <input type="text" id="noticeTitle" placeholder="Title">
+
+                <textarea id="noticeContent" placeholder="Notice"></textarea>
+
+                <button onclick="saveNotice()">Save Notice</button>
+
+                <div id="noticeList"></div>
+            </div>
+
+            <!-- NOTIFICATIONS -->
+            <div id="notifications" class="section" style="display:none;">
+                <h1>🔔 Notifications</h1>
+                <div id="notificationList"></div>
+            </div>
+
+            <!-- REPORT -->
+            <div id="report" class="section" style="display:none;">
+
+                <h2>📄 Create Report</h2>
+
+                <button onclick="toggleReportForm()" class="open-report-btn">
+                    ➕ レポートを書く
+                </button>
+
+                <div id="reportForm" style="display:none;">
+
+                    <!-- Teacher + Student -->
+                    <div class="report-row">
+
+                        <div>
+                            <label>教師名</label>
+                            <input type="text" id="teacher_name" readonly>
+                        </div>
+
+                        <div>
+                            <label>生徒名</label>
+                            <select id="student_name">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Date -->
+                    <label>日付</label>
+                    <input type="date" id="date">
+
+                    <!-- Subject -->
+                    <label>教科</label>
+                    <select id="subject">
+
+                        <option>算数</option>
+                        <option>数学</option>
+                        <option>英語</option>
+                        <option>国語</option>
+                        <option>理科</option>
+                        <option>社会</option>
+                        <option>英検</option>
+                        <option>テスト勉強</option>
+
+                    </select>
+
+                    <!-- Content -->
+                    <label>授業内容</label>
+                    <textarea id="content"></textarea>
+
+                    <!-- Homework -->
+                    <label>宿題</label>
+                    <textarea id="homework"></textarea>
+
+                    <!-- Homework Status -->
+                    <label>宿題チェック</label>
+                    <select id="homeworkStatus">
+                        <option value="やった">やった</option>
+                        <option value="やっていない">やっていない</option>
+                    </select>
+
+                    <!-- Understanding -->
+                    <label>理解度</label>
+                    <input type="range" min="1" max="10" value="5" id="understanding">
+
+                    <!-- Image -->
+                    <label>画像追加（任意）</label>
+                    <input type="file" id="reportImage" accept="image/*">
+
+                    <!-- Save -->
+                    <button onclick="saveReport()" class="save-report-btn">
+                        保存
+                    </button>
+
+                </div>
+
+            </div>
+            <!-- SAVED REPORTS -->
+            <div id="savedReports" class="section" style="display:none;">
+                <h2>📂 Saved Reports</h2>
+
+                <select id="reportSearch" onchange="loadSavedReports()">
+                    <option value="">すべての生徒</option>
+                </select>
+
+                <div id="savedReportList"></div>
+            </div>
+            <!-- STUDENT REPORTS -->
+            <div id="studentReports" class="section" style="display:none;">
+                <h2>📘 My Reports</h2>
+                <div id="studentReportList"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/report.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/notice.js"></script>
+    <script src="js/notification.js"></script>
+
+    <!-- SERVICE WORKER -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./sw.js");
+        }
+    </script>
+
+</body>
+
+</html>

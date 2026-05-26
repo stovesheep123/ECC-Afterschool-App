@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>ベストワン</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#4facfe">
+
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- ================= ONESIGNAL ================= -->
+    <!-- <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+        OneSignalDeferred.push(async function (OneSignal) {
+
+            await OneSignal.init({
+                appId: "3cef745f-da97-4887-97c9-d81a6d95e612"
+            });
+
+        });
+    </script> -->
+
+</head>
+
+<body class="login-page">
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+
+        <h1 class="logo">
+            Ecc-best-one
+        </h1>
+
+    </nav>
+
+    <!-- LOGIN CONTAINER -->
+    <div class="login-wrapper">
+
+        <div class="login-card">
+
+            <h2>Login</h2>
+
+            <p class="subtitle">
+                Best-One-App
+            </p>
+
+            <!-- USERNAME -->
+            <div class="input-group">
+
+                <input type="text" id="username" placeholder="Username" autocomplete="username">
+
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="input-group">
+
+                <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+
+            </div>
+
+            <!-- LOGIN BUTTON -->
+            <button id="loginBtn">
+
+                Login
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>
