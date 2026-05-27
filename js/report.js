@@ -161,9 +161,11 @@ window.loadSavedReports = async function () {
   const container =
     document.getElementById("savedReportList");
 
-  const search =
-    document.getElementById("reportSearch")?.value || "";
+  const selectedStudent =
+    document.getElementById("student_name")?.value || "";
 
+  const pendingOnly =
+    document.getElementById("pendingOnly")?.checked;
   if (!container) return;
 
   container.innerHTML = "読み込み中...";
@@ -198,6 +200,20 @@ window.loadSavedReports = async function () {
   }
 
   let reports = data;
+
+  // student filter
+  if (selectedStudent) {
+    reports = reports.filter(
+      report => report.student_name === selectedStudent
+    );
+  }
+
+  // pending only filter
+  if (pendingOnly) {
+    reports = reports.filter(
+      report => report.status === "pending"
+    );
+  }
 
   if (search) {
     reports = reports.filter(
