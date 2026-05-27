@@ -201,9 +201,7 @@ window.loadSavedReports = async function () {
 
   let reports = data;
 
-  const selectedStudent =
-  document.getElementById("reportSearch")?.value || "";
-
+  
   // pending only filter
   if (pendingOnly) {
     reports = reports.filter(
