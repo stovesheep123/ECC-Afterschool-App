@@ -228,14 +228,22 @@ window.loadSavedReports = async function () {
                 <p><strong>理解度:</strong> ${report.understanding}/10</p>
 
                 <div class="report-actions">
-                    <button onclick="editReport('${report.id}')">
-                        ✏️ Edit
-                    </button>
 
-                    <button onclick="deleteReport('${report.id}')">
-                        🗑 Delete
-                    </button>
-                </div>
+  ${currentUser.role === "headmaster" && report.status !== "approved"
+        ? `<button onclick="approveReport('${report.id}')">
+         ✅ Approve
+       </button>`
+        : ""}
+
+  <button onclick="editReport('${report.id}')">
+      ✏️ Edit
+  </button>
+
+  <button onclick="deleteReport('${report.id}')">
+      🗑 Delete
+  </button>
+
+</div>
             </div>
         `;
   });
@@ -349,10 +357,10 @@ window.loadStudentReports = async function () {
     await window.supabase
       .from("reports")
       .select("*")
+      .eq("status", "approved")
       .order("created_at", {
         ascending: false
       });
-
   if (error) {
     console.log(error);
     container.innerHTML = "読み込み失敗";
@@ -381,6 +389,7 @@ window.loadStudentReports = async function () {
       <p><strong>授業:</strong> ${report.content}</p>
       <p><strong>宿題:</strong> ${report.homework}</p>
       <p><strong>理解度:</strong> ${report.understanding}/10</p>
+      <p><strong>Status:</strong> ${report.status}</p>
 
       ${report.image_url ? `
         <img src="${report.image_url}"
@@ -389,4 +398,34 @@ window.loadStudentReports = async function () {
     </div>
   `;
   });
+};
+window.approveReport = async function (id) {
+
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+  if (currentUser.role !== "headmaster") {
+    alert("権限ありません");
+    return;
+  }
+
+  const { error } =
+    await window.supabase
+      .from("reports")
+      .update({
+        status: "approved",
+        approved_by: currentUser.username,
+        approved_at: new Date()
+      })
+      .eq("id", id);
+
+  if (error) {
+    console.log(error);
+    alert("承認失敗");
+    return;
+  }
+
+  alert("承認しました");
+
+  loadSavedReports();
 };
