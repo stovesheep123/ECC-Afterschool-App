@@ -55,11 +55,36 @@
                     <span class="text">Notice</span>
                 </a>
 
-                <a href="#" class="nav-item" onclick="showSection('chat', this)">
-                    <span class="icon">💬</span>
-                    <span class="text">Chat</span>
-                </a>
+                <div id="chat" class="section" style="display:none;">
 
+                    <div class="chat-container">
+
+                        <!-- LEFT USER LIST -->
+                        <div class="chat-sidebar">
+                            <h2>💬 Chats</h2>
+                            <select id="userSelect"></select>
+                        </div>
+
+                        <!-- RIGHT CHAT AREA -->
+                        <div class="chat-main">
+
+                            <div class="chat-header">
+                                <h3 id="chatWith">Select User</h3>
+                            </div>
+
+                            <div id="chatBox" class="chat-box"></div>
+
+                            <div class="chat-input-area">
+                                <input type="text" id="messageInput" placeholder="Type message...">
+
+                                <button onclick="sendMessage()">➤</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
                 <!-- REPORT NAV -->
                 <a id="reportNav" href="#" class="nav-item" onclick="showSection('report', this)">
                     <span class="icon">📄</span>
