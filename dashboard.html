@@ -20,10 +20,9 @@
         <source id="videoSource" src="" type="video/mp4">
     </video>
 
-    <!-- DARK OVERLAY -->
     <div class="video-overlay"></div>
 
-    <!-- MOBILE MENU BUTTON -->
+    <!-- MOBILE MENU -->
     <button class="hamburger" onclick="toggleMenu()">☰</button>
 
     <div class="app">
@@ -31,13 +30,11 @@
         <!-- SIDEBAR -->
         <div class="sidebar">
 
-            <!-- LOGO -->
             <div class="logo-area">
                 <h2 class="logo">ベストワン</h2>
                 <p id="welcome"></p>
             </div>
 
-            <!-- MENU -->
             <nav class="nav-menu">
 
                 <a href="#" class="nav-item active" onclick="showSection('home', this)">
@@ -55,40 +52,14 @@
                     <span class="text">Notice</span>
                 </a>
 
-                <div id="chat" class="section" style="display:none;">
-
-                    <div class="chat-container">
-
-                        <!-- LEFT USER LIST -->
-                        <div class="chat-sidebar">
-                            <h2>💬 Chats</h2>
-                            <select id="userSelect"></select>
-                        </div>
-
-                        <!-- RIGHT CHAT AREA -->
-                        <div class="chat-main">
-
-                            <div class="chat-header">
-                                <h3 id="chatWith">Select User</h3>
-                            </div>
-
-                            <div id="chatBox" class="chat-box"></div>
-
-                            <div class="chat-input-area">
-                                <input type="text" id="messageInput" placeholder="Type message...">
-
-                                <button onclick="sendMessage()">➤</button>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- REPORT NAV -->
-                <a id="reportNav" href="#" class="nav-item" onclick="showSection('report', this)">
+                <a href="#" class="nav-item" onclick="showSection('report', this)">
                     <span class="icon">📄</span>
                     <span class="text">Reports</span>
+                </a>
+
+                <a href="#" class="nav-item" onclick="showSection('chat', this)">
+                    <span class="icon">💬</span>
+                    <span class="text">Chat</span>
                 </a>
 
                 <a href="#" class="nav-item" onclick="showSection('savedReports', this)">
@@ -103,7 +74,6 @@
 
             </nav>
 
-            <!-- FOOTER -->
             <div class="sidebar-footer">
                 <a href="#" class="nav-item" onclick="logout()">
                     <span class="icon">🚪</span>
@@ -139,15 +109,34 @@
 
             <!-- CHAT -->
             <div id="chat" class="section" style="display:none;">
-                <h1>💬 Chat</h1>
 
-                <select id="userSelect"></select>
+                <div class="chat-container">
 
-                <div id="chatBox"></div>
+                    <!-- LEFT SIDE -->
+                    <div class="chat-sidebar">
+                        <h2>💬 Chats</h2>
+                        <select id="userSelect"></select>
+                    </div>
 
-                <input type="text" id="messageInput" placeholder="Type message...">
+                    <!-- RIGHT SIDE -->
+                    <div class="chat-main">
 
-                <button onclick="sendMessage()">Send</button>
+                        <div class="chat-header">
+                            <h3 id="chatWith">Select User</h3>
+                        </div>
+
+                        <div id="chatBox" class="chat-box"></div>
+
+                        <div class="chat-input-area">
+                            <input type="text" id="messageInput" placeholder="Type message...">
+
+                            <button onclick="sendMessage()">➤</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
             <!-- NOTICE -->
@@ -155,7 +144,6 @@
                 <h1>📢 Notice Board</h1>
 
                 <input type="text" id="noticeTitle" placeholder="Title">
-
                 <textarea id="noticeContent" placeholder="Notice"></textarea>
 
                 <button onclick="saveNotice()">Save Notice</button>
@@ -180,7 +168,6 @@
 
                 <div id="reportForm" style="display:none;">
 
-                    <!-- Teacher + Student -->
                     <div class="report-row">
 
                         <div>
@@ -197,14 +184,11 @@
 
                     </div>
 
-                    <!-- Date -->
                     <label>日付</label>
                     <input type="date" id="date">
 
-                    <!-- Subject -->
                     <label>教科</label>
                     <select id="subject">
-
                         <option>算数</option>
                         <option>数学</option>
                         <option>英語</option>
@@ -213,40 +197,33 @@
                         <option>社会</option>
                         <option>英検</option>
                         <option>テスト勉強</option>
-
                     </select>
 
-                    <!-- Content -->
                     <label>授業内容</label>
                     <textarea id="content"></textarea>
 
-                    <!-- Homework -->
                     <label>宿題</label>
                     <textarea id="homework"></textarea>
 
-                    <!-- Homework Status -->
                     <label>宿題チェック</label>
                     <select id="homeworkStatus">
                         <option value="やった">やった</option>
                         <option value="やっていない">やっていない</option>
                     </select>
 
-                    <!-- Understanding -->
                     <label>理解度</label>
                     <input type="range" min="1" max="10" value="5" id="understanding">
 
-                    <!-- Image -->
                     <label>画像追加（任意）</label>
                     <input type="file" id="reportImage" accept="image/*">
 
-                    <!-- Save -->
                     <button onclick="saveReport()" class="save-report-btn">
                         保存
                     </button>
 
                 </div>
-
             </div>
+
             <!-- SAVED REPORTS -->
             <div id="savedReports" class="section" style="display:none;">
                 <h2>📂 Saved Reports</h2>
@@ -254,14 +231,15 @@
                 <select id="reportSearch" onchange="loadSavedReports()">
                     <option value="">すべての生徒</option>
                 </select>
+
                 <label>
                     <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
                     承認待ち
                 </label>
 
-
                 <div id="savedReportList"></div>
             </div>
+
             <!-- STUDENT REPORTS -->
             <div id="studentReports" class="section" style="display:none;">
                 <h2>📘 My Reports</h2>
@@ -281,7 +259,6 @@
     <script src="js/notice.js"></script>
     <script src="js/notification.js"></script>
 
-    <!-- SERVICE WORKER -->
     <script>
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("./sw.js");
