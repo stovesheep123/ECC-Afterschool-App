@@ -146,14 +146,9 @@ body.dashboard-page {
 ========================= */
 
 .nav-menu {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 18px;
-
-    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
 }
 
 /* =========================
@@ -645,27 +640,6 @@ textarea {
     color: white;
 }
 
-
-
-
-/* Chat dropdown */
-#userSelect {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    background: rgba(255,255,255,0.15);
-    color: #7ec8ff;   /* light blue */
-    font-size: 16px;
-    font-weight: 600;
-    outline: none;
-}
-
-/* Dropdown options */
-#userSelect option {
-    background: #1b1f2e;
-    color: #7ec8ff;
-}
 /* =========================
    MOBILE CHAT FIX
 ========================= */
@@ -734,7 +708,7 @@ textarea {
     .chat-sidebar select {
         font-size: 16px;
         color: #4facfe;
-        background: rgba(255,255,255,0.9);
+        background: rgba(255, 255, 255, 0.9);
     }
 
     /* Better section spacing */
