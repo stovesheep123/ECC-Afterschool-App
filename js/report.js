@@ -201,12 +201,8 @@ window.loadSavedReports = async function () {
 
   let reports = data;
 
-  // student filter
-  if (selectedStudent) {
-    reports = reports.filter(
-      report => report.student_name === selectedStudent
-    );
-  }
+  const selectedStudent =
+  document.getElementById("reportSearch")?.value || "";
 
   // pending only filter
   if (pendingOnly) {
@@ -221,12 +217,7 @@ window.loadSavedReports = async function () {
     );
   }
 
-  if (pendingOnly) {
-    reports = reports.filter(
-      report => report.status === "pending"
-    );
-  }
-
+  
   if (!reports.length) {
     container.innerHTML = "レポートなし";
     return;
