@@ -229,6 +229,11 @@
                 <select id="reportSearch" onchange="loadSavedReports()">
                     <option value="">すべての生徒</option>
                 </select>
+                <label>
+                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
+                    承認待ち
+                </label>
+
 
                 <div id="savedReportList"></div>
             </div>
