@@ -312,3 +312,29 @@ body.login-page::before {
     animation:
         floatCard 5s ease-in-out infinite;
 }
+/* =========================
+   DROPDOWN FIX
+========================= */
+
+select,
+#userSelect,
+#student_name,
+#reportSearch {
+    background: rgba(255,255,255,0.12) !important;
+    color: #7ec8ff !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    font-weight: 600;
+}
+
+select option,
+#userSelect option,
+#student_name option,
+#reportSearch option {
+    background: #1b1f2e !important;
+    color: #7ec8ff !important;
+}
+
+/* Chat selected username */
+#chatWith {
+    color: #7ec8ff;
+}
