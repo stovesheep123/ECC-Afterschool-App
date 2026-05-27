@@ -141,7 +141,8 @@ window.saveReport = async function () {
         homework,
         homework_status: homeworkStatus,
         understanding,
-        image_url: imageUrl
+        image_url: imageUrl,
+        status: "pending"
       }]);
   }
 
