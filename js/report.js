@@ -152,7 +152,6 @@ window.saveReport = async function () {
 // ===============================
 // LOAD SAVED REPORTS
 // ===============================
-
 window.loadSavedReports = async function () {
 
   const currentUser =
@@ -161,11 +160,12 @@ window.loadSavedReports = async function () {
   const container =
     document.getElementById("savedReportList");
 
-  const selectedStudent =
-    document.getElementById("student_name")?.value || "";
+  const search =
+    document.getElementById("reportSearch")?.value || "";
 
   const pendingOnly =
     document.getElementById("pendingOnly")?.checked;
+
   if (!container) return;
 
   container.innerHTML = "読み込み中...";
@@ -218,6 +218,12 @@ window.loadSavedReports = async function () {
   if (search) {
     reports = reports.filter(
       report => report.student_name === search
+    );
+  }
+
+  if (pendingOnly) {
+    reports = reports.filter(
+      report => report.status === "pending"
     );
   }
 
