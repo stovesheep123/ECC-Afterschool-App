@@ -87,6 +87,13 @@ document.addEventListener(
       loadUsers();
     }
 
+    // ANDROID DROPDOWN FIX
+    document.querySelectorAll("select").forEach(select => {
+      select.addEventListener("touchstart", function () {
+        this.focus();
+      });
+    });
+
   }
 );
 
