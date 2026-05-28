@@ -717,3 +717,48 @@ textarea {
         min-height: auto;
     }
 }
+
+/* ANDROID DROPDOWN FIX */
+select,
+input,
+textarea {
+    position: relative;
+    z-index: 999;
+    pointer-events: auto;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Glass effect fix */
+.section,
+.chat-container,
+.chat-sidebar,
+.saved-report-card {
+    pointer-events: auto;
+}
+
+/* Fix blur blocking taps */
+.video-overlay {
+    pointer-events: none;
+}
+
+/* Better mobile touch */
+@media (max-width: 768px) {
+
+    select {
+        min-height: 50px;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #4facfe;
+        border: none;
+        z-index: 9999;
+    }
+
+    .chat-sidebar {
+        overflow: visible;
+    }
+
+    .section {
+        overflow: visible;
+    }
+}
