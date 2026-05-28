@@ -82,6 +82,7 @@ document.addEventListener(
 
     setupDashboard();
     setupRoleUI();
+
     if (typeof loadUsers === "function") {
       loadUsers();
     }
