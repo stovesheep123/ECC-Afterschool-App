@@ -201,11 +201,16 @@ window.loadSavedReports = async function () {
 
   let reports = data;
 
-  
+
   // pending only filter
   if (pendingOnly) {
     reports = reports.filter(
       report => report.status === "pending"
+    );
+  }
+  if (approvedOnly) {
+    reports = reports.filter(
+      report => report.status === "approved"
     );
   }
 
@@ -215,7 +220,7 @@ window.loadSavedReports = async function () {
     );
   }
 
-  
+
   if (!reports.length) {
     container.innerHTML = "レポートなし";
     return;
@@ -226,7 +231,8 @@ window.loadSavedReports = async function () {
   reports.forEach(report => {
 
     container.innerHTML += `
-            <div class="saved-report-card">
+            <div class="saved-report-card"
+                style="position:relative;">
                 <div class="report-header">
                     <h3>${report.student_name}</h3>
                     <span>${report.subject}</span>
@@ -238,6 +244,12 @@ window.loadSavedReports = async function () {
                 <p><strong>宿題:</strong> ${report.homework}</p>
                 <p><strong>宿題状況:</strong> ${report.homework_status}</p>
                 <p><strong>理解度:</strong> ${report.understanding}/10</p>
+                <p><strong>状況:</strong> ${report.status === "approved"
+        ? `
+<img src="assets/images/approved.png"
+     class="approved-stamp">
+`
+        : ""}}</p>
 
                 <div class="report-actions">
 
@@ -437,7 +449,9 @@ window.approveReport = async function (id) {
     return;
   }
 
-  alert("承認しました");
+  document
+    .getElementById("approveModal")
+    .style.display = "flex";
 
   loadSavedReports();
 };
