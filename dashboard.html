@@ -57,6 +57,11 @@
                     <span class="text">Reports</span>
                 </a>
 
+                <a href="#" class="nav-item" onclick="showSection('groupReport', this)">
+                    <span class="icon">👥</span>
+                    <span class="text">Group</span>
+                </a>
+
                 <a href="#" class="nav-item" onclick="showSection('chat', this)">
                     <span class="icon">💬</span>
                     <span class="text">Chat</span>
@@ -237,6 +242,10 @@
                     承認待ち
                 </label>
 
+                <label>
+                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
+                    承認済み
+                </label>
                 <div id="savedReportList"></div>
             </div>
 
@@ -246,24 +255,96 @@
                 <div id="studentReportList"></div>
             </div>
 
+            <!-- REPORT -->
+            <div id="report" class="section" style="display:none;">
+                ...
+            </div>
+
+            <!-- GROUP REPORT -->
+            <div id="groupReport" class="section" style="display:none;">
+
+                <h2>👥 Group Report</h2>
+
+                <label>Grade</label>
+
+                <select id="groupGrade" onchange="loadStudentsByGrade()">
+
+                    <option value="">学年選択</option>
+                    <option value="Grade1">中1</option>
+                    <option value="Grade2">小6</option>
+                    <option value="Grade2">中2</option>
+                    <option value="Grade2">中3</option>
+                    <option value="Grade2">高1</option>
+                    <option value="Grade2">高2</option>
+                    <option value="Grade2">高3</option>
+
+                </select>
+
+                <div id="studentCheckboxList"></div>
+
+                <hr>
+
+                <input type="date" id="groupDate">
+
+                <select id="groupSubject">
+                    <option>数学</option>
+                    <option>英語</option>
+                    <option>理科</option>
+                    <option>国語</option>
+                    <option>社会</option>
+                    <option>テスト勉強</option>
+                </select>
+
+                <textarea id="groupContent"></textarea>
+
+                <textarea id="groupHomework"></textarea>
+
+                <button onclick="saveGroupReport()">
+                    保存
+                </button>
+
+            </div>
+
+            <!-- SAVED REPORTS -->
+            <div id="savedReports" class="section" style="display:none;">
+
+            </div>
         </div>
-    </div>
+        <div id="approveModal" class="approve-modal" style="display:none;">
 
-    <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <div class="approve-content">
 
-    <script src="js/supabase.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/report.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/notice.js"></script>
-    <script src="js/notification.js"></script>
+                <img src="assets/images/approved.png" width="150">
 
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js");
-        }
-    </script>
+                <h2>承認しました！</h2>
+
+                <button onclick="
+      document.getElementById('approveModal')
+      .style.display='none';
+    ">
+                    完了
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- SCRIPTS -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+        <script src="js/supabase.js"></script>
+        <script src="js/dashboard.js"></script>
+        <script src="js/report.js"></script>
+        <script src="js/chat.js"></script>
+        <script src="js/notice.js"></script>
+        <script src="js/group-report.js"></script>
+        <script src="js/notification.js"></script>
+
+        <script>
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("./sw.js");
+            }
+        </script>
 
 </body>
 
