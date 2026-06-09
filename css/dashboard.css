@@ -235,27 +235,34 @@ button {
 @media (max-width: 768px) {
 
     body.dashboard-page {
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .app {
         flex-direction: column;
     }
 
-    /* bottom nav */
+    /* BOTTOM NAV */
     .sidebar {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
+
         width: 100%;
-        height: 75px;
+        height: 80px;
+
         border-radius: 20px 20px 0 0;
+
+        display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-around;
-        z-index: 999;
-        padding: 8px;
+        justify-content: center;
+
+        z-index: 9999;
+
+        padding: 5px 10px;
     }
 
     .logo-area,
@@ -264,19 +271,34 @@ button {
         display: none;
     }
 
+    /* IMPORTANT FIX */
     .nav-menu {
-        flex-direction: row;
-        width: 100%;
+        display: flex !important;
+        flex-direction: row !important;
         justify-content: space-around;
+        align-items: center;
+
+        width: 100%;
+        gap: 0;
+    }
+
+    .nav-item {
+        flex: 1;
+        padding: 6px;
+        min-width: 0;
     }
 
     .text {
         display: none;
     }
 
+    .icon {
+        font-size: 22px;
+    }
+
     .main {
         padding: 12px;
-        padding-bottom: 95px;
+        padding-bottom: 100px;
     }
 
     .section {
@@ -284,7 +306,13 @@ button {
         padding: 15px;
     }
 
-    /* Chat mobile */
+    /* REPORT FORM */
+    .report-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* CHAT */
     .chat-container {
         flex-direction: column;
         height: auto;
@@ -302,14 +330,11 @@ button {
         font-size: 16px;
     }
 
-    /* report rows stack */
-    .report-row {
-        flex-direction: column;
-    }
-
+    /* DROPDOWNS */
     select {
         min-height: 50px;
         -webkit-appearance: menulist;
+        appearance: menulist;
     }
 }
 
