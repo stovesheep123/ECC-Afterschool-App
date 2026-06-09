@@ -329,3 +329,30 @@ button {
     opacity: 0.9;
     transform: rotate(-10deg);
 }
+#savedReportList{
+    width:100%;
+}
+
+.saved-report-card{
+    width:100%;
+    box-sizing:border-box;
+    margin-bottom:15px;
+}
+
+@media(max-width:768px){
+
+    #savedReports{
+        overflow-y:auto;
+        height:auto;
+    }
+
+    .saved-report-card{
+        padding:15px;
+        font-size:14px;
+    }
+
+    .saved-report-card img{
+        max-width:100%;
+        height:auto;
+    }
+}
