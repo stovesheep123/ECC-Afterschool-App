@@ -453,3 +453,36 @@ button {
         width:100%;
     }
 }
+/* =========================
+   MOBILE FIX
+========================= */
+@media (max-width:768px){
+
+    .main{
+        width:100%;
+        box-sizing:border-box;
+        overflow-y:auto;
+        padding-bottom:140px !important;
+    }
+
+    .section{
+        display:block;
+        width:100%;
+        box-sizing:border-box;
+        margin-bottom:20px;
+    }
+
+    #savedReportList{
+        padding-bottom:120px;
+    }
+
+    .saved-report-card{
+        margin-bottom:15px;
+        word-wrap:break-word;
+        overflow:hidden;
+    }
+
+    .sidebar{
+        z-index:99999;
+    }
+}
