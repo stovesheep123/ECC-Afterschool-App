@@ -232,7 +232,10 @@ button {
 /* =========================
    MOBILE FIX
 ========================= */
-@media (max-width: 768px) {
+/* =========================
+   MOBILE FIX
+========================= */
+@media (max-width:768px) {
 
     body.dashboard-page {
         overflow-x: hidden;
@@ -243,7 +246,7 @@ button {
         flex-direction: column;
     }
 
-    /* BOTTOM NAV */
+    /* Bottom Navigation */
     .sidebar {
         position: fixed;
         bottom: 0;
@@ -253,16 +256,19 @@ button {
         width: 100%;
         height: 80px;
 
-        border-radius: 20px 20px 0 0;
-
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
 
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(18px);
+
+        border-radius: 20px 20px 0 0;
+
         z-index: 9999;
 
-        padding: 5px 10px;
+        padding: 5px;
     }
 
     .logo-area,
@@ -271,21 +277,34 @@ button {
         display: none;
     }
 
-    /* IMPORTANT FIX */
     .nav-menu {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around;
-        align-items: center;
+        display: flex;
+        flex-direction: row;
 
         width: 100%;
-        gap: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        gap: 8px;
+        padding: 0 8px;
+
+        scrollbar-width: none;
+    }
+
+    .nav-menu::-webkit-scrollbar {
+        display: none;
     }
 
     .nav-item {
-        flex: 1;
-        padding: 6px;
-        min-width: 0;
+        flex: 0 0 auto;
+        min-width: 60px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        padding: 5px;
     }
 
     .text {
@@ -293,26 +312,27 @@ button {
     }
 
     .icon {
-        font-size: 22px;
+        font-size: 26px;
     }
 
     .main {
-        padding: 12px;
-        padding-bottom: 100px;
+        width: 100%;
+        padding: 15px;
+        padding-bottom: 110px;
     }
 
     .section {
+        width: 100%;
         min-height: auto;
         padding: 15px;
+        box-sizing: border-box;
     }
 
-    /* REPORT FORM */
     .report-row {
         flex-direction: column;
         gap: 10px;
     }
 
-    /* CHAT */
     .chat-container {
         flex-direction: column;
         height: auto;
@@ -323,14 +343,10 @@ button {
     }
 
     .chat-main {
+        width: 100%;
         min-height: 60vh;
     }
 
-    .chat-input-area input {
-        font-size: 16px;
-    }
-
-    /* DROPDOWNS */
     select {
         min-height: 50px;
         -webkit-appearance: menulist;
@@ -354,135 +370,13 @@ button {
     opacity: 0.9;
     transform: rotate(-10deg);
 }
-#savedReportList{
-    width:100%;
+
+#savedReportList {
+    width: 100%;
 }
 
-.saved-report-card{
-    width:100%;
-    box-sizing:border-box;
-    margin-bottom:15px;
-}
-
-@media (max-width:768px){
-
-    body.dashboard-page{
-        overflow:auto;
-    }
-
-    .app{
-        flex-direction:column;
-    }
-
-    .sidebar{
-        position:fixed;
-        bottom:0;
-        left:0;
-        right:0;
-
-        width:100%;
-        height:80px;
-
-        display:flex;
-        flex-direction:row;
-
-        align-items:center;
-        justify-content:center;
-
-        z-index:9999;
-    }
-
-    .logo-area,
-    .sidebar-footer,
-    #welcome{
-        display:none;
-    }
-
-    .nav-menu{
-        display:flex;
-        flex-direction:row;
-
-        overflow-x:auto;
-
-        width:100%;
-        gap:10px;
-
-        justify-content:flex-start;
-
-        padding:0 10px;
-    }
-
-    .nav-item{
-        min-width:60px;
-        flex-shrink:0;
-        text-align:center;
-    }
-
-    .text{
-        display:none;
-    }
-
-    .icon{
-        font-size:28px;
-    }
-
-    .main{
-        width:100%;
-        padding:15px;
-        padding-bottom:110px;
-    }
-
-    .section{
-        width:100%;
-        box-sizing:border-box;
-    }
-
-    .report-row{
-        flex-direction:column;
-    }
-
-    .chat-container{
-        flex-direction:column;
-    }
-
-    .chat-sidebar{
-        width:100%;
-    }
-
-    .chat-main{
-        width:100%;
-    }
-}
-/* =========================
-   MOBILE FIX
-========================= */
-@media (max-width:768px){
-
-    .main{
-        width:100%;
-        box-sizing:border-box;
-        overflow-y:auto;
-        padding-bottom:140px !important;
-    }
-
-    .section{
-        display:block;
-        width:100%;
-        box-sizing:border-box;
-        margin-bottom:20px;
-    }
-
-    #savedReportList{
-        padding-bottom:120px;
-    }
-
-    .saved-report-card{
-        margin-bottom:15px;
-        word-wrap:break-word;
-        overflow:hidden;
-    }
-
-    .sidebar{
-        z-index:99999;
-    }
+.saved-report-card {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
 }
