@@ -394,3 +394,51 @@ async function loadWeather() {
       "Unavailable";
   }
 }
+window.loadUsers = async function () {
+
+  const studentSelect =
+    document.getElementById("student_name");
+
+  const reportSearch =
+    document.getElementById("reportSearch");
+
+  if (!studentSelect) return;
+
+  const { data, error } =
+    await window.supabase
+      .from("users")
+      .select("*")
+      .eq("role", "student")
+      .order("username");
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  studentSelect.innerHTML =
+    `<option value="">選択してください</option>`;
+
+  if (reportSearch) {
+    reportSearch.innerHTML =
+      `<option value="">すべての生徒</option>`;
+  }
+
+  data.forEach(user => {
+
+    studentSelect.innerHTML += `
+      <option value="${user.username}">
+        ${user.username}
+      </option>
+    `;
+
+    if (reportSearch) {
+
+      reportSearch.innerHTML += `
+        <option value="${user.username}">
+          ${user.username}
+        </option>
+      `;
+    }
+  });
+};
