@@ -2,24 +2,34 @@
 // TOGGLE REPORT FORM
 // ===============================
 
-function toggleReportForm() {
-  const form = document.getElementById("reportForm");
+async function toggleReportForm() {
+
+  const form =
+    document.getElementById("reportForm");
+
   await loadUsers();
-  
+
   if (!form) return;
 
-  if (form.style.display === "none" || form.style.display === "") {
+  if (
+    form.style.display === "none" ||
+    form.style.display === ""
+  ) {
+
     form.style.display = "block";
 
-    // Auto-fill teacher name
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser =
+      JSON.parse(
+        localStorage.getItem("currentUser")
+      );
 
-    if (currentUser) {
-      document.getElementById("teacher_name").value =
-        currentUser.username;
-    }
+    document.getElementById(
+      "teacher_name"
+    ).value =
+      currentUser.username;
 
   } else {
+
     form.style.display = "none";
   }
 }
