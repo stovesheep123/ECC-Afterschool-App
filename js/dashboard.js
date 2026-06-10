@@ -120,7 +120,9 @@ function setupDashboard() {
   setupRoleUI();
 
   // show home first
-  showSection("home");
+  if (sectionId === "home") {
+    loadDashboardStats();
+  }
 }
 
 // ===============================
@@ -276,25 +278,45 @@ function loadGreeting() {
 ///////////////////////
 //load main dashboard//
 ///////////////////////
-async function loadDashboardStats() {
+window.loadDashboardStats = async function () {
 
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
 
-  // reports today
-  const {
-    data: reports
-  } =
+  // greeting
+  const hour = new Date().getHours();
+
+  let greeting = "Hello";
+
+  if (hour < 12) {
+    greeting = "Good Morning";
+  }
+  else if (hour < 18) {
+    greeting = "Good Afternoon";
+  }
+  else {
+    greeting = "Good Evening";
+  }
+
+  document.getElementById("greetingText").innerHTML =
+    `${greeting}, ${currentUser.username} 👋`;
+
+  // reports count
+  const { data: reports } =
     await window.supabase
       .from("reports")
-      .select("*")
-      .eq("date", today);
+      .select("*");
 
-  document.getElementById(
-    "reportsToday"
-  ).textContent =
+  document.getElementById("reportsToday").innerText =
     reports?.length || 0;
 
-}
+  // pending approvals
+  const pending =
+    reports?.filter(
+      r => r.status === "pending"
+    ).length || 0;
+
+  document.getElementById("quickSummary").innerText =
+    `${pending} reports pending approval`;
+
+};
