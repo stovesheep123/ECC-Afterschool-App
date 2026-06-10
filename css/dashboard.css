@@ -364,3 +364,50 @@ Stamp-for reportcard
     padding: 20px;
     border-radius: 20px;
 }
+
+/* =====================
+   DASHBOARD CARDS
+===================== */
+
+.welcome-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.welcome-card h1 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.welcome-card p {
+    color: white;
+    opacity: 0.9;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.stat-card p {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
