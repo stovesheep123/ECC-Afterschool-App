@@ -81,7 +81,9 @@ document.addEventListener(
   () => {
 
     setupDashboard();
+    loadGreeting();
     setupRoleUI();
+    loadDashboardStats();
 
     if (typeof loadUsers === "function") {
       loadUsers();
@@ -245,4 +247,54 @@ function hideElement(id) {
       "none";
   }
 }
+////////////
+//greeting//
+////////////
+function loadGreeting() {
 
+  const hour =
+    new Date().getHours();
+
+  let greeting =
+    "Hello";
+
+  if (hour < 12) {
+    greeting = "Good Morning";
+  }
+  else if (hour < 18) {
+    greeting = "Good Afternoon";
+  }
+  else {
+    greeting = "Good Evening";
+  }
+
+  document.getElementById(
+    "dashboardGreeting"
+  ).innerHTML =
+    `${greeting}, ${currentUser.username} 👋`;
+}
+///////////////////////
+//load main dashboard//
+///////////////////////
+async function loadDashboardStats() {
+
+  const today =
+    new Date()
+      .toISOString()
+      .split("T")[0];
+
+  // reports today
+  const {
+    data: reports
+  } =
+    await window.supabase
+      .from("reports")
+      .select("*")
+      .eq("date", today);
+
+  document.getElementById(
+    "reportsToday"
+  ).textContent =
+    reports?.length || 0;
+
+}
