@@ -93,253 +93,287 @@
 
             <!-- HOME -->
             <div id="home" class="section">
-                <h1>Dashboard</h1>
 
-                <div id="teacherSection" class="role-section">
-                    Teacher Panel
-                </div>
+                <h1 id="dashboardGreeting">
+                    🌈👋✨ Welcome
+                </h1>
 
-                <div id="studentSection" class="role-section">
-                    Student Panel
-                </div>
+                <div class="dashboard-cards">
 
-                <div id="headmasterSection" class="role-section">
-                    <h2>Headmaster Panel</h2>
-                </div>
-
-                <div id="parentSection" class="role-section">
-                    Parent Panel
-                </div>
-            </div>
-
-            <!-- CHAT -->
-            <div id="chat" class="section" style="display:none;">
-
-                <div class="chat-container">
-
-                    <!-- LEFT SIDE -->
-                    <div class="chat-sidebar">
-                        <h2>💬 Chats</h2>
-                        <select id="userSelect" size="1"></select>
+                    <div class="stat-card">
+                        <h3>📄 Reports Today</h3>
+                        <span id="reportsToday">0</span>
                     </div>
 
-                    <!-- RIGHT SIDE -->
-                    <div class="chat-main">
+                    <div class="stat-card">
+                        <h3>👥 Group Reports</h3>
+                        <span id="groupReportsCount">0</span>
+                    </div>
 
-                        <div class="chat-header">
-                            <h3 id="chatWith">Select User</h3>
-                        </div>
+                    <div class="stat-card">
+                        <h3>💬 Messages</h3>
+                        <span id="chatCount">0</span>
+                    </div>
 
-                        <div id="chatBox" class="chat-box"></div>
-
-                        <div class="chat-input-area">
-                            <input type="text" id="messageInput" placeholder="Type message...">
-
-                            <button onclick="sendMessage()">➤</button>
-                        </div>
-
+                    <div class="stat-card">
+                        <h3>🔔 Notifications</h3>
+                        <span id="notificationCount">0</span>
                     </div>
 
                 </div>
 
-            </div>
+                <div class="weather-widget">
 
-            <!-- NOTICE -->
-            <div id="notice" class="section" style="display:none;">
-                <h1>📢 Notice Board</h1>
+                    <h2>🌤 Weather</h2>
 
-                <input type="text" id="noticeTitle" placeholder="Title">
-                <textarea id="noticeContent" placeholder="Notice"></textarea>
-
-                <button onclick="saveNotice()">Save Notice</button>
-
-                <div id="noticeList"></div>
-            </div>
-
-            <!-- NOTIFICATIONS -->
-            <div id="notifications" class="section" style="display:none;">
-                <h1>🔔 Notifications</h1>
-                <div id="notificationList"></div>
-            </div>
-
-            <!-- REPORT -->
-            <div id="report" class="section" style="display:none;">
-
-                <h2>📄 Create Report</h2>
-
-                <button onclick="toggleReportForm()" class="open-report-btn">
-                    ➕ レポートを書く
-                </button>
-
-                <div id="reportForm" style="display:none;">
-
-                    <div class="report-row">
-
-                        <div>
-                            <label>教師名</label>
-                            <input type="text" id="teacher_name" readonly>
-                        </div>
-
-                        <div>
-                            <label>生徒名</label>
-                            <select id="student_name" size="1">
-                                <option value="">選択してください</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <label>日付</label>
-                    <input type="date" id="date">
-
-                    <label>教科</label>
-                    <select id="subject">
-                        <option>算数</option>
-                        <option>数学</option>
-                        <option>英語</option>
-                        <option>国語</option>
-                        <option>理科</option>
-                        <option>社会</option>
-                        <option>英検</option>
-                        <option>テスト勉強</option>
-                    </select>
-
-                    <label>授業内容</label>
-                    <textarea id="content"></textarea>
-
-                    <label>宿題</label>
-                    <textarea id="homework"></textarea>
-
-                    <label>宿題チェック</label>
-                    <select id="homeworkStatus">
-                        <option value="やった">やった</option>
-                        <option value="やっていない">やっていない</option>
-                    </select>
-
-                    <label>理解度</label>
-                    <input type="range" min="1" max="10" value="5" id="understanding">
-
-                    <label>画像追加（任意）</label>
-                    <input type="file" id="reportImage" accept="image/*">
-
-                    <button onclick="saveReport()" class="save-report-btn">
-                        保存
-                    </button>
+                    <p id="weatherText">
+                        Loading weather...
+                    </p>
 
                 </div>
+
+                <div class="activity-widget">
+
+                    <h2>📢 Recent Activity</h2>
+
+                    <div id="activityFeed">
+                        No activity
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- SAVED REPORTS -->
-            <div id="savedReports" class="section" style="display:none;">
-                <h2>📂 Saved Reports</h2>
+        </div>
 
-                <select id="reportSearch" onchange="loadSavedReports()" size="1">
-                    <option value="">すべての生徒</option>
-                </select>
+        <!-- CHAT -->
+        <div id="chat" class="section" style="display:none;">
 
-                <label>
-                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
-                    承認待ち
-                </label>
+            <div class="chat-container">
 
-                <label>
-                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
-                    承認済み
-                </label>
-                <div id="savedReportList"></div>
+                <!-- LEFT SIDE -->
+                <div class="chat-sidebar">
+                    <h2>💬 Chats</h2>
+                    <select id="userSelect" size="1"></select>
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="chat-main">
+
+                    <div class="chat-header">
+                        <h3 id="chatWith">Select User</h3>
+                    </div>
+
+                    <div id="chatBox" class="chat-box"></div>
+
+                    <div class="chat-input-area">
+                        <input type="text" id="messageInput" placeholder="Type message...">
+
+                        <button onclick="sendMessage()">➤</button>
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- STUDENT REPORTS -->
-            <div id="studentReports" class="section" style="display:none;">
-                <h2>📘 My Reports</h2>
-                <div id="studentReportList"></div>
-            </div>
+        </div>
 
+        <!-- NOTICE -->
+        <div id="notice" class="section" style="display:none;">
+            <h1>📢 Notice Board</h1>
 
+            <input type="text" id="noticeTitle" placeholder="Title">
+            <textarea id="noticeContent" placeholder="Notice"></textarea>
 
-            <!-- GROUP REPORT -->
-            <div id="groupReport" class="section" style="display:none;">
+            <button onclick="saveNotice()">Save Notice</button>
 
-                <h2>👥 Group Report</h2>
+            <div id="noticeList"></div>
+        </div>
 
-                <label>Grade</label>
+        <!-- NOTIFICATIONS -->
+        <div id="notifications" class="section" style="display:none;">
+            <h1>🔔 Notifications</h1>
+            <div id="notificationList"></div>
+        </div>
 
-                <select id="groupGrade" onchange="loadStudentsByGrade()">
+        <!-- REPORT -->
+        <div id="report" class="section" style="display:none;">
 
-                    <option value="">学年選択</option>
-                    <option value="Grade1">中1</option>
-                    <option value="Grade2">小6</option>
-                    <option value="Grade2">中2</option>
-                    <option value="Grade2">中3</option>
-                    <option value="Grade2">高1</option>
-                    <option value="Grade2">高2</option>
-                    <option value="Grade2">高3</option>
+            <h2>📄 Create Report</h2>
 
-                </select>
+            <button onclick="toggleReportForm()" class="open-report-btn">
+                ➕ レポートを書く
+            </button>
 
-                <div id="studentCheckboxList"></div>
+            <div id="reportForm" style="display:none;">
 
-                <hr>
+                <div class="report-row">
 
-                <input type="date" id="groupDate">
+                    <div>
+                        <label>教師名</label>
+                        <input type="text" id="teacher_name" readonly>
+                    </div>
 
-                <select id="groupSubject">
+                    <div>
+                        <label>生徒名</label>
+                        <select id="student_name" size="1">
+                            <option value="">選択してください</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <label>日付</label>
+                <input type="date" id="date">
+
+                <label>教科</label>
+                <select id="subject">
+                    <option>算数</option>
                     <option>数学</option>
                     <option>英語</option>
-                    <option>理科</option>
                     <option>国語</option>
+                    <option>理科</option>
                     <option>社会</option>
+                    <option>英検</option>
                     <option>テスト勉強</option>
                 </select>
 
-                <textarea id="groupContent"></textarea>
+                <label>授業内容</label>
+                <textarea id="content"></textarea>
 
-                <textarea id="groupHomework"></textarea>
+                <label>宿題</label>
+                <textarea id="homework"></textarea>
 
-                <button onclick="saveGroupReport()">
+                <label>宿題チェック</label>
+                <select id="homeworkStatus">
+                    <option value="やった">やった</option>
+                    <option value="やっていない">やっていない</option>
+                </select>
+
+                <label>理解度</label>
+                <input type="range" min="1" max="10" value="5" id="understanding">
+
+                <label>画像追加（任意）</label>
+                <input type="file" id="reportImage" accept="image/*">
+
+                <button onclick="saveReport()" class="save-report-btn">
                     保存
                 </button>
 
             </div>
+        </div>
 
-            <!-- SAVED REPORTS -->
+        <!-- SAVED REPORTS -->
+        <div id="savedReports" class="section" style="display:none;">
+            <h2>📂 Saved Reports</h2>
+
+            <select id="reportSearch" onchange="loadSavedReports()" size="1">
+                <option value="">すべての生徒</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
+                承認待ち
+            </label>
+
+            <label>
+                <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
+                承認済み
+            </label>
+            <div id="savedReportList"></div>
+        </div>
+
+        <!-- STUDENT REPORTS -->
+        <div id="studentReports" class="section" style="display:none;">
+            <h2>📘 My Reports</h2>
+            <div id="studentReportList"></div>
+        </div>
+
+
+
+        <!-- GROUP REPORT -->
+        <div id="groupReport" class="section" style="display:none;">
+
+            <h2>👥 Group Report</h2>
+
+            <label>Grade</label>
+
+            <select id="groupGrade" onchange="loadStudentsByGrade()">
+
+                <option value="">学年選択</option>
+                <option value="Grade1">中1</option>
+                <option value="Grade2">小6</option>
+                <option value="Grade2">中2</option>
+                <option value="Grade2">中3</option>
+                <option value="Grade2">高1</option>
+                <option value="Grade2">高2</option>
+                <option value="Grade2">高3</option>
+
+            </select>
+
+            <div id="studentCheckboxList"></div>
+
+            <hr>
+
+            <input type="date" id="groupDate">
+
+            <select id="groupSubject">
+                <option>数学</option>
+                <option>英語</option>
+                <option>理科</option>
+                <option>国語</option>
+                <option>社会</option>
+                <option>テスト勉強</option>
+            </select>
+
+            <textarea id="groupContent"></textarea>
+
+            <textarea id="groupHomework"></textarea>
+
+            <button onclick="saveGroupReport()">
+                保存
+            </button>
 
         </div>
-        <div id="approveModal" class="approve-modal" style="display:none;">
 
-            <div class="approve-content">
+        <!-- SAVED REPORTS -->
 
-                <img src="assets/images/approved.png" width="150">
+    </div>
+    <div id="approveModal" class="approve-modal" style="display:none;">
 
-                <h2>承認しました！</h2>
+        <div class="approve-content">
 
-                <button onclick="
+            <img src="assets/images/approved.png" width="150">
+
+            <h2>承認しました！</h2>
+
+            <button onclick="
       document.getElementById('approveModal')
       .style.display='none';
     ">
-                    完了
-                </button>
-
-            </div>
+                完了
+            </button>
 
         </div>
 
-        <!-- SCRIPTS -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    </div>
 
-        <script src="js/supabase.js"></script>
-        <script src="js/dashboard.js"></script>
-        <script src="js/report.js"></script>
-        <script src="js/chat.js"></script>
-        <script src="js/notice.js"></script>
-        <script src="js/group-report.js"></script>
-        <script src="js/notification.js"></script>
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <script>
-            if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("./sw.js");
-            }
-        </script>
+    <script src="js/supabase.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/report.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/notice.js"></script>
+    <script src="js/group-report.js"></script>
+    <script src="js/notification.js"></script>
+
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./sw.js");
+        }
+    </script>
 
 </body>
 
