@@ -84,6 +84,9 @@ document.addEventListener(
     loadGreeting();
     setupRoleUI();
     loadDashboardStats();
+    loadNotificationCount();
+    loadMessageCount();
+    loadWeather();
 
     if (typeof loadUsers === "function") {
       loadUsers();
@@ -320,3 +323,74 @@ window.loadDashboardStats = async function () {
     `${pending} reports pending approval`;
 
 };
+////////////////
+//nofification//
+////////////////
+async function loadNotificationCount() {
+
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+  const { data, error } =
+    await window.supabase
+      .from("notifications")
+      .select("*");
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  document.getElementById(
+    "notificationCount"
+  ).innerText = data.length;
+}
+///////////////
+//loadmessage//
+///////////////
+async function loadMessageCount() {
+
+  const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+  const { data, error } =
+    await window.supabase
+      .from("messages")
+      .select("*");
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  document.getElementById(
+    "messageCount"
+  ).innerText = data.length;
+}
+///////////////
+//loadweather//
+///////////////
+async function loadWeather() {
+
+  try {
+
+    const response =
+      await fetch(
+        "https://wttr.in/Osaka?format=3"
+      );
+
+    const text =
+      await response.text();
+
+    document.getElementById(
+      "weatherText"
+    ).innerText = text;
+
+  } catch {
+
+    document.getElementById(
+      "weatherText"
+    ).innerText =
+      "Unavailable";
+  }
+}
