@@ -248,12 +248,12 @@ window.loadSavedReports = async function () {
                 <p><strong>宿題:</strong> ${report.homework}</p>
                 <p><strong>宿題状況:</strong> ${report.homework_status}</p>
                 <p><strong>理解度:</strong> ${report.understanding}/10</p>
-                <p><strong>状況:</strong> ${report.status === "approved"
-        ? `
-<img src="assets/images/approved.png"
-     class="approved-stamp">
-`
-        : ""}}</p>
+                <p><strong>状況:</strong>
+${report.status === "approved"
+    ? `<img src="assets/images/approved.png"
+            class="approved-stamp">`
+    : "Pending"}
+</p>
 
                 <div class="report-actions">
 
