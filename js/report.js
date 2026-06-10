@@ -4,7 +4,8 @@
 
 function toggleReportForm() {
   const form = document.getElementById("reportForm");
-
+  await loadUsers();
+  
   if (!form) return;
 
   if (form.style.display === "none" || form.style.display === "") {
