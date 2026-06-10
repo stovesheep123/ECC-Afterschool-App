@@ -166,6 +166,9 @@ window.loadSavedReports = async function () {
   const pendingOnly =
     document.getElementById("pendingOnly")?.checked;
 
+  const approvedOnly =
+    document.getElementById("approvedOnly")?.checked;
+
   if (!container) return;
 
   container.innerHTML = "読み込み中...";
@@ -203,15 +206,16 @@ window.loadSavedReports = async function () {
 
 
   // pending only filter
-  if (pendingOnly) {
+  if (pendingOnly && !approvedOnly) {
     reports = reports.filter(
       report => report.status === "pending"
     );
   }
-  if (approvedOnly) {
+
+  if (approvedOnly && !pendingOnly) {
     reports = reports.filter(
       report => report.status === "approved"
-    );
+    )
   }
 
   if (search) {
