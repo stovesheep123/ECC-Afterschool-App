@@ -47,6 +47,20 @@
                     <span class="text">Notifications</span>
                 </a>
 
+                <a class="nav-item" onclick="showSection('createQuiz',this)">
+                    <span class="icon">📝</span>
+                    <span class="text">
+                        Create Test
+                    </span>
+                </a>
+
+                <a class="nav-item" onclick="showSection('takeQuiz',this)">
+                    <span class="icon">🎯</span>
+                    <span class="text">
+                        Take Test
+                    </span>
+                </a>
+
                 <a href="#" class="nav-item" onclick="showSection('notice', this)">
                     <span class="icon">📢</span>
                     <span class="text">Notice</span>
@@ -336,7 +350,57 @@
 
         </div>
 
-        <!-- SAVED REPORTS -->
+        <!-- CREATE TEST -->
+
+        <section id="createQuiz" class="section" style="display:none;">
+
+            <h2>Create Test</h2>
+
+            <input id="quizTitle" placeholder="単語テスト">
+
+            <select id="quizGrade">
+
+                <option value="1">
+                    Year 1
+                </option>
+
+                <option value="2">
+                    Year 2
+                </option>
+
+                <option value="3">
+                    Year 3
+                </option>
+
+            </select>
+
+            <input id="quizSubject" placeholder="English">
+
+            <div id="questionContainer">
+            </div>
+
+            <button onclick="addQuestion()">
+                ＋ Question
+            </button>
+
+            <button onclick="saveQuiz()">
+                Deploy Test
+            </button>
+
+        </section>
+
+
+
+        <!-- TAKE TEST -->
+
+        <section id="takeQuiz" class="section" style="display:none;">
+
+            <h2>Take Test</h2>
+
+            <div id="quizList">
+            </div>
+
+        </section>
 
     </div>
     <div id="approveModal" class="approve-modal" style="display:none;">
@@ -368,6 +432,7 @@
     <script src="js/notice.js"></script>
     <script src="js/group-report.js"></script>
     <script src="js/notification.js"></script>
+    <script src="js/quiz.js"></script>
 
     <script>
         if ("serviceWorker" in navigator) {
