@@ -213,6 +213,7 @@ window.showSection = function (sectionId, clickedElement) {
   ) {
 
     loadTests();
+    loadQuizResults();
 
   }
 
