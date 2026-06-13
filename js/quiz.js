@@ -2,14 +2,14 @@ window.questionCount = 0;
 
 window.addQuestion = function () {
 
-questionCount++;
+    questionCount++;
 
-document
-.getElementById(
-"questionContainer"
-)
+    document
+        .getElementById(
+            "questionContainer"
+        )
 
-.innerHTML += `
+        .innerHTML += `
 
 <div class="question-card">
 
@@ -60,167 +60,417 @@ placeholder="Choice 4">
 };
 window.saveQuiz = async function () {
 
-const currentUser =
-JSON.parse(
-localStorage.getItem(
-"currentUser"
-));
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "currentUser"
+            ));
 
-if(
-currentUser.role !== "teacher"
-&&
-currentUser.role !== "headmaster"
-){
-alert("権限ありません");
-return;
-}
+    if (
+        currentUser.role !== "teacher"
+        &&
+        currentUser.role !== "headmaster"
+    ) {
+        alert("権限ありません");
+        return;
+    }
 
-const title =
-document.getElementById(
-"quizTitle"
-).value;
+    const title =
+        document.getElementById(
+            "quizTitle"
+        ).value;
 
-const subject =
-document.getElementById(
-"quizSubject"
-).value;
+    const subject =
+        document.getElementById(
+            "quizSubject"
+        ).value;
 
-const grade =
-document.getElementById(
-"quizGrade"
-).value;
+    const grade =
+        document.getElementById(
+            "quizGrade"
+        ).value;
 
-if(!title){
-alert("タイトル入力");
-return;
-}
-
-
-// CREATE QUIZ
-const {
-data: quiz,
-error
-}
-=
-await window.supabase
-.from("quizzes")
-.insert([{
-
-title,
-subject,
-grade,
-
-created_by:
-currentUser.username
-
-}])
-.select()
-.single();
+    if (!title) {
+        alert("タイトル入力");
+        return;
+    }
 
 
-if(error){
+    // CREATE QUIZ
+    const {
+        data: quiz,
+        error
+    }
+        =
+        await window.supabase
+            .from("quizzes")
+            .insert([{
 
-console.log(error);
+                title,
+                subject,
+                grade,
 
-alert(
-"作成失敗"
-);
+                created_by:
+                    currentUser.username
 
-return;
-
-}
-
-
-// QUESTIONS
-const cards =
-document.querySelectorAll(
-".question-card"
-);
-
-const questions = [];
-
-cards.forEach(card=>{
-
-questions.push({
-
-quiz_id:
-quiz.id,
-
-question:
-card.querySelector(
-".question"
-).value,
-
-choice1:
-card.querySelector(
-".c1"
-).value,
-
-choice2:
-card.querySelector(
-".c2"
-).value,
-
-choice3:
-card.querySelector(
-".c3"
-).value,
-
-choice4:
-card.querySelector(
-".c4"
-).value,
-
-correct_answer:
-parseInt(
-card.querySelector(
-".correct"
-).value
-)
-
-});
-
-});
+            }])
+            .select()
+            .single();
 
 
-const {
-error:qError
-}
-=
-await window.supabase
-.from(
-"quiz_questions"
-)
-.insert(
-questions
-);
+    if (error) {
+
+        console.log(error);
+
+        alert(
+            "作成失敗"
+        );
+
+        return;
+
+    }
 
 
-if(qError){
+    // QUESTIONS
+    const cards =
+        document.querySelectorAll(
+            ".question-card"
+        );
 
-console.log(
-qError
-);
+    const questions = [];
 
-alert(
-"問題保存失敗"
-);
+    cards.forEach(card => {
 
-return;
+        questions.push({
 
-}
+            quiz_id:
+                quiz.id,
+
+            question:
+                card.querySelector(
+                    ".question"
+                ).value,
+
+            choice1:
+                card.querySelector(
+                    ".c1"
+                ).value,
+
+            choice2:
+                card.querySelector(
+                    ".c2"
+                ).value,
+
+            choice3:
+                card.querySelector(
+                    ".c3"
+                ).value,
+
+            choice4:
+                card.querySelector(
+                    ".c4"
+                ).value,
+
+            correct_answer:
+                parseInt(
+                    card.querySelector(
+                        ".correct"
+                    ).value
+                )
+
+        });
+
+    });
 
 
-alert(
-"テスト配信成功 🎉"
-);
+    const {
+        error: qError
+    }
+        =
+        await window.supabase
+            .from(
+                "quiz_questions"
+            )
+            .insert(
+                questions
+            );
 
 
-document
-.getElementById(
-"questionContainer"
-)
-.innerHTML =
-"";
+    if (qError) {
+
+        console.log(
+            qError
+        );
+
+        alert(
+            "問題保存失敗"
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "テスト配信成功 🎉"
+    );
+
+
+    document
+        .getElementById(
+            "questionContainer"
+        )
+        .innerHTML =
+        "";
 
 };
+window.loadTests =
+    async function () {
+
+        const currentUser =
+            JSON.parse(
+                localStorage
+                    .getItem(
+                        "currentUser"
+                    )
+            );
+
+        const container =
+            document
+                .getElementById(
+                    "availableTests"
+                );
+
+        container.innerHTML =
+            "Loading...";
+
+        const {
+            data
+        }
+            =
+            await window
+                .supabase
+                .from(
+                    "quizzes"
+                )
+                .select("*")
+                .eq(
+                    "grade",
+                    currentUser.grade
+                );
+
+        if (
+            !data.length
+        ) {
+
+            container.innerHTML =
+                "No tests";
+
+            return;
+
+        }
+
+        container.innerHTML =
+            "";
+
+        data.forEach(
+            quiz => {
+
+                container.innerHTML
+                    +=
+                    `
+<div
+class="
+saved-report-card
+">
+
+<h3>
+${quiz.title}
+</h3>
+
+<p>
+${quiz.subject}
+</p>
+
+<button
+
+onclick=
+"
+startQuiz(
+'${quiz.id}'
+)
+"
+
+>
+
+Start
+
+</button>
+
+</div>
+`;
+
+            });
+
+    };
+
+window.startQuiz =
+    async function (
+        quizId
+    ) {
+
+        const {
+            data
+        }
+            =
+            await window
+                .supabase
+                .from(
+                    "quiz_questions"
+                )
+                .select("*")
+                .eq(
+                    "quiz_id",
+                    quizId);
+
+        const area =
+            document
+                .getElementById(
+                    "quizArea"
+                );
+
+        area.innerHTML =
+            "";
+
+        data.forEach(
+            (
+                q,
+                i
+            ) => {
+
+                area.innerHTML
+                    +=
+                    `
+
+<div
+class="
+saved-report-card
+">
+
+<h3>
+
+Q${i + 1}
+
+</h3>
+
+<p>
+
+${q.question}
+
+</p>
+
+<label>
+
+<input
+type=
+radio
+
+name=
+q${i}
+
+value=
+1>
+
+${q.choice1}
+
+</label>
+
+<br>
+
+<label>
+
+<input
+type=
+radio
+
+name=
+q${i}
+
+value=
+2>
+
+${q.choice2}
+
+</label>
+
+<br>
+
+<label>
+
+<input
+type=
+radio
+
+name=
+q${i}
+
+value=
+3>
+
+${q.choice3}
+
+</label>
+
+<br>
+
+<label>
+
+<input
+type=
+radio
+
+name=
+q${i}
+
+value=
+4>
+
+${q.choice4}
+
+</label>
+
+</div>
+
+`;
+
+            });
+
+        area.innerHTML +=
+            `
+
+<button
+
+onclick=
+
+"
+
+submitQuiz(
+
+'${quizId}'
+
+)
+
+"
+
+>
+
+Submit
+
+</button>
+
+`;
+
+        window.currentQuiz =
+            data;
+
+    };
