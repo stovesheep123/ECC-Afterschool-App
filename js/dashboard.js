@@ -186,6 +186,7 @@ window.showSection = function (sectionId, clickedElement) {
     return;
   }
 
+
   document.querySelectorAll(".section")
     .forEach(section => {
       section.style.display = "none";
@@ -204,6 +205,15 @@ window.showSection = function (sectionId, clickedElement) {
 
   if (sectionId === "studentReports") {
     loadStudentReports();
+  }
+  if (
+    sectionId
+    ===
+    "takeTest"
+  ) {
+
+    loadTests();
+
   }
 
   document.querySelectorAll(".nav-item")
