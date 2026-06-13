@@ -248,16 +248,38 @@ window.loadTests =
             data
         }
             =
-            await window
-                .supabase
-                .from(
-                    "quizzes"
-                )
-                .select("*")
-                .eq(
-                    "grade",
-                    currentUser.grade
-                );
+            await
+                window.supabase
+                    .from(
+                        "quizzes"
+                    )
+                    .select("*")
+                    .eq(
+                        "grade",
+                        currentUser.grade);
+
+
+        const {
+            data: done
+        }
+            =
+            await
+                window.supabase
+                    .from(
+                        "quiz_results"
+                    )
+                    .select(
+                        "quiz_id"
+                    )
+                    .eq(
+                        "student_name",
+                        currentUser.username);
+
+        const doneIds =
+            done.map(
+                x =>
+                    x.quiz_id
+            );
 
         if (
             !data.length
@@ -273,12 +295,19 @@ window.loadTests =
         container.innerHTML =
             "";
 
-        data.forEach(
-            quiz => {
+        ddata
+            .filter(
+                q =>
+                    !doneIds.includes(
+                        q.id
+                    )
+            )
+            .forEach(
+                quiz => {
 
-                container.innerHTML
-                    +=
-                    `
+                    container.innerHTML
+                        +=
+                        `
 <div
 class="
 saved-report-card
@@ -310,7 +339,7 @@ Start
 </div>
 `;
 
-            });
+                });
 
     };
 
@@ -472,5 +501,214 @@ Submit
 
         window.currentQuiz =
             data;
+
+    };
+
+window.submitQuiz =
+    async function (
+        quizId
+    ) {
+
+        const currentUser =
+            JSON.parse(
+                localStorage.getItem(
+                    "currentUser"
+                ));
+
+        const questions =
+            window.currentQuiz;
+
+        let score = 0;
+
+        questions.forEach(
+            (q, i) => {
+
+                const selected =
+                    document.querySelector(
+                        `input[name=q${i}]:checked`
+                    );
+
+                if (
+                    selected
+                    &&
+                    parseInt(
+                        selected.value
+                    )
+                    ===
+                    q.correct_answer
+                ) {
+                    score++;
+                }
+
+            });
+
+
+        // SAVE RESULT
+        const {
+            error
+        }
+            =
+            await window.supabase
+                .from(
+                    "quiz_results"
+                )
+                .insert([{
+
+                    quiz_id:
+                        quizId,
+
+                    student_name:
+                        currentUser.username,
+
+                    grade:
+                        currentUser.grade,
+
+                    score,
+
+                    total:
+                        questions.length
+
+                }]);
+
+
+        if (error) {
+
+            console.log(
+                error
+            );
+
+            alert(
+                "保存失敗"
+            );
+
+            return;
+
+        }
+
+
+        // RESULT
+        const percent =
+            Math.round(
+                (
+                    score
+                    /
+                    questions.length
+                )
+                *
+                100
+            );
+
+        document
+            .getElementById(
+                "quizArea"
+            )
+            .innerHTML =
+            `
+
+<div
+class="
+saved-report-card
+">
+
+<h2>
+
+🎉 Finished
+
+</h2>
+
+<h1>
+
+${score}
+
+/
+
+${questions.length}
+
+</h1>
+
+<p>
+
+${percent}%
+
+</p>
+
+</div>
+
+`;
+
+    };
+
+window.loadQuizResults =
+    async function () {
+
+        const currentUser =
+            JSON.parse(
+                localStorage.getItem(
+                    "currentUser"
+                ));
+
+        const {
+            data
+        }
+            =
+            await window.supabase
+                .from(
+                    "quiz_results"
+                )
+                .select("*")
+                .eq(
+                    "student_name",
+                    currentUser.username)
+                .order(
+                    "submitted_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+        const box =
+            document.getElementById(
+                "quizResults"
+            );
+
+        if (
+            !data.length
+        ) {
+
+            box.innerHTML =
+                "No results";
+
+            return;
+
+        }
+
+        box.innerHTML =
+            "";
+
+        data.forEach(
+            r => {
+
+                box.innerHTML
+                    +=
+                    `
+
+<div
+class="
+saved-report-card
+">
+
+🏆
+
+${r.score}
+
+/
+
+${r.total}
+
+</div>
+
+`;
+
+            });
 
     };
