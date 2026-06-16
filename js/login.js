@@ -29,8 +29,8 @@ async function login() {
     .eq("password", password)
     .single();
 
-  console.log(user);
-  console.log(error);
+  //console.log(user);
+  //console.log(error);
 
   if (error || !user) {
 
