@@ -673,3 +673,110 @@ QUIZ UI
     }
 
 }
+
+.quiz-create-card {
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 35px;
+
+    border-radius: 35px;
+
+    background:
+
+        rgba(255,
+            255,
+            255,
+            0.15);
+
+    backdrop-filter:
+
+        blur(25px);
+
+}
+
+
+.quiz-grid {
+
+    display: grid;
+
+    grid-template-columns:
+
+        1fr 1fr 1fr;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.quiz-grid input,
+.quiz-grid select {
+
+    width: 100%;
+
+    padding: 15px;
+
+    border-radius: 18px;
+
+    border: none;
+
+}
+
+
+.quiz-btn,
+.deploy-btn {
+
+    width: 100%;
+
+    padding: 18px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    margin-top: 20px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+}
+
+
+.quiz-btn {
+
+    background: #ffc107;
+
+}
+
+
+.deploy-btn {
+
+    background:
+
+        linear-gradient(45deg,
+            #4facfe,
+            #00f2fe);
+
+    color: white;
+
+}
+
+
+.student-check {
+
+    display: block;
+
+    padding: 14px;
+
+    margin: 10px;
+
+    background: white;
+
+    border-radius: 14px;
+
+}
