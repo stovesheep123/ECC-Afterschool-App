@@ -363,42 +363,112 @@
 
         <section id="createQuiz" class="section" style="display:none;">
 
-            <h2>Create Test</h2>
+            <div class="quiz-create-card">
 
-            <input id="quizTitle" placeholder="単語テスト">
+                <h1>
+                    📝 Create Test
+                </h1>
 
-            <select id="quizGrade">
+                <div class="quiz-grid">
 
-                <option value="1">
-                    Year 1
-                </option>
+                    <div>
 
-                <option value="2">
-                    Year 2
-                </option>
+                        <label>
+                            対象学年
+                        </label>
 
-                <option value="3">
-                    Year 3
-                </option>
+                        <select id="quizGrade">
 
-            </select>
+                            <option value="">
+                                選択
+                            </option>
 
-            <input id="quizSubject" placeholder="English">
+                            <option>小1</option>
+                            <option>小2</option>
+                            <option>小3</option>
+                            <option>小4</option>
+                            <option>小5</option>
+                            <option>小6</option>
 
-            <div id="questionContainer">
+                            <option>中1</option>
+                            <option>中2</option>
+                            <option>中3</option>
+
+                            <option>高1</option>
+                            <option>高2</option>
+                            <option>高3</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            問題数
+                        </label>
+
+                        <input id="quizQuestionCount" type="number" min="1" max="50" value="5">
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            制限時間（分）
+                        </label>
+
+                        <input id="quizMinutes" type="number" min="1" value="10">
+
+                    </div>
+
+                </div>
+
+
+                <button class="quiz-btn" onclick="loadQuizStudents()">
+
+                    👥 Load Students
+
+                </button>
+
+
+                <div id="quizStudentList">
+
+                </div>
+
+
+                <hr>
+
+
+                <input id="quizTitle" placeholder="単語テスト">
+
+
+                <input id="quizSubject" placeholder="English">
+
+
+                <button class="quiz-btn" onclick="generateQuestions()">
+
+                    ✨ Generate Questions
+
+                </button>
+
+
+                <div id="questionContainer">
+
+                </div>
+
+
+                <button class="deploy-btn" onclick="saveQuiz()">
+
+                    🚀 Deploy Test
+
+                </button>
+
             </div>
 
-            <button onclick="addQuestion()">
-                ＋ Question
-            </button>
-
-            <button onclick="saveQuiz()">
-                Deploy Test
-            </button>
-
         </section>
-
-
 
         <!-- TAKE TEST -->
 
