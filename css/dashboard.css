@@ -781,109 +781,226 @@ QUIZ UI
 
 }
 
-.quiz-create-card {
+/* =========================
+CREATE TEST — BIG MODERN UI
+========================= */
 
-    max-width: 900px;
+#createQuiz {
 
-    margin: auto;
-
-    padding: 35px;
-
-    border-radius: 35px;
-
-    background:
-
-        rgba(255,
-            255,
-            255,
-            0.15);
-
-    backdrop-filter:
-
-        blur(25px);
+    width: 100%;
+    padding: 20px 20px 180px;
 
 }
 
+.quiz-create-card {
+
+    width: 100%;
+
+    max-width: none;
+
+    padding: 40px;
+
+    border-radius: 40px;
+
+    background:
+        rgba(255, 255, 255, .15);
+
+    backdrop-filter:
+        blur(30px);
+
+}
+
+/* title */
+
+.quiz-create-card h1 {
+
+    font-size: 64px;
+
+    margin-bottom: 40px;
+
+    text-align: center;
+
+}
+
+/* top controls */
 
 .quiz-grid {
 
     display: grid;
 
     grid-template-columns:
+        repeat(3, 1fr);
 
-        1fr 1fr 1fr;
+    gap: 25px;
 
-    gap: 20px;
-
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
 }
 
+/* labels */
 
-.quiz-grid input,
-.quiz-grid select {
+.quiz-grid label {
+
+    display: block;
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+
+}
+
+/* inputs */
+
+.quiz-create-card input,
+.quiz-create-card select {
 
     width: 100%;
 
-    padding: 15px;
+    min-height: 95px;
 
-    border-radius: 18px;
+    padding: 25px;
 
-    border: none;
+    font-size: 32px;
+
+    border-radius: 30px;
 
 }
 
+/* buttons */
 
 .quiz-btn,
 .deploy-btn {
 
     width: 100%;
 
-    padding: 18px;
+    padding: 35px;
 
-    border: none;
+    font-size: 34px;
 
-    border-radius: 20px;
+    border-radius: 34px;
 
-    margin-top: 20px;
-
-    font-size: 18px;
-
-    cursor: pointer;
+    margin-top: 30px;
 
 }
-
 
 .quiz-btn {
 
-    background: #ffc107;
+    background:
+        linear-gradient(135deg,
+            #ffc107,
+            #ffb300);
 
 }
-
 
 .deploy-btn {
 
     background:
-
-        linear-gradient(45deg,
+        linear-gradient(135deg,
             #4facfe,
             #00f2fe);
 
-    color: white;
+}
+
+/* student list */
+
+#quizStudentList {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill,
+            minmax(280px, 1fr));
+
+    gap: 20px;
+
+    margin-top: 30px;
 
 }
 
+/* student cards */
 
 .student-check {
 
-    display: block;
-
-    padding: 14px;
-
-    margin: 10px;
+    padding: 25px;
 
     background: white;
 
-    border-radius: 14px;
+    color: black;
+
+    border-radius: 22px;
+
+    font-size: 24px;
+
+}
+
+/* question area */
+
+#questionContainer {
+
+    margin-top: 40px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+
+}
+
+/* mobile */
+
+@media(max-width:768px) {
+
+    #createQuiz {
+
+        padding:
+            15px 15px 250px;
+
+    }
+
+    .quiz-create-card {
+
+        padding: 25px;
+
+    }
+
+    .quiz-create-card h1 {
+
+        font-size: 44px;
+
+    }
+
+    .quiz-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 20px;
+
+    }
+
+    .quiz-create-card input,
+    .quiz-create-card select {
+
+        font-size: 22px;
+
+        min-height: 75px;
+
+    }
+
+    .quiz-btn,
+    .deploy-btn {
+
+        font-size: 22px;
+
+        padding: 22px;
+
+    }
+
+    .student-check {
+
+        font-size: 18px;
+
+    }
 
 }
