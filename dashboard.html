@@ -395,17 +395,61 @@
 
         <section id="takeQuiz" class="section" style="display:none;">
 
-            <h2>Take Test</h2>
+            <div class="quiz-phone">
 
-            <div id="quizList">
-            </div>
-            <hr>
+                <div class="quiz-top">
 
-            <h3>
-                🏆 My Results
-            </h3>
+                    <div class="quiz-progress">
+                        <span id="quizQuestionNumber">
+                            1
+                        </span>
+                    </div>
 
-            <div id="quizResults">
+                    <div class="quiz-close" onclick="
+showSection('home')
+">
+                        ✖
+                    </div>
+
+                </div>
+
+
+                <div class="quiz-bar">
+
+                    <div id="quizBarFill"></div>
+
+                </div>
+
+
+                <div class="quiz-content">
+
+                    <h1 id="quizWord">
+                        Select Test
+                    </h1>
+
+                    <p id="quizHint">
+                        Tap Start
+                    </p>
+
+                </div>
+
+
+                <button class="skip-btn" onclick="skipQuestion()">
+
+                    ⏩ SKIP
+
+                </button>
+
+
+                <div id="quizChoices" class="quiz-answers">
+
+                </div>
+
+
+                <div id="quizList">
+
+                </div>
+
             </div>
 
         </section>
