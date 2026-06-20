@@ -201,3 +201,126 @@ document.addEventListener(
     "DOMContentLoaded",
     loadQuizList
 );
+
+window.loadQuizStudents =
+    async function () {
+
+        const grade =
+            document
+                .getElementById(
+                    "quizGrade"
+                )
+                .value;
+
+        const box =
+            document
+                .getElementById(
+                    "quizStudentList"
+                );
+
+        box.innerHTML =
+            "Loading...";
+
+
+        const {
+            data
+        }
+            =
+            await window.supabase
+                .from(
+                    "users"
+                )
+                .select("*")
+                .eq(
+                    "grade",
+                    grade
+                )
+                .eq(
+                    "role",
+                    "student"
+                );
+
+
+        box.innerHTML =
+            "";
+
+
+        data.forEach(
+            student => {
+
+                box.innerHTML += `
+
+<label
+class="student-check">
+
+<input
+type="checkbox"
+
+value="${student.username}"
+
+class="quizStudent">
+
+${student.username}
+
+</label>
+
+`;
+
+            });
+
+    };
+
+
+
+window.generateQuestions =
+    function () {
+
+        const n =
+            Number(
+                document
+                    .getElementById(
+                        "quizQuestionCount"
+                    )
+                    .value
+            );
+
+        const container =
+            document
+                .getElementById(
+                    "questionContainer"
+                );
+
+        container.innerHTML =
+            "";
+
+
+        for (
+            let i = 1;
+            i <= n;
+            i++
+        ) {
+
+            container.innerHTML += `
+
+<div
+class="question-block">
+
+<h3>
+
+Question ${i}
+
+</h3>
+
+<input
+placeholder="問題">
+
+<input
+placeholder="正解">
+
+</div>
+
+`;
+
+        }
+
+    };
