@@ -173,58 +173,170 @@ function setupRoleUI() {
 window.showSection = function (sectionId, clickedElement) {
 
   const currentUser =
-    JSON.parse(localStorage.getItem("currentUser"));
+    JSON.parse(
+      localStorage.getItem(
+        "currentUser"
+      )
+    );
 
+  // ====================
+  // ROLE PERMISSIONS
+  // ====================
+
+  // HEADMASTER ONLY
   if (
-    sectionId === "savedReports" &&
-    (
-      currentUser.role === "student" ||
-      currentUser.role === "parent"
+    sectionId === "createQuiz" ||
+    sectionId === "notice"
+  ) {
+
+    if (
+      currentUser.role !==
+      "headmaster"
+    ) {
+
+      alert(
+        "権限ありません"
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  // STUDENT ONLY
+  if (
+    sectionId ===
+    "takeQuiz"
+  ) {
+
+    if (
+      currentUser.role !==
+      "student"
+    ) {
+
+      alert(
+        "生徒のみです。"
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  // HEADMASTER + TEACHER
+  if (
+
+    sectionId === "report"
+
+    ||
+
+    sectionId === "savedReports"
+
+    ||
+
+    sectionId === "groupReport"
+
+  ) {
+
+    if (
+
+      currentUser.role !==
+      "teacher"
+
+      &&
+
+      currentUser.role !==
+      "headmaster"
+
+    ) {
+
+      alert(
+        "権限ありません"
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  // ====================
+  // SHOW SECTION
+  // ====================
+
+  document
+    .querySelectorAll(
+      ".section"
     )
-  ) {
-    alert("権限ありません");
-    return;
-  }
+    .forEach(
+      s =>
+        s.style.display =
+        "none"
+    );
 
+  const active =
+    document.getElementById(
+      sectionId
+    );
 
-  document.querySelectorAll(".section")
-    .forEach(section => {
-      section.style.display = "none";
-    });
-
-  const activeSection =
-    document.getElementById(sectionId);
-
-  if (activeSection) {
-    activeSection.style.display = "block";
-  }
-
-  if (sectionId === "savedReports") {
-    loadSavedReports();
-  }
-
-  if (sectionId === "studentReports") {
-    loadStudentReports();
-  }
   if (
-    sectionId
-    ===
-    "takeTest"
+    active
   ) {
 
-    loadTests();
-    loadQuizResults();
+    active.style.display =
+      "block";
 
   }
 
-  document.querySelectorAll(".nav-item")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
 
-  if (clickedElement) {
-    clickedElement.classList.add("active");
+  // LOADERS
+
+  if (
+    sectionId ===
+    "savedReports"
+  ) {
+
+    loadSavedReports();
+
   }
+
+  if (
+    sectionId ===
+    "studentReports"
+  ) {
+
+    loadStudentReports();
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".nav-item"
+    )
+    .forEach(
+      i =>
+        i.classList.remove(
+          "active"
+        )
+    );
+
+  if (
+    clickedElement
+  ) {
+
+    clickedElement
+      .classList.add(
+        "active"
+      );
+
+  }
+
 };
 // ===============================
 // TOGGLE SIDEBAR
