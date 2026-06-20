@@ -150,6 +150,113 @@ button {
     cursor: pointer;
 }
 
+/* ===================== */
+/* CREATE TEST FIX */
+/* ===================== */
+
+#createQuiz {
+
+    width: 100%;
+    max-width: none;
+
+    padding:
+
+        20px 30px 120px;
+
+    overflow-y: auto;
+
+}
+
+/* wider card */
+#createQuiz .quiz-builder {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 30px;
+
+    border-radius: 40px;
+
+    backdrop-filter: blur(30px);
+
+}
+
+/* top settings */
+#createQuiz .quiz-settings {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1fr;
+
+    gap: 20px;
+
+}
+
+/* buttons */
+#createQuiz button {
+
+    width: 100%;
+
+    min-height: 90px;
+
+    font-size: 30px;
+
+    border-radius: 30px;
+
+}
+
+/* inputs */
+#createQuiz input,
+#createQuiz select {
+
+    width: 100%;
+
+    min-height: 80px;
+
+    font-size: 28px;
+
+}
+
+/* MOBILE */
+@media(max-width:900px) {
+
+    #createQuiz {
+
+        margin-left: 0;
+
+        padding:
+            20px 20px 200px;
+
+    }
+
+    #createQuiz .quiz-settings {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    #createQuiz button {
+
+        font-size: 22px;
+
+        min-height: 80px;
+
+    }
+
+    #createQuiz input,
+    #createQuiz select {
+
+        font-size: 22px;
+
+    }
+
+}
+
 /* =========================
    REPORTS
 ========================= */
