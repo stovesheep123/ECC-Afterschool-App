@@ -272,55 +272,70 @@ ${student.username}
 
 
 
-window.generateQuestions =
-    function () {
+window.generateQuestions = function () {
 
-        const n =
-            Number(
-                document
-                    .getElementById(
-                        "quizQuestionCount"
-                    )
-                    .value
-            );
+    const container =
+        document.getElementById(
+            "questionContainer"
+        );
 
-        const container =
-            document
-                .getElementById(
-                    "questionContainer"
-                );
+    container.innerHTML = "";
 
-        container.innerHTML =
-            "";
+    const count =
+        parseInt(
+            document.getElementById(
+                "quizQuestionCount"
+            ).value
+        );
 
+    for (
+        let i = 1;
+        i <= count;
+        i++
+    ) {
 
-        for (
-            let i = 1;
-            i <= n;
-            i++
-        ) {
+        container.innerHTML += `
 
-            container.innerHTML += `
-
-<div
-class="question-block">
+<div class="question-card">
 
 <h3>
-
-Question ${i}
-
+問題 ${i}
 </h3>
 
 <input
+class="question"
+
 placeholder="問題">
 
 <input
+class="answer"
+
 placeholder="正解">
+
+<input
+class="choice1"
+
+placeholder="選択肢1">
+
+<input
+class="choice2"
+
+placeholder="選択肢2">
+
+<input
+class="choice3"
+
+placeholder="選択肢3">
+
+<input
+class="choice4"
+
+placeholder="選択肢4">
 
 </div>
 
 `;
 
-        }
+    }
 
-    };
+};
