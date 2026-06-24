@@ -227,18 +227,21 @@ window.loadQuizStudents =
         }
             =
             await window.supabase
+
                 .from(
                     "users"
                 )
+
                 .select("*")
+
                 .eq(
                     "grade",
                     grade
                 )
+
                 .eq(
                     "role",
-                    "student"
-                );
+                    "student");
 
 
         box.innerHTML =
@@ -258,7 +261,7 @@ type="checkbox"
 
 value="${student.username}"
 
-class="quizStudent">
+class="student-box">
 
 ${student.username}
 
@@ -337,5 +340,160 @@ placeholder="選択肢4">
 `;
 
     }
+
+};
+
+window.saveQuiz = async function () {
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "currentUser"
+            ));
+
+    if (
+        currentUser.role
+        !== "headmaster"
+    ) {
+        alert("権限ありません");
+        return;
+    }
+
+    const title =
+        document.getElementById(
+            "quizTitle"
+        ).value;
+
+    const subject =
+        document.getElementById(
+            "quizSubject"
+        ).value;
+
+    const grade =
+        document.getElementById(
+            "quizGrade"
+        ).value;
+
+    const minutes =
+        parseInt(
+            document.getElementById(
+                "quizMinutes"
+            ).value
+        );
+
+    const count =
+        parseInt(
+            document.getElementById(
+                "quizQuestionCount"
+            ).value
+        );
+
+
+    // selected students
+
+    const students =
+        [
+            ...document
+                .querySelectorAll(
+                    ".student-box:checked"
+                )
+        ]
+            .map(
+                x => x.value
+            );
+
+
+    // questions
+
+    const questions =
+        [
+            ...
+            document.querySelectorAll(
+                ".question-card"
+            )
+        ].map(card => ({
+
+            question:
+                card.querySelector(
+                    ".question"
+                ).value,
+
+            answer:
+                card.querySelector(
+                    ".answer"
+                ).value,
+
+            choices: [
+
+                card.querySelector(
+                    ".choice1"
+                ).value,
+
+                card.querySelector(
+                    ".choice2"
+                ).value,
+
+                card.querySelector(
+                    ".choice3"
+                ).value,
+
+                card.querySelector(
+                    ".choice4"
+                ).value
+
+            ]
+
+        }));
+
+
+    const {
+        error
+    }
+        =
+        await
+            window.supabase
+
+                .from(
+                    "quizzes"
+                )
+
+                .insert([{
+
+                    title,
+
+                    subject,
+
+                    grade,
+
+                    minutes,
+
+                    question_count:
+                        count,
+
+                    students,
+
+                    questions,
+
+                    created_by:
+                        currentUser.username
+
+                }]);
+
+
+    if (error) {
+
+        console.log(error);
+
+        alert(
+            "保存失敗"
+        );
+
+        return;
+
+    }
+
+    alert(
+        "🚀 Test deployed!"
+    );
 
 };
