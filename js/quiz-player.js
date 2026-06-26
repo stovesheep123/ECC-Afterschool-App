@@ -63,30 +63,65 @@ window.loadQuizList =
 
         }
 
+        for (
+            const q
+            of data
+        ) {
 
-        data.forEach(q => {
+            const check =
+                await window.supabase
+
+                    .from(
+                        "quiz_results"
+                    )
+
+                    .select()
+
+                    .eq(
+                        "quiz_id",
+                        q.id
+                    )
+
+                    .eq(
+                        "student",
+                        user.username
+                    )
+
+                    .maybeSingle();
+
 
             box.innerHTML += `
 
 <button
-class="quiz-card"
 
-onclick=
-"startQuiz('${q.id}')">
+class=
+"quiz-card"
 
-📝
+${check.data
+                    ?
+                    "disabled"
+                    :
+                    `onclick=
+"startQuiz('${q.id}')"`
+                }
+
+>
+
+${check.data
+                    ?
+                    "🔒 Submitted"
+                    :
+                    "📝"
+                }
 
 ${q.title}
-
-<br>
-
-${q.subject}
 
 </button>
 
 `;
 
-        });
+        }
+
 
     };
 
@@ -472,10 +507,19 @@ Submitted
 
 </p>
 
+<p>
+
+${score}
+
+/
+
+${currentQuiz.questions.length}
+
+</p>
+
 </div>
 
 `;
-
 
     loadQuizList();
 
