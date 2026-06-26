@@ -1361,3 +1361,60 @@ CREATE TEST — BIG MODERN UI
     }
 
 }
+
+/* RESULT */
+
+#quizRanking {
+
+    display: none;
+
+    text-align: center;
+
+    padding: 40px;
+
+    animation:
+        fade .5s;
+
+}
+
+#quizScore {
+
+    font-size: 60px;
+
+    font-weight: bold;
+
+    color: #ffb400;
+
+    margin: 20px;
+
+}
+
+#quizMessage {
+
+    font-size: 24px;
+
+    margin-bottom: 30px;
+
+}
+
+@keyframes fade {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(30px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
