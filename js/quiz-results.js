@@ -7,15 +7,117 @@ window.loadQuizResults =
                     "currentUser"
                 ));
 
+        const box =
+            document.getElementById(
+                "quizResultList"
+            );
+
         if (
             user.role !== "headmaster"
-        ) return;
+        ) {
+
+            box.innerHTML =
+                `
+<h2>
+
+権限ありません
+
+</h2>
+`;
+
+            return;
+
+        }
 
 
         const {
             data
         }
+
             =
+
+            await window.supabase
+
+                .from(
+                    "quizzes"
+                )
+
+                .select("*");
+
+
+        box.innerHTML = "";
+
+
+        if (
+            !data?.length
+        ) {
+
+            box.innerHTML =
+                `
+No Tests
+`;
+
+            return;
+
+        }
+
+
+        data.forEach(
+            q => {
+
+                box.innerHTML += `
+
+<button
+
+class=
+"quiz-card"
+
+onclick=
+"
+
+openQuizResults(
+
+'${q.id}',
+
+'${q.title}'
+
+)
+
+"
+
+>
+
+📝
+
+${q.title}
+
+</button>
+
+`;
+
+            }
+
+        );
+
+    };
+
+
+
+
+window.openQuizResults =
+    async function (
+        quizId,
+        title
+    ) {
+
+        const {
+
+            data
+
+        }
+
+            =
+
             await window.supabase
 
                 .from(
@@ -23,6 +125,11 @@ window.loadQuizResults =
                 )
 
                 .select("*")
+
+                .eq(
+                    "quiz_id",
+                    quizId
+                )
 
                 .order(
                     "score",
@@ -32,49 +139,107 @@ window.loadQuizResults =
                 );
 
 
-        const resultBox =
-            document.getElementById(
-                "quizResultList"
-            );
+        const box =
 
-        const rankBox =
-            document.getElementById(
-                "quizRanking"
-            );
+            document
+                .getElementById(
+                    "rankingTable"
+                );
+
+        box.innerHTML = `
+
+<h2>
+
+${title}
+
+</h2>
+
+`;
 
 
-        resultBox.innerHTML = "";
+        if (
+            !data.length
+        ) {
 
-        rankBox.innerHTML = "";
+            box.innerHTML += `
 
+<p>
+
+No submissions
+
+</p>
+
+`;
+
+            return;
+
+        }
+
+
+        if (!data) {
+
+            resultBox.innerHTML =
+
+                `
+<h2>
+
+No Results Yet
+
+</h2>
+`;
+
+            return;
+
+        }
 
         data.forEach((r, i) => {
 
-            const percent =
+            box.innerHTML += `
 
-                Math.round(
-                    (
-                        r.score
-                        /
-                        r.total
-                    )
-                    *
-                    100
-                );
+<div
+class=
+"rank-card">
+
+<div>
+
+${i === 0
+                    ?
+
+                    "🥇"
+
+                    :
+
+                    i === 1
+
+                        ?
+
+                        "🥈"
+
+                        :
+
+                        i === 2
+
+                            ?
+
+                            "🥉"
+
+                            :
+
+                            `#${i + 1}`
+
+                }
+
+</div>
 
 
-            resultBox.innerHTML += `
+<div>
 
-<div class="result-card">
-
-<h3>
-
-👤
 ${r.student}
 
-</h3>
+</div>
 
-<p>
+
+<div>
 
 ${r.score}
 
@@ -82,53 +247,22 @@ ${r.score}
 
 ${r.total}
 
-</p>
+</div>
 
 </div>
 
 `;
 
-
-            rankBox.innerHTML += `
-
-<div class="rank-card">
-
-${i + 1}
-
-位
-
-🏆
-
-${r.student}
-
-—
-
-${percent}%
-
-</div>
-
-`;
-
-        });
-
-    };
-
-
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    () => {
-
-        setTimeout(
-
-            loadQuizResults,
-
-            1000
+        }
 
         );
 
-    }
 
-);
+        document
+            .getElementById(
+                "quizRanking"
+            )
+            .style.display =
+            "block";
+
+    };
