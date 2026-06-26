@@ -1418,3 +1418,51 @@ CREATE TEST — BIG MODERN UI
     }
 
 }
+
+.rank-card {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    padding: 20px;
+
+    margin: 15px 0;
+
+    background:
+
+        rgba(255,
+            255,
+            255,
+            0.12);
+
+    backdrop-filter:
+
+        blur(15px);
+
+    border-radius:
+        20px;
+
+    font-size:
+        22px;
+
+    color: white;
+
+}
+
+.rank-card:hover {
+
+    transform:
+        scale(1.02);
+
+}
+
+#rankingTable {
+
+    margin-top:
+        20px;
+
+}
