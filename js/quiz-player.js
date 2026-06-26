@@ -198,11 +198,68 @@ window.startQuiz =
         currentQuiz =
             data;
 
+        const submitted =
+
+            await window.supabase
+
+                .from(
+                    "quiz_results"
+                )
+
+                .select()
+
+                .eq(
+                    "quiz_id",
+                    id
+                )
+
+                .eq(
+                    "student",
+
+                    JSON.parse(
+                        localStorage.getItem(
+                            "currentUser"
+                        )).username
+
+                )
+
+                .maybeSingle();
+
+
+        if (
+
+            submitted.data
+
+        ) {
+
+            alert(
+
+                "提出済みです"
+
+            );
+
+            return;
+
+        }
+
         currentQuestion =
             0;
 
         score =
             0;
+        document
+            .getElementById(
+                "quizChoices"
+            )
+            .style.display =
+            "grid";
+
+        document
+            .getElementById(
+                "quizRanking"
+            )
+            .style.display =
+            "none";
 
 
         secondsLeft =
@@ -320,28 +377,22 @@ ${choice}
 ANSWER
 =================*/
 
-window.answerQuiz =
-    function (choice) {
+window.answerQuiz = function (choice) {
 
-        const q =
-            currentQuiz.questions[
-            currentQuestion
-            ];
+    const q =
+        currentQuiz.questions[
+        currentQuestion
+        ];
 
+    if (
+        choice === q.answer
+    ) {
+        score++;
+    }
 
-        if (
-            choice ===
-            q.answer
-        ) {
+    nextQuestion();
 
-            score++;
-
-        }
-
-
-        nextQuestion();
-
-    };
+};
 
 
 
@@ -354,32 +405,118 @@ window.skipQuestion =
 
 
 
-function nextQuestion() {
+async function nextQuestion() {
 
     currentQuestion++;
 
-
     if (
 
-        currentQuestion
-
-        >=
-
+        currentQuestion >=
         currentQuiz.questions.length
 
     ) {
 
-        submitQuiz();
+        await finishQuiz();
 
         return;
 
     }
 
-
     showQuestion();
 
 }
+async function finishQuiz() {
 
+    const user =
+        JSON.parse(
+            localStorage.getItem(
+                "currentUser"
+            ));
+
+
+    await window.supabase
+
+        .from(
+            "quiz_results"
+        )
+
+        .insert([{
+
+            quiz_id:
+                currentQuiz.id,
+
+            student:
+                user.username,
+
+            score,
+
+            total:
+                currentQuiz.questions.length
+
+        }]);
+
+
+    document
+        .getElementById(
+            "quizChoices"
+        )
+
+        .style.display =
+
+        "none";
+
+
+    document
+        .getElementById(
+            "quizRanking"
+        )
+
+        .style.display =
+
+        "block";
+
+
+    document
+        .getElementById(
+            "quizScore"
+        )
+
+        .innerText =
+
+        `${score}
+
+/
+
+${currentQuiz.questions.length}`;
+
+
+    document
+        .getElementById(
+            "quizMessage"
+        )
+
+        .innerText =
+
+        score
+
+            >=
+
+            currentQuiz.questions.length
+            *
+            0.8
+
+            ?
+
+            "🎉 Excellent!"
+
+            :
+
+            "👏 Good Job";
+
+
+    loadQuizList();
+
+}
 
 
 /*=================
@@ -432,7 +569,7 @@ function startTimer() {
 
             ) {
 
-                submitQuiz();
+                finishQuiz();
 
             }
 
@@ -442,85 +579,5 @@ function startTimer() {
 
 
 
-/*=================
-SUBMIT
-=================*/
-
-async function submitQuiz() {
-
-    clearInterval(
-        timer
-    );
-
-    const user =
-
-        JSON.parse(
-            localStorage.getItem(
-                "currentUser"
-            ));
 
 
-    await window.supabase
-
-        .from(
-            "quiz_results"
-        )
-
-        .insert([{
-
-            quiz_id:
-                currentQuiz.id,
-
-            student:
-                user.username,
-
-            score,
-
-            total:
-                currentQuiz.questions.length
-
-        }]);
-
-
-    document
-        .getElementById(
-            "quizChoices"
-        )
-
-        .innerHTML =
-
-        `
-
-<div class="quiz-finished">
-
-🎉
-
-<h2>
-
-Good Job
-
-</h2>
-
-<p>
-
-Submitted
-
-</p>
-
-<p>
-
-${score}
-
-/
-
-${currentQuiz.questions.length}
-
-</p>
-
-</div>
-
-`;
-
-    loadQuizList();
-
-}
