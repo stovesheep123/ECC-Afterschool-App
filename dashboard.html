@@ -470,62 +470,82 @@
 
         </section>
 
-        <!-- TAKE TEST -->
-
         <section id="takeQuiz" class="section" style="display:none;">
 
             <div class="quiz-phone">
 
-                <div class="quiz-top">
+                <div class="quiz-header">
 
-                    <div class="quiz-progress">
-                        <span id="quizQuestionNumber">
-                            1
-                        </span>
-                    </div>
+                    <button class="quiz-exit" onclick="showSection('home')">
 
-                    <div class="quiz-close" onclick="
-showSection('home')
-">
-                        ✖
+                        ✕
+
+                    </button>
+
+                    <div id="quizTimer">
+
+                        30:00
+
                     </div>
 
                 </div>
 
 
-                <div class="quiz-bar">
+                <div class="quiz-progress-wrap">
 
                     <div id="quizBarFill"></div>
 
                 </div>
 
 
-                <div class="quiz-content">
+                <div class="quiz-counter">
 
-                    <h1 id="quizWord">
-                        Select Test
-                    </h1>
+                    <span id="currentQ">
+                        1
+                    </span>
 
-                    <p id="quizHint">
-                        Tap Start
-                    </p>
+                    /
+
+                    <span id="totalQ">
+                        5
+                    </span>
 
                 </div>
 
 
-                <button class="skip-btn" onclick="skipQuestion()">
+                <div class="quiz-body">
 
-                    ⏩ SKIP
+                    <h1 id="quizQuestion">
+
+                        Select Test
+
+                    </h1>
+
+                    <div id="quizChoices">
+
+                    </div>
+
+                </div>
+
+
+                <button id="nextBtn" onclick="nextQuestion()">
+
+                    Next →
 
                 </button>
 
 
-                <div id="quizChoices" class="quiz-answers">
+                <div id="quizFinished" style="display:none">
 
-                </div>
+                    <h1>
+                        ✅ Good Job
+                    </h1>
 
+                    <p>
 
-                <div id="quizList">
+                        Test submitted
+
+                    </p>
 
                 </div>
 
@@ -533,43 +553,24 @@ showSection('home')
 
         </section>
 
-    </div>
-    <div id="approveModal" class="approve-modal" style="display:none;">
+        <!-- SCRIPTS -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        <div class="approve-content">
+        <script src="js/supabase.js"></script>
+        <script src="js/dashboard.js"></script>
+        <script src="js/report.js"></script>
+        <script src="js/chat.js"></script>
+        <script src="js/notice.js"></script>
+        <script src="js/group-report.js"></script>
+        <script src="js/notification.js"></script>
+        <script src="js/quiz.js"></script>
+        <script src="js/quiz-player.js"></script>
 
-            <img src="assets/images/approved.png" width="150">
-
-            <h2>承認しました！</h2>
-
-            <button onclick="
-      document.getElementById('approveModal')
-      .style.display='none';
-    ">
-                完了
-            </button>
-
-        </div>
-
-    </div>
-
-    <!-- SCRIPTS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script src="js/supabase.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/report.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/notice.js"></script>
-    <script src="js/group-report.js"></script>
-    <script src="js/notification.js"></script>
-    <script src="js/quiz.js"></script>
-
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js");
-        }
-    </script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("./sw.js");
+            }
+        </script>
 
 </body>
 
