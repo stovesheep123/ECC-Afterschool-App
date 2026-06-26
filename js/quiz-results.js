@@ -9,11 +9,8 @@ window.loadQuizResults =
 
         if (
             user.role !== "headmaster"
-        ) {
+        ) return;
 
-            return;
-
-        }
 
         const {
             data
@@ -28,36 +25,30 @@ window.loadQuizResults =
                 .select("*")
 
                 .order(
-                    "submitted_at",
+                    "score",
                     {
                         ascending: false
                     }
-
                 );
 
 
-        const box =
+        const resultBox =
             document.getElementById(
                 "quizResultList"
             );
 
-        if (!box) return;
+        const rankBox =
+            document.getElementById(
+                "quizRanking"
+            );
 
 
-        box.innerHTML = "";
+        resultBox.innerHTML = "";
+
+        rankBox.innerHTML = "";
 
 
-        if (!data.length) {
-
-            box.innerHTML =
-                "まだ提出なし";
-
-            return;
-
-        }
-
-
-        data.forEach(r => {
+        data.forEach((r, i) => {
 
             const percent =
 
@@ -72,14 +63,13 @@ window.loadQuizResults =
                 );
 
 
-            box.innerHTML += `
+            resultBox.innerHTML += `
 
 <div class="result-card">
 
 <h3>
 
 👤
-
 ${r.student}
 
 </h3>
@@ -92,9 +82,28 @@ ${r.score}
 
 ${r.total}
 
-(${percent}%)
-
 </p>
+
+</div>
+
+`;
+
+
+            rankBox.innerHTML += `
+
+<div class="rank-card">
+
+${i + 1}
+
+位
+
+🏆
+
+${r.student}
+
+—
+
+${percent}%
 
 </div>
 
