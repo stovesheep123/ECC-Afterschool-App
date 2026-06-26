@@ -1217,3 +1217,52 @@ CREATE TEST — BIG MODERN UI
     }
 
 }
+
+.result-card {
+
+    background:
+
+        rgba(255,
+            255,
+            255,
+            0.15);
+
+    padding:
+
+        20px;
+
+    border-radius:
+
+        20px;
+
+    margin:
+
+        15px 0;
+
+    backdrop-filter:
+
+        blur(20px);
+
+}
+
+.result-card h3 {
+
+    color: white;
+
+    margin-bottom:
+
+        10px;
+
+}
+
+.result-card p {
+
+    font-size:
+
+        24px;
+
+    color:
+
+        gold;
+
+}
