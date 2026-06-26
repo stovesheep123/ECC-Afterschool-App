@@ -1031,3 +1031,189 @@ CREATE TEST — BIG MODERN UI
     margin-bottom: 14px;
 
 }
+
+.quiz-phone {
+
+    max-width: 650px;
+
+    margin: auto;
+
+    background: white;
+
+    color: black;
+
+    padding: 25px;
+
+    border-radius: 30px;
+
+    min-height: 90vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.quiz-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+.quiz-exit {
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+
+    background: #ddd;
+
+    color: black;
+
+}
+
+
+#quizTimer {
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #ffb300;
+
+}
+
+
+.quiz-progress-wrap {
+
+    height: 10px;
+
+    background: #ddd;
+
+    border-radius: 999px;
+
+    margin: 20px 0;
+
+    overflow: hidden;
+
+}
+
+
+#quizBarFill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #3f8cff;
+
+    transition: .3s;
+
+}
+
+
+.quiz-counter {
+
+    text-align: center;
+
+    font-size: 22px;
+
+}
+
+
+.quiz-body {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+}
+
+
+#quizQuestion {
+
+    font-size: 38px;
+
+    margin-bottom: 40px;
+
+}
+
+
+#quizChoices {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+}
+
+
+.quiz-choice {
+
+    padding: 22px;
+
+    border-radius: 20px;
+
+    background: #f2f2f2;
+
+    cursor: pointer;
+
+    font-size: 20px;
+
+}
+
+
+.quiz-choice:hover {
+
+    background: #4facfe;
+
+    color: white;
+
+}
+
+
+.selected {
+
+    background: #4facfe;
+
+    color: white;
+
+}
+
+
+#nextBtn {
+
+    margin-top: 30px;
+
+    padding: 18px;
+
+    font-size: 22px;
+
+}
+
+
+@media(max-width:768px) {
+
+    .quiz-phone {
+
+        border-radius: 0;
+
+        min-height: 100vh;
+
+    }
+
+}
