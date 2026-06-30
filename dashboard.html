@@ -631,6 +631,119 @@
         }
     </script>
 
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            () => {
+
+                const menu =
+                    document.getElementById(
+                        "circleMenu"
+                    );
+
+                const center =
+                    document.getElementById(
+                        "menuCenter"
+                    );
+
+                if (!menu || !center) return;
+
+                // OPEN CLOSE
+
+                center.addEventListener(
+                    "click",
+                    e => {
+
+                        e.stopPropagation();
+
+                        menu.classList.toggle(
+                            "open"
+                        );
+
+                    });
+
+                // CLOSE IF OUTSIDE
+
+                document.addEventListener(
+                    "click",
+                    e => {
+
+                        if (
+                            !menu.contains(
+                                e.target
+                            )
+                        ) {
+
+                            menu.classList.remove(
+                                "open"
+                            );
+
+                        }
+
+                    });
+
+                // DRAG
+
+                let drag = false;
+
+                let startX = 0;
+
+                let startY = 0;
+
+                center.addEventListener(
+                    "touchstart",
+                    e => {
+
+                        drag = true;
+
+                        startX =
+                            e.touches[0].clientX -
+                            menu.offsetLeft;
+
+                        startY =
+                            e.touches[0].clientY -
+                            menu.offsetTop;
+
+                    }
+                );
+
+                document.addEventListener(
+                    "touchmove",
+                    e => {
+
+                        if (!drag) return;
+
+                        menu.style.left =
+                            (
+                                e.touches[0].clientX -
+                                startX
+                            ) + "px";
+
+                        menu.style.top =
+                            (
+                                e.touches[0].clientY -
+                                startY
+                            ) + "px";
+
+                        menu.style.bottom =
+                            "auto";
+
+                    }
+                );
+
+                document.addEventListener(
+                    "touchend",
+                    () => {
+
+                        drag = false;
+
+                    });
+
+            });
+
+    </script>
+
 </body>
 
 </html>
