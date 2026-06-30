@@ -123,9 +123,8 @@ function setupDashboard() {
   setupRoleUI();
 
   // show home first
-  if (sectionId === "home") {
-    loadDashboardStats();
-  }
+  showSection("home");
+  loadDashboardStats();
 }
 
 // ===============================
@@ -424,9 +423,10 @@ window.loadDashboardStats = async function () {
     greeting = "Good Evening";
   }
 
-  document.getElementById("greetingText").innerHTML =
+  document.getElementById(
+    "dashboardGreeting"
+  ).innerHTML =
     `${greeting}, ${currentUser.username} 👋`;
-
   // reports count
   const { data: reports } =
     await window.supabase
@@ -487,7 +487,7 @@ async function loadMessageCount() {
   }
 
   document.getElementById(
-    "messageCount"
+    "chatCount"
   ).innerText = data.length;
 }
 ///////////////
