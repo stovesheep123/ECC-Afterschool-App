@@ -32,58 +32,32 @@
    BODY
 ========================= */
 body.dashboard-page {
-    overflow: auto;
     min-height: 100vh;
-    overflow: hidden;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+
+    overflow-x: hidden;
+
+    overflow-y: auto;
+
+    background:
+        linear-gradient(135deg,
+            #4facfe,
+            #00f2fe);
 }
 
 /* =========================
    APP
 ========================= */
 .app {
-    display: flex;
+
+    width: 100%;
+
     min-height: 100vh;
-}
 
-/* =========================
-   SIDEBAR (PC)
-========================= */
-.sidebar {
-
-    position: fixed;
-
-    left: 20px;
-
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    width: 240px;
-
-    height: 240px;
-
-    background:
-
-        rgba(255, 255, 255, .12);
-
-    backdrop-filter:
-
-        blur(30px);
-
-    border-radius: 50%;
-
-    z-index: 999;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 0;
+    position: relative;
 
 }
+
+
 
 .logo {
     color: white;
@@ -97,27 +71,10 @@ body.dashboard-page {
     text-align: center;
 }
 
-.nav-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
 
-.nav-item {
-    text-decoration: none;
-    color: white;
-    padding: 12px;
-    border-radius: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
 
-.nav-item.active,
-.nav-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
+
+
 
 .icon {
     font-size: 22px;
@@ -363,9 +320,7 @@ button {
 }
 
 
-/* =========================
-   MOBILE FIX
-========================= */
+
 /* =========================
 ANDROID SCROLL FIX
 ========================= */
@@ -397,66 +352,10 @@ ANDROID SCROLL FIX
         min-height: 100vh;
     }
 
-    .sidebar {
 
-        position: fixed;
 
-        left: 0;
 
-        top: 0;
 
-        bottom: 0;
-
-        width: 85px;
-
-        height: 100vh;
-
-        overflow-y: auto;
-
-        overflow-x: hidden;
-
-        padding: 10px;
-
-        z-index: 9999;
-
-        border-radius: 0 20px 20px 0;
-    }
-
-    .nav-menu {
-
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 8px;
-
-        overflow-y: auto;
-
-        overflow-x: hidden;
-
-        height: 100%;
-
-        padding-bottom: 30px;
-
-        scrollbar-width: none;
-    }
-
-    .nav-menu::-webkit-scrollbar {
-        display: none;
-    }
-
-    .nav-item {
-
-        min-height: 60px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        flex-shrink: 0;
-    }
 
     .text {
         display: none;
@@ -468,28 +367,26 @@ ANDROID SCROLL FIX
 
     .main {
 
-        margin-left: 95px;
+        width: 100%;
 
-        width: calc(100% - 95px);
+        margin: 0;
 
-        height: auto;
+        padding: 20px;
 
-        overflow-y: auto;
+        overflow: auto;
 
-        padding: 15px;
-
-        padding-bottom: 100px;
     }
 
     .section {
 
         width: 100%;
 
-        min-height: auto;
+        min-height: 100vh;
 
-        overflow: visible;
+        padding: 30px;
 
-        padding: 15px;
+        border-radius: 30px;
+
     }
 
     .chat-container {
@@ -1493,20 +1390,56 @@ CREATE TEST — BIG MODERN UI
 }
 
 /*=====================
-CIRCLE MENU
+FLOATING RADIAL MENU
 =====================*/
 
-.circle-menu {
+.sidebar {
 
-    position: relative;
+    display: block;
 
-    width: 220px;
+    position: fixed;
 
-    height: 220px;
+    left: 20px;
+
+    bottom: 20px;
+
+    z-index: 99999;
+
+    background: none;
+
+    width: auto;
+
+    height: auto;
+
+    padding: 0;
+
+    border: none;
 
 }
 
+
+
+
+
 .menu-center {
+
+    width: 80px;
+
+    height: 80px;
+
+    border-radius: 50%;
+
+    background:
+
+        linear-gradient(135deg,
+            #4facfe,
+            #00f2fe);
+
+    color: white;
+
+    font-size: 34px;
+
+    border: none;
 
     position: absolute;
 
@@ -1514,158 +1447,26 @@ CIRCLE MENU
 
     top: 50%;
 
-    transform:
-
-        translate(-50%,
-            -50%);
-
-    width: 110px;
-
-    height: 110px;
-
-    border-radius: 50%;
-
-    background:
-
-        white;
-
-    color: black;
-
-    font-size: 40px;
-
-    z-index: 5;
+    transform: translate(-50%, -50%);
 
     box-shadow:
 
-        0 0 40px rgba(0,
-            0,
-            0,
-            .2);
+        0 20px 60px rgba(0, 0, 0, .3);
 
 }
 
-.circle-items {
 
-    position: absolute;
 
-    width: 100%;
 
-    height: 100%;
 
-}
 
-.nav-item {
 
-    position: absolute;
 
-    width: 60px;
 
-    height: 60px;
 
-    border-radius: 50%;
 
-    display: flex;
 
-    justify-content: center;
 
-    align-items: center;
-
-    background:
-
-        rgba(255,
-            255,
-            255,
-            .2);
-
-    backdrop-filter:
-
-        blur(20px);
-
-    text-decoration: none;
-
-}
-
-.nav-item:nth-child(1) {
-
-    top: -5px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-}
-
-.nav-item:nth-child(2) {
-
-    top: 25px;
-
-    right: 0;
-
-}
-
-.nav-item:nth-child(3) {
-
-    top: 80px;
-
-    right: -10px;
-
-}
-
-.nav-item:nth-child(4) {
-
-    bottom: 25px;
-
-    right: 0;
-
-}
-
-.nav-item:nth-child(5) {
-
-    bottom: -5px;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-}
-
-.nav-item:nth-child(6) {
-
-    bottom: 25px;
-
-    left: 0;
-
-}
-
-.nav-item:nth-child(7) {
-
-    top: 80px;
-
-    left: -10px;
-
-}
-
-.nav-item:nth-child(8) {
-
-    top: 25px;
-
-    left: 0;
-
-}
-
-.nav-item:hover {
-
-    transform:
-
-        scale(1.15);
-
-    background:
-
-        #4facfe;
-
-}
 
 .text {
 
@@ -1679,8 +1480,183 @@ CIRCLE MENU
 
 }
 
+/*====================
+FLOAT MENU
+====================*/
+
+.menu-center {
+
+    width: 80px;
+
+    height: 80px;
+
+    border-radius: 50%;
+
+    background:
+
+        linear-gradient(135deg,
+            #4facfe,
+            #00f2fe);
+
+    color: white;
+
+    font-size: 34px;
+
+    border: none;
+
+    box-shadow:
+
+        0 10px 40px rgba(0, 0, 0, .3);
+
+    z-index: 9999;
+
+}
+
+
+
+
+
+
+/*====================
+FLOATING MENU
+====================*/
+
+.sidebar {
+
+    position: fixed;
+
+    left: 25px;
+
+    bottom: 25px;
+
+    z-index: 99999;
+
+    background: none;
+
+    padding: 0;
+
+    width: auto;
+
+    height: auto;
+
+}
+
 .main {
 
-    margin-left: 300px;
+    width: 100%;
 
+    margin: 0;
+
+    padding: 20px;
+
+}
+
+.circle-menu {
+    position: relative;
+}
+
+
+
+.circle-menu.open .circle-items {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+    transform:
+        translateY(0);
+
+}
+
+/* icons */
+
+.circle-items .nav-item {
+
+    width: 65px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    background:
+
+        rgba(255, 255, 255, .18);
+
+    backdrop-filter:
+
+        blur(20px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 28px;
+
+    transition: .25s;
+
+}
+
+.circle-items .nav-item:hover {
+
+    transform:
+        scale(1.15);
+
+}
+
+.text {
+
+    display: none;
+
+}
+
+.circle-items {
+    position: absolute;
+
+    bottom: 95px;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform: translateY(30px);
+
+    transition: .35s;
+}
+
+.circle-items .nav-item {
+    opacity: 1;
+
+    position: relative;
+
+    width: 65px;
+
+    height: 65px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, .18);
+
+    backdrop-filter: blur(20px);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    color: white;
 }
