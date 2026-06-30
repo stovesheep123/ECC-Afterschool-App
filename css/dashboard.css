@@ -1497,7 +1497,7 @@ FLOATING RADIAL MENU
 .circle-menu.open .nav-item {
 
     opacity: 1;
-
+    transform: scale(1);
     pointer-events: auto;
 
 }
