@@ -1404,35 +1404,129 @@ FLOATING RADIAL MENU
     height: auto;
 }
 
+.circle-menu {
 
+    position: fixed;
 
+    left: 20px;
+    bottom: 20px;
 
+    width: 70px;
+    height: 70px;
+
+    z-index: 9999;
+}
 
 .menu-center {
 
-    width: 90px;
-
-    height: 90px;
+    width: 70px;
+    height: 70px;
 
     border-radius: 50%;
 
     border: none;
 
-    font-size: 42px;
-
-    background: #39c5ff;
+    background: #000;
 
     color: white;
 
+    font-size: 30px;
+
     cursor: pointer;
 
-    position: relative;
+    position: absolute;
 
-    z-index: 10000;
-
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
-
+    z-index: 10;
 }
+
+.menu-items {
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    left: -90px;
+    top: -90px;
+
+    pointer-events: none;
+}
+
+.circle-menu.open .menu-items {
+
+    pointer-events: auto;
+}
+
+.menu-item {
+
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+
+    background: #111;
+
+    color: white;
+
+    text-decoration: none;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 22px;
+
+    opacity: 0;
+
+    transition: .3s;
+}
+
+.circle-menu.open .menu-item {
+
+    opacity: 1;
+}
+
+.circle-menu.open .menu-item:nth-child(1) {
+
+    left: 100px;
+    top: 0;
+}
+
+.circle-menu.open .menu-item:nth-child(2) {
+
+    left: 190px;
+    top: 60px;
+}
+
+.circle-menu.open .menu-item:nth-child(3) {
+
+    left: 190px;
+    top: 150px;
+}
+
+.circle-menu.open .menu-item:nth-child(4) {
+
+    left: 100px;
+    top: 210px;
+}
+
+.circle-menu.open .menu-item:nth-child(5) {
+
+    left: 10px;
+    top: 150px;
+}
+
+.circle-menu.open .menu-item:nth-child(6) {
+
+    left: 10px;
+    top: 60px;
+}
+
+
 
 
 
@@ -1530,9 +1624,7 @@ FLOATING MENU
 
 }
 
-.circle-menu {
-    position: relative;
-}
+
 
 
 
@@ -1640,9 +1732,7 @@ FLOATING MENU
     color: white;
 }
 
-.circle-menu {
-    position: relative;
-}
+
 
 .circle-items {
 
@@ -1676,10 +1766,15 @@ FLOATING MENU
     pointer-events: auto;
 }
 
-.section{
-display:none;
+.section {
+    display: none;
 }
 
-.section.active{
-display:block;
+.section.active {
+    display: block;
 }
+
+
+
+
+
