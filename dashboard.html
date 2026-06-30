@@ -23,7 +23,6 @@
     <div class="video-overlay"></div>
 
     <!-- MOBILE MENU -->
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
 
     <div class="app">
 
@@ -37,16 +36,16 @@
 
             <div class="circle-menu">
 
-                <button class="menu-center">
+                <button class="menu-center" onclick="this.parentElement.classList.toggle('open')">
 
-                    🏠
+                    ☰
 
                 </button>
 
                 <nav class="circle-items">
 
                     <a href="#" class="nav-item active" onclick="showSection('home',this)">
-                        <span class="icon">Home 🏠</span>
+                        <span class="icon">🏠</span>
                     </a>
 
                     <a href="#" class="nav-item" onclick="showSection('notifications',this)">
@@ -166,485 +165,465 @@
                 </div>
 
             </div>
+            <!-- CHAT -->
+            <div id="chat" class="section" style="display:none;">
 
-        </div>
+                <div class="chat-container">
 
-        <!-- CHAT -->
-        <div id="chat" class="section" style="display:none;">
-
-            <div class="chat-container">
-
-                <!-- LEFT SIDE -->
-                <div class="chat-sidebar">
-                    <h2>💬 Chats</h2>
-                    <select id="userSelect" size="1"></select>
-                </div>
-
-                <!-- RIGHT SIDE -->
-                <div class="chat-main">
-
-                    <div class="chat-header">
-                        <h3 id="chatWith">Select User</h3>
+                    <!-- LEFT SIDE -->
+                    <div class="chat-sidebar">
+                        <h2>💬 Chats</h2>
+                        <select id="userSelect" size="1"></select>
                     </div>
 
-                    <div id="chatBox" class="chat-box"></div>
+                    <!-- RIGHT SIDE -->
+                    <div class="chat-main">
 
-                    <div class="chat-input-area">
-                        <input type="text" id="messageInput" placeholder="Type message...">
+                        <div class="chat-header">
+                            <h3 id="chatWith">Select User</h3>
+                        </div>
 
-                        <button onclick="sendMessage()">➤</button>
+                        <div id="chatBox" class="chat-box"></div>
+
+                        <div class="chat-input-area">
+                            <input type="text" id="messageInput" placeholder="Type message...">
+
+                            <button onclick="sendMessage()">➤</button>
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
 
-        </div>
+            <!-- NOTICE -->
+            <div id="notice" class="section" style="display:none;">
+                <h1>📢 Notice Board</h1>
 
-        <!-- NOTICE -->
-        <div id="notice" class="section" style="display:none;">
-            <h1>📢 Notice Board</h1>
+                <input type="text" id="noticeTitle" placeholder="Title">
+                <textarea id="noticeContent" placeholder="Notice"></textarea>
 
-            <input type="text" id="noticeTitle" placeholder="Title">
-            <textarea id="noticeContent" placeholder="Notice"></textarea>
+                <button onclick="saveNotice()">Save Notice</button>
 
-            <button onclick="saveNotice()">Save Notice</button>
+                <div id="noticeList"></div>
+            </div>
 
-            <div id="noticeList"></div>
-        </div>
+            <!-- NOTIFICATIONS -->
+            <div id="notifications" class="section" style="display:none;">
+                <h1>🔔 Notifications</h1>
+                <div id="notificationList"></div>
+            </div>
 
-        <!-- NOTIFICATIONS -->
-        <div id="notifications" class="section" style="display:none;">
-            <h1>🔔 Notifications</h1>
-            <div id="notificationList"></div>
-        </div>
+            <!-- REPORT -->
+            <div id="report" class="section" style="display:none;">
 
-        <!-- REPORT -->
-        <div id="report" class="section" style="display:none;">
+                <h2>📄 Create Report</h2>
 
-            <h2>📄 Create Report</h2>
+                <button onclick="toggleReportForm()" class="open-report-btn">
+                    ➕ レポートを書く
+                </button>
 
-            <button onclick="toggleReportForm()" class="open-report-btn">
-                ➕ レポートを書く
-            </button>
+                <div id="reportForm" style="display:none;">
 
-            <div id="reportForm" style="display:none;">
+                    <div class="report-row">
 
-                <div class="report-row">
+                        <div>
+                            <label>教師名</label>
+                            <input type="text" id="teacher_name" readonly>
+                        </div>
 
-                    <div>
-                        <label>教師名</label>
-                        <input type="text" id="teacher_name" readonly>
+                        <div>
+                            <label>生徒名</label>
+                            <select id="student_name" size="1">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+
                     </div>
 
-                    <div>
-                        <label>生徒名</label>
-                        <select id="student_name" size="1">
-                            <option value="">選択してください</option>
-                        </select>
-                    </div>
+                    <label>日付</label>
+                    <input type="date" id="date">
+
+                    <label>教科</label>
+                    <select id="subject">
+                        <option>算数</option>
+                        <option>数学</option>
+                        <option>英語</option>
+                        <option>国語</option>
+                        <option>理科</option>
+                        <option>社会</option>
+                        <option>英検</option>
+                        <option>テスト勉強</option>
+                    </select>
+
+                    <label>授業内容</label>
+                    <textarea id="content"></textarea>
+
+                    <label>宿題</label>
+                    <textarea id="homework"></textarea>
+
+                    <label>宿題チェック</label>
+                    <select id="homeworkStatus">
+                        <option value="やった">やった</option>
+                        <option value="やっていない">やっていない</option>
+                    </select>
+
+                    <label>理解度</label>
+                    <input type="range" min="1" max="10" value="5" id="understanding">
+
+                    <label>画像追加（任意）</label>
+                    <input type="file" id="reportImage" accept="image/*">
+
+                    <button onclick="saveReport()" class="save-report-btn">
+                        保存
+                    </button>
 
                 </div>
+            </div>
 
-                <label>日付</label>
-                <input type="date" id="date">
+            <!-- SAVED REPORTS -->
+            <div id="savedReports" class="section" style="display:none;">
+                <h2>📂 Saved Reports</h2>
 
-                <label>教科</label>
-                <select id="subject">
-                    <option>算数</option>
+                <select id="reportSearch" onchange="loadSavedReports()" size="1">
+                    <option value="">すべての生徒</option>
+                </select>
+
+                <label>
+                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
+                    承認待ち
+                </label>
+
+                <label>
+                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
+                    承認済み
+                </label>
+                <div id="savedReportList"></div>
+            </div>
+
+            <!-- STUDENT REPORTS -->
+            <div id="studentReports" class="section" style="display:none;">
+                <h2>📘 My Reports</h2>
+                <div id="studentReportList"></div>
+            </div>
+
+
+
+            <!-- GROUP REPORT -->
+            <div id="groupReport" class="section" style="display:none;">
+
+                <h2>👥 Group Report</h2>
+
+                <label>Grade</label>
+
+                <select id="groupGrade" onchange="loadStudentsByGrade()">
+
+                    <option value="">学年選択</option>
+                    <option value="Grade1">中1</option>
+                    <option value="Grade2">中2</option>
+                    <option value="Grade3">中3</option>
+                    <option value="High1">高1</option>
+                    <option value="High2">高2</option>
+                    <option value="High3">高3</option>
+
+                </select>
+
+                <div id="studentCheckboxList"></div>
+
+                <hr>
+
+                <input type="date" id="groupDate">
+
+                <select id="groupSubject">
                     <option>数学</option>
                     <option>英語</option>
-                    <option>国語</option>
                     <option>理科</option>
+                    <option>国語</option>
                     <option>社会</option>
-                    <option>英検</option>
                     <option>テスト勉強</option>
                 </select>
 
-                <label>授業内容</label>
-                <textarea id="content"></textarea>
+                <textarea id="groupContent"></textarea>
 
-                <label>宿題</label>
-                <textarea id="homework"></textarea>
+                <textarea id="groupHomework"></textarea>
 
-                <label>宿題チェック</label>
-                <select id="homeworkStatus">
-                    <option value="やった">やった</option>
-                    <option value="やっていない">やっていない</option>
-                </select>
-
-                <label>理解度</label>
-                <input type="range" min="1" max="10" value="5" id="understanding">
-
-                <label>画像追加（任意）</label>
-                <input type="file" id="reportImage" accept="image/*">
-
-                <button onclick="saveReport()" class="save-report-btn">
+                <button onclick="saveGroupReport()">
                     保存
                 </button>
 
             </div>
-        </div>
 
-        <!-- SAVED REPORTS -->
-        <div id="savedReports" class="section" style="display:none;">
-            <h2>📂 Saved Reports</h2>
+            <!-- CREATE TEST -->
 
-            <select id="reportSearch" onchange="loadSavedReports()" size="1">
-                <option value="">すべての生徒</option>
-            </select>
+            <section id="createQuiz" class="section" style="display:none;">
 
-            <label>
-                <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
-                承認待ち
-            </label>
+                <div class="quiz-create-card quiz-builder">
 
-            <label>
-                <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
-                承認済み
-            </label>
-            <div id="savedReportList"></div>
-        </div>
-
-        <!-- STUDENT REPORTS -->
-        <div id="studentReports" class="section" style="display:none;">
-            <h2>📘 My Reports</h2>
-            <div id="studentReportList"></div>
-        </div>
-
-
-
-        <!-- GROUP REPORT -->
-        <div id="groupReport" class="section" style="display:none;">
-
-            <h2>👥 Group Report</h2>
-
-            <label>Grade</label>
-
-            <select id="groupGrade" onchange="loadStudentsByGrade()">
-
-                <option value="">学年選択</option>
-                <option value="Grade1">中1</option>
-                <option value="Grade2">小6</option>
-                <option value="Grade2">中2</option>
-                <option value="Grade2">中3</option>
-                <option value="Grade2">高1</option>
-                <option value="Grade2">高2</option>
-                <option value="Grade2">高3</option>
-
-            </select>
-
-            <div id="studentCheckboxList"></div>
-
-            <hr>
-
-            <input type="date" id="groupDate">
-
-            <select id="groupSubject">
-                <option>数学</option>
-                <option>英語</option>
-                <option>理科</option>
-                <option>国語</option>
-                <option>社会</option>
-                <option>テスト勉強</option>
-            </select>
-
-            <textarea id="groupContent"></textarea>
-
-            <textarea id="groupHomework"></textarea>
-
-            <button onclick="saveGroupReport()">
-                保存
-            </button>
-
-        </div>
-
-        <!-- CREATE TEST -->
-
-        <section id="createQuiz" class="section" style="display:none;">
-
-            <div class="quiz-create-card quiz-builder">
-
-                <h1>
-                    📝 Create Test
-                </h1>
-
-                <div class="quiz-grid quiz-settings">
-
-                    <div>
-
-                        <label>
-                            対象学年
-                        </label>
-
-                        <select id="quizGrade">
-
-                            <option value="">
-                                選択
-                            </option>
-
-                            <option>小1</option>
-                            <option>小2</option>
-                            <option>小3</option>
-                            <option>小4</option>
-                            <option>小5</option>
-                            <option>小6</option>
-
-                            <option>中1</option>
-                            <option>中2</option>
-                            <option>中3</option>
-
-                            <option>高1</option>
-                            <option>高2</option>
-                            <option>高3</option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div>
-
-                        <label>
-                            問題数
-                        </label>
-
-                        <input id="quizQuestionCount" type="number" min="1" max="50" value="5">
-
-                    </div>
-
-
-                    <div>
-
-                        <label>
-                            制限時間（分）
-                        </label>
-
-                        <input id="quizMinutes" type="number" min="1" value="10">
-
-                    </div>
-
-                </div>
-
-
-                <button class="quiz-btn" onclick="loadQuizStudents()">
-
-                    👥 Load Students
-
-                </button>
-
-
-                <div id="quizStudentList">
-
-                </div>
-
-
-                <hr>
-
-
-                <input id="quizTitle" placeholder="単語テスト">
-
-
-                <input id="quizSubject" placeholder="English">
-
-
-                <button class="quiz-btn" onclick="generateQuestions()">
-
-                    ✨ Generate Questions
-
-                </button>
-
-
-                <div id="questionContainer">
-
-                </div>
-
-
-                <button class="deploy-btn" onclick="saveQuiz()">
-
-                    🚀 Deploy Test
-
-                </button>
-
-            </div>
-
-        </section>
-
-        <section id="takeQuiz" class="section" style="display:none;">
-
-            <div class="quiz-phone">
-
-                <div class="quiz-header">
-
-                    <button class="quiz-exit" onclick="showSection('home')">
-
-                        ✕
-
-                    </button>
-
-                    <div id="quizTimer">
-
-                        30:00
-
-                    </div>
-
-                </div>
-
-
-                <div class="quiz-progress-wrap">
-
-                    <div id="quizBarFill"></div>
-
-                </div>
-
-
-                <div class="quiz-counter">
-
-                    <span id="currentQ">
-                        1
-                    </span>
-
-                    /
-
-                    <span id="totalQ">
-                        5
-                    </span>
-
-                </div>
-
-
-                <div class="quiz-body">
-
-                    <h1 id="quizQuestion">
-
-                        Select Test
-
+                    <h1>
+                        📝 Create Test
                     </h1>
 
-                    <div id="quizChoices" class="quiz-answers">
-                    </div>
+                    <div class="quiz-grid quiz-settings">
 
+                        <div>
 
-                    <!-- RESULT SCREEN -->
+                            <label>
+                                対象学年
+                            </label>
 
-                    <div id="quizRanking" style="display:none;">
+                            <select id="quizGrade">
 
-                        <h2>
-                            🏆 Result
-                        </h2>
+                                <option value="">
+                                    選択
+                                </option>
 
-                        <div id="quizScore">
+                                <option>小1</option>
+                                <option>小2</option>
+                                <option>小3</option>
+                                <option>小4</option>
+                                <option>小5</option>
+                                <option>小6</option>
 
-                            0 / 0
+                                <option>中1</option>
+                                <option>中2</option>
+                                <option>中3</option>
+
+                                <option>高1</option>
+                                <option>高2</option>
+                                <option>高3</option>
+
+                            </select>
 
                         </div>
 
-                        <p id="quizMessage">
 
-                            Good Job 🎉
+                        <div>
 
-                        </p>
+                            <label>
+                                問題数
+                            </label>
 
-                        <button onclick="loadQuizList()">
+                            <input id="quizQuestionCount" type="number" min="1" max="50" value="5">
 
-                            Back
+                        </div>
+
+
+                        <div>
+
+                            <label>
+                                制限時間（分）
+                            </label>
+
+                            <input id="quizMinutes" type="number" min="1" value="10">
+
+                        </div>
+
+                    </div>
+
+
+                    <button class="quiz-btn" onclick="loadQuizStudents()">
+
+                        👥 Load Students
+
+                    </button>
+
+
+                    <div id="quizStudentList">
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <input id="quizTitle" placeholder="単語テスト">
+
+
+                    <input id="quizSubject" placeholder="English">
+
+
+                    <button class="quiz-btn" onclick="generateQuestions()">
+
+                        ✨ Generate Questions
+
+                    </button>
+
+
+                    <div id="questionContainer">
+
+                    </div>
+
+
+                    <button class="deploy-btn" onclick="saveQuiz()">
+
+                        🚀 Deploy Test
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            <section id="takeQuiz" class="section" style="display:none;">
+
+                <div class="quiz-phone">
+
+                    <div class="quiz-header">
+
+                        <button class="quiz-exit" onclick="showSection('home')">
+
+                            ✕
 
                         </button>
 
+                        <div id="quizTimer">
+
+                            30:00
+
+                        </div>
+
                     </div>
 
 
-                    <div id="quizList">
+                    <div class="quiz-progress-wrap">
+
+                        <div id="quizBarFill"></div>
 
                     </div>
+
+
+                    <div class="quiz-counter">
+
+                        <span id="currentQ">
+                            1
+                        </span>
+
+                        /
+
+                        <span id="totalQ">
+                            5
+                        </span>
+
+                    </div>
+
+
+                    <div class="quiz-body">
+
+                        <h1 id="quizQuestion">
+
+                            Select Test
+
+                        </h1>
+
+                        <div id="quizChoices" class="quiz-answers">
+                        </div>
+
+
+                        <!-- RESULT SCREEN -->
+
+                        <div id="quizRanking" style="display:none;">
+
+                            <h2>
+                                🏆 Result
+                            </h2>
+
+                            <div id="quizScore">
+
+                                0 / 0
+
+                            </div>
+
+                            <p id="quizMessage">
+
+                                Good Job 🎉
+
+                            </p>
+
+                            <button onclick="loadQuizList()">
+
+                                Back
+
+                            </button>
+
+                        </div>
+
+
+                        <div id="quizList">
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <button id="nextBtn" onclick="nextQuestion()">
+
+                    Next →
+
+                </button>
+
+
+                <div id="quizFinished" style="display:none">
+
+                    <h1>
+                        ✅ Good Job
+                    </h1>
+
+                    <p>
+
+                        Test submitted
+
+                    </p>
 
                 </div>
-            </div>
 
+            </section>
 
-            <button id="nextBtn" onclick="nextQuestion()">
-
-                Next →
-
-            </button>
-
-
-            <div id="quizFinished" style="display:none">
-
-                <h1>
-                    ✅ Good Job
-                </h1>
-
-                <p>
-
-                    Test submitted
-
-                </p>
-
-            </div>
-
-    </div>
-    <div id="quizResults">
-
-        <h2>
-            📊 Test Results
-        </h2>
-
-        <div id="quizResultList">
-
-            No results
-
-        </div>
-        <!-- QUIZ RESULTS -->
-
-        <section id="quizResultsSection" class="section" style="display:none;">
-
-            <h1>
-
-                🏆 Test Results
-
-            </h1>
-
-
-            <div id="quizResultList">
-
-            </div>
-
-
-            <div id="quizRanking" style="display:none;margin-top:30px;">
+            <section id="quizResults">
 
                 <h2>
-
-                    📊 Ranking
-
+                    📊 Test Results
                 </h2>
 
+                <div id="quizResultList">
 
-                <div id="rankingTable">
+                    No results
 
                 </div>
+                <!-- QUIZ RESULTS -->
 
-            </div>
+                <section id="quizResultsSection" class="section" style="display:none;">
 
-        </section>
+                    <h1>
+
+                        🏆 Test Results
+
+                    </h1>
+
+                </section>
+
+            </section>
+
+        </div>
 
     </div>
 
-    </section>
+
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script src="js/supabase.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/report.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/notice.js"></script>
-    <script src="js/group-report.js"></script>
-    <script src="js/notification.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="js/quiz-player.js"></script>
-    <script src="js/quiz-results.js"></script>
+    <script defer src="js/supabase.js"></script>
+    <script defer src="js/dashboard.js"></script>
+    <script defer src="js/report.js"></script>
+    <script defer src="js/chat.js"></script>
+    <script defer src="js/notice.js"></script>
+    <script defer src="js/group-report.js"></script>
+    <script defer src="js/notification.js"></script>
+    <script defer src="js/quiz.js"></script>
+    <script defer src="js/quiz-player.js"></script>
+    <script defer src="js/quiz-results.js"></script>
 
     <script>
         if ("serviceWorker" in navigator) {
