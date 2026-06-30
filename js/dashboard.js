@@ -292,6 +292,14 @@ window.showSection = function (sectionId, clickedElement) {
 
   }
 
+  document
+    .querySelector(
+      ".circle-menu"
+    )
+    ?.classList.remove(
+      "open"
+    );
+
 
   // LOADERS
 
