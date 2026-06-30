@@ -607,15 +607,8 @@ document.addEventListener(
         "menuCenter"
       );
 
-    if (!menu) {
-      console.log("circleMenu not found");
-      return;
-    }
+    if (!menu || !center) return;
 
-    if (!center) {
-      console.log("menuCenter not found");
-      return;
-    }
 
     // OPEN MENU
 
@@ -623,22 +616,25 @@ document.addEventListener(
       "click",
       function (e) {
 
-        e.preventDefault();
+        e.stopPropagation();
 
         menu.classList.toggle(
           "open"
         );
 
-      }
-    );
+      });
+
 
     // DRAG
 
     let moving = false;
 
-    let offsetX = 0;
+    let moved = false;
 
-    let offsetY = 0;
+    let startX = 0;
+
+    let startY = 0;
+
 
     center.addEventListener(
       "pointerdown",
@@ -646,15 +642,14 @@ document.addEventListener(
 
         moving = true;
 
-        offsetX =
-          e.clientX -
-          menu.offsetLeft;
+        moved = false;
 
-        offsetY =
-          e.clientY -
-          menu.offsetTop;
+        startX = e.clientX;
+
+        startY = e.clientY;
 
       });
+
 
     document.addEventListener(
       "pointermove",
@@ -662,20 +657,40 @@ document.addEventListener(
 
         if (!moving) return;
 
-        menu.style.left =
-          (
-            e.clientX - offsetX
-          ) + "px";
+        const dx =
+          Math.abs(
+            e.clientX - startX
+          );
 
-        menu.style.top =
-          (
-            e.clientY - offsetY
-          ) + "px";
+        const dy =
+          Math.abs(
+            e.clientY - startY
+          );
 
-        menu.style.bottom =
-          "auto";
+        if (
+          dx > 8 ||
+          dy > 8
+        ) {
+
+          moved = true;
+
+          menu.style.left =
+            (
+              e.clientX - 40
+            ) + "px";
+
+          menu.style.top =
+            (
+              e.clientY - 40
+            ) + "px";
+
+          menu.style.bottom =
+            "auto";
+
+        }
 
       });
+
 
     document.addEventListener(
       "pointerup",
