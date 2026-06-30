@@ -588,3 +588,101 @@ window.loadUsers = async function () {
     }
   });
 };
+
+// =========================
+// FLOATING CIRCLE MENU
+// =========================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const menu =
+      document.getElementById(
+        "circleMenu"
+      );
+
+    const center =
+      document.getElementById(
+        "menuCenter"
+      );
+
+    if (!menu) {
+      console.log("circleMenu not found");
+      return;
+    }
+
+    if (!center) {
+      console.log("menuCenter not found");
+      return;
+    }
+
+    // OPEN MENU
+
+    center.addEventListener(
+      "click",
+      function (e) {
+
+        e.preventDefault();
+
+        menu.classList.toggle(
+          "open"
+        );
+
+      }
+    );
+
+    // DRAG
+
+    let moving = false;
+
+    let offsetX = 0;
+
+    let offsetY = 0;
+
+    center.addEventListener(
+      "pointerdown",
+      e => {
+
+        moving = true;
+
+        offsetX =
+          e.clientX -
+          menu.offsetLeft;
+
+        offsetY =
+          e.clientY -
+          menu.offsetTop;
+
+      });
+
+    document.addEventListener(
+      "pointermove",
+      e => {
+
+        if (!moving) return;
+
+        menu.style.left =
+          (
+            e.clientX - offsetX
+          ) + "px";
+
+        menu.style.top =
+          (
+            e.clientY - offsetY
+          ) + "px";
+
+        menu.style.bottom =
+          "auto";
+
+      });
+
+    document.addEventListener(
+      "pointerup",
+      () => {
+
+        moving = false;
+
+      });
+
+  });
