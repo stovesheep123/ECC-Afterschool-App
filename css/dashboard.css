@@ -1449,13 +1449,13 @@ FLOATING RADIAL MENU
 
     position: absolute;
 
-    width: 300px;
+    width: 320px;
 
-    height: 300px;
+    height: 320px;
 
-    left: -110px;
+    left: -120px;
 
-    top: -110px;
+    top: -120px;
 
     overflow: visible;
 
@@ -1509,31 +1509,51 @@ FLOATING RADIAL MENU
 }
 
 .circle-menu.open .nav-item:nth-child(2) {
-    transform: translate(190px, 40px);
+    transform: translate(170px, 20px);
 }
 
 .circle-menu.open .nav-item:nth-child(3) {
-    transform: translate(230px, 110px);
+    transform: translate(220px, 70px);
 }
 
 .circle-menu.open .nav-item:nth-child(4) {
-    transform: translate(190px, 190px);
+    transform: translate(240px, 130px);
 }
 
 .circle-menu.open .nav-item:nth-child(5) {
-    transform: translate(110px, 230px);
+    transform: translate(220px, 190px);
 }
 
 .circle-menu.open .nav-item:nth-child(6) {
-    transform: translate(30px, 190px);
+    transform: translate(170px, 240px);
 }
 
 .circle-menu.open .nav-item:nth-child(7) {
-    transform: translate(-10px, 110px);
+    transform: translate(110px, 260px);
 }
 
 .circle-menu.open .nav-item:nth-child(8) {
-    transform: translate(30px, 40px);
+    transform: translate(50px, 240px);
+}
+
+.circle-menu.open .nav-item:nth-child(9) {
+    left: 0px;
+    top: 190px;
+}
+
+.circle-menu.open .nav-item:nth-child(10) {
+    left: -20px;
+    top: 130px;
+}
+
+.circle-menu.open .nav-item:nth-child(11) {
+    left: 0px;
+    top: 70px;
+}
+
+.circle-menu.open .nav-item:nth-child(12) {
+    left: 50px;
+    top: 20px;
 }
 
 /* ICON ONLY */
