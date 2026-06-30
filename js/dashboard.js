@@ -345,15 +345,30 @@ window.showSection = function (sectionId, clickedElement) {
   }
 
 };
+
 // ===============================
-// TOGGLE SIDEBAR
+// CIRCLE MENU
 // ===============================
 
-window.toggleMenu = function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-  document.querySelector(".sidebar")
-    .classList.toggle("active");
-}
+  const menu =
+    document.getElementById("circleMenu");
+
+  const button =
+    document.getElementById("menuCenter");
+
+  if (!menu || !button) return;
+
+  button.addEventListener("click", (e) => {
+
+    e.stopPropagation();
+
+    menu.classList.toggle("open");
+
+  });
+
+});
 
 // ===============================
 // LOGOUT
