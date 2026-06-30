@@ -35,93 +35,77 @@
                 <p id="welcome"></p>
             </div>
 
-            <nav class="nav-menu">
+            <div class="circle-menu">
 
-                <a href="#" class="nav-item active" onclick="showSection('home', this)">
-                    <span class="icon">🏠</span>
-                    <span class="text">Home</span>
-                </a>
+                <button class="menu-center">
 
-                <a href="#" class="nav-item" onclick="showSection('notifications', this)">
-                    <span class="icon">🔔</span>
-                    <span class="text">Notifications</span>
-                </a>
+                    🏠
 
+                </button>
 
+                <nav class="circle-items">
 
-                <a href="#" class="nav-item" onclick="showSection('notice', this)">
-                    <span class="icon">📢</span>
-                    <span class="text">Notice</span>
-                </a>
+                    <a href="#" class="nav-item active" onclick="showSection('home',this)">
+                        <span class="icon">Home 🏠</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('report', this)">
-                    <span class="icon">📄</span>
-                    <span class="text">Reports</span>
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('notifications',this)">
+                        <span class="icon">Notification 🔔</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('groupReport', this)">
-                    <span class="icon">👥</span>
-                    <span class="text">Group</span>
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('notice',this)">
+                        <span class="icon">Notice 📢</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('chat', this)">
-                    <span class="icon">💬</span>
-                    <span class="text">Chat</span>
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('report',this)">
+                        <span class="icon"> Make Report📄</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('savedReports', this)">
-                    <span class="icon">💾</span>
-                    <span class="text">Saved</span>
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('groupReport',this)">
+                        <span class="icon">Group Report 👥</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('studentReports', this)">
-                    <span class="icon">📘</span>
-                    <span class="text">My Reports</span>
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('chat',this)">
+                        <span class="icon"> Chat 💬</span>
+                    </a>
 
-                <a href="#" class="nav-item" onclick="showSection('createQuiz',this)">
+                    <a href="#" class="nav-item" onclick="showSection('savedReports',this)">
+                        <span class="icon">Saved Report 💾</span>
+                    </a>
 
-                    <span class="icon">📝</span>
+                    <a href="#" class="nav-item" onclick="showSection('studentReports',this)">
+                        <span class="icon"> Report 📘</span>
+                    </a>
 
-                    <span class="text">
-                        Create Test
-                    </span>
+                    <a href="#" class="nav-item" onclick="showSection('createQuiz',this)">
+                        <span class="icon"> Make Quiz📝</span>
+                    </a>
 
-                </a>
+                    <a href="#" class="nav-item" onclick="showSection('takeQuiz',this)">
+                        <span class="icon"> Quiz 🎯</span>
+                    </a>
 
+                    <a href="#" class="nav-item" onclick="showSection('quizResultsSection',this);loadQuizResults();">
 
-                <a href="#" class="nav-item" onclick="showSection('takeQuiz',this)">
+                        <span class="icon">
+                            Result 🏆
+                        </span>
 
-                    <span class="icon">🎯</span>
+                    </a>
 
-                    <span class="text">
-                        Take Test
-                    </span>
+                    <a href="#" class="nav-item" onclick="logout()">
 
-                </a>
+                        <span class="icon">
 
-                <a class="nav-item" onclick="showSection('quizResultsSection',this);loadQuizResults();">
+                            Log Out 🚪
 
-                    <span class="icon">
+                        </span>
 
-                        🏆
+                    </a>
 
-                    </span>
+                </nav>
 
-                    <span class="text">
-
-                        Quiz Results
-
-                    </span>
-
-                </a>
-
-                <a href="#" class="nav-item" onclick="logout()">
-                    <span class="icon">🚪</span>
-                    <span class="text">Logout</span>
-                </a>
-
-            </nav>
+            </div>
 
 
 
