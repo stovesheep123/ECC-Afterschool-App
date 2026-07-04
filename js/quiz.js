@@ -417,6 +417,38 @@ placeholder="Choice D">
 
         });
 
+    card.querySelector(".questionImage")
+        .addEventListener("change", function (e) {
+
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function () {
+
+                card.querySelector(".imagePreview").innerHTML =
+
+                    `<img src="${reader.result}">`;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+    card.querySelector(".duplicateQuestion")
+        .addEventListener("click", () => {
+
+            const copy = card.cloneNode(true);
+
+            container.appendChild(copy);
+
+            renumberQuestions();
+
+        });
+
 }
 function renumberQuestions() {
 
