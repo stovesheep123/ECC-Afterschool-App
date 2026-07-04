@@ -401,41 +401,28 @@ window.saveQuiz = async function () {
 
     const questions =
         [
-            ...
-            document.querySelectorAll(
-                ".question-card"
-            )
+            ...document.querySelectorAll(".question-card")
         ].map(card => ({
 
             question:
-                card.querySelector(
-                    ".question"
-                ).value,
-
-            answer:
-                card.querySelector(
-                    ".answer"
-                ).value,
+                card.querySelector(".question").value,
 
             choices: [
 
-                card.querySelector(
-                    ".choice1"
-                ).value,
+                card.querySelector(".choice1").value,
 
-                card.querySelector(
-                    ".choice2"
-                ).value,
+                card.querySelector(".choice2").value,
 
-                card.querySelector(
-                    ".choice3"
-                ).value,
+                card.querySelector(".choice3").value,
 
-                card.querySelector(
-                    ".choice4"
-                ).value
+                card.querySelector(".choice4").value
 
-            ]
+            ],
+
+            answer:
+                parseInt(
+                    card.querySelector(".correctAnswer").value
+                )
 
         }));
 
