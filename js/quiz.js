@@ -287,56 +287,96 @@ window.generateQuestions = function () {
             document.getElementById("quizQuestionCount").value
         );
 
-    for (let i = 1; i <= count; i++) {
+    for (let i = 0; i < count; i++) {
 
-        container.innerHTML += `
+        addQuestionCard();
 
-<div class="question-card">
+    }
 
-<h3>問題 ${i}</h3>
+};
+function addQuestionCard() {
+
+    const container =
+        document.getElementById("questionContainer");
+
+    const number =
+        container.children.length + 1;
+
+    const card =
+        document.createElement("div");
+
+    card.className = "question-card";
+
+    card.innerHTML = `
+
+<h3>Question ${number}</h3>
 
 <input
 class="question"
-placeholder="問題">
+placeholder="Question">
 
 <input
 class="choice1"
-placeholder="選択肢1">
+placeholder="Choice A">
 
 <input
 class="choice2"
-placeholder="選択肢2">
+placeholder="Choice B">
 
 <input
 class="choice3"
-placeholder="選択肢3">
+placeholder="Choice C">
 
 <input
 class="choice4"
-placeholder="選択肢4">
+placeholder="Choice D">
 
 <label>Correct Answer</label>
 
 <select class="correctAnswer">
 
-<option value="0">Choice 1</option>
+<option value="0">Choice A</option>
 
-<option value="1">Choice 2</option>
+<option value="1">Choice B</option>
 
-<option value="2">Choice 3</option>
+<option value="2">Choice C</option>
 
-<option value="3">Choice 4</option>
+<option value="3">Choice D</option>
 
 </select>
 
-</div>
+<button class="deleteQuestion">
+
+🗑 Delete Question
+
+</button>
 
 `;
 
-    }
+    container.appendChild(card);
 
-};
+    card.querySelector(".deleteQuestion")
+        .addEventListener("click", () => {
 
+            card.remove();
+
+            renumberQuestions();
+
+        });
+
+}
+function renumberQuestions() {
+
+    document
+        .querySelectorAll(".question-card")
+        .forEach((card, index) => {
+
+            card.querySelector("h3").innerText =
+                `Question ${index + 1}`;
+
+        });
+
+}
 window.saveQuiz = async function () {
 
     const currentUser =
