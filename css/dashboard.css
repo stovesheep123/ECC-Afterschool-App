@@ -1665,3 +1665,65 @@ FLOATING RADIAL MENU
     border-radius: 20px;
 
 }
+
+.subject-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 20px;
+
+    margin-top: 30px;
+
+}
+
+.subject-grid button {
+
+    height: 120px;
+
+    border-radius: 25px;
+
+    font-size: 28px;
+
+    background: rgba(255, 255, 255, .15);
+
+    color: white;
+
+    backdrop-filter: blur(20px);
+
+    transition: .25s;
+
+}
+
+.subject-grid button:hover {
+
+    transform: scale(1.05);
+
+    background: #4facfe;
+
+}
+
+.quiz-card {
+
+    background: rgba(255, 255, 255, .15);
+
+    backdrop-filter: blur(20px);
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    margin-top: 20px;
+
+    color: white;
+
+}
+
+.quiz-card button {
+
+    margin-top: 15px;
+
+    width: 180px;
+
+}
