@@ -297,23 +297,23 @@ window.generateQuestions = function () {
 
 <input
 class="question"
-placeholder="Question">
+placeholder="問題">
 
 <input
 class="choice1"
-placeholder="Choice 1">
+placeholder="選択肢1">
 
 <input
 class="choice2"
-placeholder="Choice 2">
+placeholder="選択肢2">
 
 <input
 class="choice3"
-placeholder="Choice 3">
+placeholder="選択肢3">
 
 <input
 class="choice4"
-placeholder="Choice 4">
+placeholder="選択肢4">
 
 <label>Correct Answer</label>
 
