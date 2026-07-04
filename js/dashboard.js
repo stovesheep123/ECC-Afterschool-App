@@ -1,703 +1,842 @@
-// ===============================
-// CURRENT USER
-// ===============================
+let currentQuiz = null;
 
-const currentUser =
-  JSON.parse(
-    localStorage.getItem(
-      "currentUser"
-    )
-  );
+let questionIndex = 0;
 
-// login protection
-if (!currentUser) {
+let studentAnswers = [];
 
-  window.location.href =
-    "index.html";
-}
+window.loadQuizList =
+    async function () {
+
+        const box =
+            document.getElementById(
+                "quizList"
+            );
+
+        const {
+            data
+        }
+            =
+            await window.supabase
+                .from("quizzes")
+                .select("*");
+
+        box.innerHTML = "";
+
+        data.forEach(q => {
+
+            box.innerHTML += `
+
+<button
+onclick=
+"startQuiz('${q.id}')">
+
+📝
+${q.title}
+
+</button>
+
+`;
+
+        });
+
+    };
 
 
-// ===============================
-// RANDOM VIDEO BACKGROUND
-// ===============================
 
-const videos = [
+window.startQuiz = async function (id) {
 
-  "./assets/Videos/video1.mp4",
+    const { data, error } =
+        await window.supabase
+            .from("quizzes")
+            .select("*")
+            .eq("id", id)
+            .single();
 
-  "./assets/Videos/video2.mp4",
-
-  "./assets/Videos/video3.mp4",
-
-  "./assets/Videos/video4.mp4",
-
-  "./assets/Videos/video5.mp4",
-
-  "./assets/Videos/video6.mp4",
-
-  "./assets/Videos/video7.mp4"
-];
-
-function setRandomVideo() {
-
-  const video =
-    document.getElementById(
-      "bgVideo"
-    );
-
-  const source =
-    document.getElementById(
-      "videoSource"
-    );
-
-  if (!video || !source) return;
-
-  // RANDOM VIDEO
-  const randomIndex =
-    Math.floor(
-      Math.random() *
-      videos.length
-    );
-
-  // SET VIDEO
-  source.src =
-    videos[randomIndex];
-
-  // LOAD VIDEO
-  video.load();
-
-  // PLAY VIDEO
-  video.play();
-}
-
-// RUN
-setRandomVideo();
-
-// ===============================
-// DOM LOADED
-// ===============================
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    setupDashboard();
-    loadGreeting();
-    setupRoleUI();
-    loadDashboardStats();
-    loadNotificationCount();
-    loadMessageCount();
-    loadWeather();
-
-    if (typeof loadUsers === "function") {
-      loadUsers();
+    if (error) {
+        console.log(error);
+        return;
     }
 
-    // ANDROID DROPDOWN FIX
-    document.querySelectorAll("select").forEach(select => {
-      select.addEventListener("touchstart", function () {
-        this.focus();
-      });
-    });
+    currentQuiz = data;
 
-  }
-);
+    questionIndex = 0;
 
-// ===============================
-// SETUP DASHBOARD
-// ===============================
+    studentAnswers = [];
 
-function setupDashboard() {
+    // Show the Next button every new quiz
+    document.getElementById("nextQuestionBtn").style.display = "block";
 
-  // welcome text
-  const welcome =
-    document.getElementById("welcome");
+    showSection("quizPlayer");
 
-  if (welcome) {
-
-    welcome.innerText =
-      `👋 ${currentUser.username}
-            (${currentUser.role})`;
-  }
-
-  // role ui
-  setupRoleUI();
-
-  // show home first
-  showSection("home");
-  loadDashboardStats();
-}
-
-// ===============================
-// ROLE UI
-// ===============================
-
-function setupRoleUI() {
-
-  const role =
-    currentUser.role;
-
-  // HEADMASTER
-  if (role === "headmaster") {
-
-    return;
-  }
-
-  // TEACHER
-  if (role === "teacher") {
-
-
-    return;
-  }
-
-  // STUDENT
-  if (role === "student") {
-
-
-    return;
-  }
-
-  // PARENT
-  if (role === "parent") {
-
-
-    return;
-
-  }
-}
-
-// ===============================
-// SHOW SECTION
-// ===============================
-
-window.showSection = function (sectionId, clickedElement) {
-
-  const currentUser =
-    JSON.parse(
-      localStorage.getItem(
-        "currentUser"
-      )
-    );
-
-  // ====================
-  // ROLE PERMISSIONS
-  // ====================
-
-  // HEADMASTER ONLY
-  if (
-    sectionId === "createQuiz" ||
-    sectionId === "notice"
-  ) {
-
-    if (
-      currentUser.role !==
-      "headmaster"
-    ) {
-
-      alert(
-        "権限ありません"
-      );
-
-      return;
-
-    }
-
-  }
-
-
-  // STUDENT ONLY
-  if (
-    sectionId ===
-    "takeQuiz"
-  ) {
-
-    if (
-      currentUser.role !==
-      "student"
-    ) {
-
-      alert(
-        "生徒のみです。"
-      );
-
-      return;
-
-    }
-
-  }
-
-
-  // HEADMASTER + TEACHER
-  if (
-
-    sectionId === "report"
-
-    ||
-
-    sectionId === "savedReports"
-
-    ||
-
-    sectionId === "groupReport"
-
-  ) {
-
-    if (
-
-      currentUser.role !==
-      "teacher"
-
-      &&
-
-      currentUser.role !==
-      "headmaster"
-
-    ) {
-
-      alert(
-        "権限ありません"
-      );
-
-      return;
-
-    }
-
-  }
-
-
-  // ====================
-  // SHOW SECTION
-  // ====================
-
-  document
-    .querySelectorAll(
-      ".section"
-    )
-    .forEach(
-      s =>
-        s.style.display =
-        "none"
-    );
-
-  const active =
-    document.getElementById(
-      sectionId
-    );
-
-  if (
-    active
-  ) {
-
-    active.style.display =
-      "block";
-
-  }
-
-  document
-    .querySelector(
-      ".circle-menu"
-    )
-    ?.classList.remove(
-      "open"
-    );
-
-
-  // LOADERS
-
-  if (
-    sectionId ===
-    "savedReports"
-  ) {
-
-    loadSavedReports();
-
-  }
-
-  if (
-    sectionId ===
-    "studentReports"
-  ) {
-
-    loadStudentReports();
-
-  }
-
-
-  document
-    .querySelectorAll(
-      ".nav-item"
-    )
-    .forEach(
-      i =>
-        i.classList.remove(
-          "active"
-        )
-    );
-
-  if (
-    clickedElement
-  ) {
-
-    clickedElement
-      .classList.add(
-        "active"
-      );
-
-  }
+    showQuestion();
 
 };
 
-// ===============================
-// CIRCLE MENU
-// ===============================
+window.loadSubjectTests = async function (subject) {
 
-document.addEventListener("DOMContentLoaded", () => {
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
 
-  const menu =
-    document.getElementById("circleMenu");
+    document.getElementById("subjectTests").innerHTML =
+        "<h2>Loading...</h2>";
 
-  const button =
-    document.getElementById("menuCenter");
+    const { data, error } =
+        await window.supabase
+            .from("quizzes")
+            .select("*")
+            .eq("subject", subject);
 
-  if (!menu || !button) return;
+    if (error) {
 
-  button.addEventListener("click", (e) => {
+        console.log(error);
 
-    e.stopPropagation();
+        return;
 
-    menu.classList.toggle("open");
-
-  });
-
-});
-
-// ===============================
-// LOGOUT
-// ===============================
-
-window.logout = function () {
-
-  localStorage.clear();
-
-  window.location.href =
-    "index.html";
-}
-
-// ===============================
-// HELPER
-// ===============================
-
-function hideElement(id) {
-
-  const element =
-    document.getElementById(id);
-
-  if (element) {
-
-    element.style.display =
-      "none";
-  }
-}
-////////////
-//greeting//
-////////////
-function loadGreeting() {
-
-  const hour =
-    new Date().getHours();
-
-  let greeting =
-    "Hello";
-
-  if (hour < 12) {
-    greeting = "Good Morning";
-  }
-  else if (hour < 18) {
-    greeting = "Good Afternoon";
-  }
-  else {
-    greeting = "Good Evening";
-  }
-
-  document.getElementById(
-    "dashboardGreeting"
-  ).innerHTML =
-    `${greeting}, ${currentUser.username} 👋`;
-}
-///////////////////////
-//load main dashboard//
-///////////////////////
-window.loadDashboardStats = async function () {
-
-  const currentUser =
-    JSON.parse(localStorage.getItem("currentUser"));
-
-  // greeting
-  const hour = new Date().getHours();
-
-  let greeting = "Hello";
-
-  if (hour < 12) {
-    greeting = "Good Morning";
-  }
-  else if (hour < 18) {
-    greeting = "Good Afternoon";
-  }
-  else {
-    greeting = "Good Evening";
-  }
-
-  document.getElementById(
-    "dashboardGreeting"
-  ).innerHTML =
-    `${greeting}, ${currentUser.username} 👋`;
-  // reports count
-  const { data: reports } =
-    await window.supabase
-      .from("reports")
-      .select("*");
-
-  document.getElementById("reportsToday").innerText =
-    reports?.length || 0;
-
-  // pending approvals
-  const pending =
-    reports?.filter(
-      r => r.status === "pending"
-    ).length || 0;
-
-  document.getElementById("quickSummary").innerText =
-    `${pending} reports pending approval`;
-
-};
-////////////////
-//nofification//
-////////////////
-async function loadNotificationCount() {
-
-  const currentUser =
-    JSON.parse(localStorage.getItem("currentUser"));
-
-  const { data, error } =
-    await window.supabase
-      .from("notifications")
-      .select("*");
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  document.getElementById(
-    "notificationCount"
-  ).innerText = data.length;
-}
-///////////////
-//loadmessage//
-///////////////
-async function loadMessageCount() {
-
-  const currentUser =
-    JSON.parse(localStorage.getItem("currentUser"));
-
-  const { data, error } =
-    await window.supabase
-      .from("messages")
-      .select("*");
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  document.getElementById(
-    "chatCount"
-  ).innerText = data.length;
-}
-///////////////
-//loadweather//
-///////////////
-async function loadWeather() {
-
-  try {
-
-    const response =
-      await fetch(
-        "https://wttr.in/Osaka?format=3"
-      );
-
-    const text =
-      await response.text();
-
-    document.getElementById(
-      "weatherText"
-    ).innerText = text;
-
-  } catch {
-
-    document.getElementById(
-      "weatherText"
-    ).innerText =
-      "Unavailable";
-  }
-}
-window.loadUsers = async function () {
-
-  const studentSelect =
-    document.getElementById("student_name");
-
-  const reportSearch =
-    document.getElementById("reportSearch");
-
-  if (!studentSelect) return;
-
-  const { data, error } =
-    await window.supabase
-      .from("users")
-      .select("*")
-      .eq("role", "student")
-      .order("username");
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  studentSelect.innerHTML =
-    `<option value="">選択してください</option>`;
-
-  if (reportSearch) {
-    reportSearch.innerHTML =
-      `<option value="">すべての生徒</option>`;
-  }
-
-  data.forEach(user => {
-
-    studentSelect.innerHTML += `
-      <option value="${user.username}">
-        ${user.username}
-      </option>
-    `;
-
-    if (reportSearch) {
-
-      reportSearch.innerHTML += `
-        <option value="${user.username}">
-          ${user.username}
-        </option>
-      `;
     }
-  });
-};
 
-// =========================
-// FLOATING CIRCLE MENU
-// =========================
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const menu =
-      document.getElementById(
-        "circleMenu"
-      );
-
-    const center =
-      document.getElementById(
-        "menuCenter"
-      );
-
-    if (!menu || !center) return;
-
-
-    // OPEN MENU
-
-    center.addEventListener(
-      "click",
-      function (e) {
-
-        e.stopPropagation();
-
-        menu.classList.toggle(
-          "open"
+    const quizzes =
+        data.filter(q =>
+            q.students.includes(currentUser.username)
         );
 
-      });
+    let html =
+        `<h2>${subject}</h2>`;
+
+    if (quizzes.length === 0) {
+
+        html +=
+            "<p>No tests.</p>";
+
+    }
+
+    quizzes.forEach(q => {
+
+        html += `
+
+        <div class="quiz-card">
+
+            <h3>${q.title}</h3>
+
+            <p>Teacher : ${q.created_by}</p>
+
+            <p>${q.question_count} Questions</p>
+
+            <p>${q.minutes} Minutes</p>
+
+            <button onclick="startQuiz('${q.id}')">
+
+                Start
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("subjectTests").innerHTML =
+        html;
+
+}
+
+window.startQuiz = async function (id) {
+
+    const { data, error } =
+        await window.supabase
+            .from("quizzes")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+
+    }
+
+    currentQuiz = data;
+
+    currentQuestion = 0;
+
+    studentAnswers = [];
+
+    showSection("quizPlayer");
+
+    showQuestion();
+
+}
+
+function showQuestion() {
+
+    const q =
+        currentQuiz.questions[currentQuestion];
+
+    document.getElementById("quizQuestion").innerText =
+        q.question;
+
+    document.getElementById("quizProgress").innerText =
+        `Question ${currentQuestion + 1} / ${currentQuiz.questions.length}`;
+
+    document.getElementById("quizBarFill").style.width =
+        ((currentQuestion + 1) /
+            currentQuiz.questions.length * 100) + "%";
+
+    const choices =
+        document.getElementById("quizChoices");
+
+    choices.innerHTML = "";
+
+    q.choices.forEach((choice, index) => {
+
+        choices.innerHTML += `
+
+<button
+class="quiz-choice"
+onclick="selectAnswer(${index})">
+
+${choice}
+
+</button>
+
+`;
+
+    });
+
+}
+
+window.selectAnswer = function (index) {
+
+    studentAnswers[currentQuestion] = index;
+
+    document
+        .querySelectorAll(".quiz-choice")
+        .forEach((button, i) => {
+
+            button.classList.remove("selected");
+
+            if (i === index) {
+
+                button.classList.add("selected");
+
+            }
+
+        });
+
+}
+
+function answerQuiz(selectedIndex) {
+
+    const correct =
+        currentQuiz.questions[questionIndex].answer;
+
+    if (selectedIndex == correct) {
+        score++;
+    }
+
+    questionIndex++;
+
+    if (questionIndex >= currentQuiz.questions.length) {
+
+        finishQuiz();
+
+    } else {
+
+        showQuestion();
+
+    }
+
+}
+
+function finishQuiz() {
+
+    document.getElementById("quizQuestion").innerHTML =
+        "🎉 Finished!";
+
+    document.getElementById("quizChoices").innerHTML =
+        `<h2>Your score: ${score} / ${currentQuiz.questions.length}</h2>`;
+
+}
 
 
-    // DRAG
 
-    let moving = false;
+window.skipQuestion =
+    function () {
 
-    let moved = false;
+        nextQuestion();
 
-    let startX = 0;
-
-    let startY = 0;
+    };
 
 
-    center.addEventListener(
-      "pointerdown",
-      e => {
 
-        moving = true;
+window.nextQuestion = function () {
 
-        moved = false;
+    if (studentAnswers[currentQuestion] == null) {
 
-        startX = e.clientX;
+        alert("Please choose an answer.");
 
-        startY = e.clientY;
+        return;
 
-      });
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion >= currentQuiz.questions.length) {
+
+        finishQuiz();
+
+        return;
+
+    }
+
+    showQuestion();
+
+}
 
 
-    document.addEventListener(
-      "pointermove",
-      e => {
 
-        if (!moving) return;
+document.addEventListener(
+    "DOMContentLoaded",
+    loadQuizList
+);
 
-        const dx =
-          Math.abs(
-            e.clientX - startX
-          );
+window.loadQuizStudents =
+    async function () {
 
-        const dy =
-          Math.abs(
-            e.clientY - startY
-          );
+        const grade =
+            document
+                .getElementById(
+                    "quizGrade"
+                )
+                .value;
 
-        if (
-          dx > 8 ||
-          dy > 8
-        ) {
+        const box =
+            document
+                .getElementById(
+                    "quizStudentList"
+                );
 
-          moved = true;
+        box.innerHTML =
+            "Loading...";
 
-          menu.style.left =
-            (
-              e.clientX - 40
-            ) + "px";
 
-          menu.style.top =
-            (
-              e.clientY - 40
-            ) + "px";
+        const {
+            data
+        }
+            =
+            await window.supabase
 
-          menu.style.bottom =
-            "auto";
+                .from(
+                    "users"
+                )
+
+                .select("*")
+
+                .eq(
+                    "grade",
+                    grade
+                )
+
+                .eq(
+                    "role",
+                    "student");
+
+
+        box.innerHTML =
+            "";
+
+
+        data.forEach(
+            student => {
+
+                box.innerHTML += `
+
+<label
+class="student-check">
+
+<input
+type="checkbox"
+
+value="${student.username}"
+
+class="student-box">
+
+${student.username}
+
+</label>
+
+`;
+
+            });
+
+    };
+
+
+
+window.generateQuestions = function () {
+
+    const container =
+        document.getElementById("questionContainer");
+
+    container.innerHTML = "";
+
+    const count =
+        parseInt(
+            document.getElementById("quizQuestionCount").value
+        );
+
+    for (let i = 0; i < count; i++) {
+
+        addQuestionCard();
+
+    }
+
+};
+function addQuestionCard() {
+
+    const container =
+        document.getElementById("questionContainer");
+
+    const number =
+        container.children.length + 1;
+
+    const card =
+        document.createElement("div");
+
+    card.className = "question-card";
+
+    card.innerHTML = `
+
+<h3 class="question-title">
+📝 Question ${number}
+</h3>
+
+<div class="question-toolbar">
+
+<button class="duplicateQuestion">
+📋 Duplicate
+</button>
+
+<button class="deleteQuestion">
+🗑 Delete
+</button>
+
+</div>
+
+<label>Question Type</label>
+
+<select class="questionType">
+
+<option value="multiple">
+Multiple Choice
+</option>
+
+<option value="truefalse">
+True / False
+</option>
+
+<option value="short">
+Short Answer
+</option>
+
+</select>
+
+<label>Question</label>
+
+<input
+class="question"
+placeholder="Enter your question">
+
+<label>
+📷 Question Image
+</label>
+
+<input
+type="file"
+class="questionImage"
+accept="image/*">
+
+<div class="imagePreview"></div>
+
+<label>Choice A</label>
+
+<input
+class="choice1"
+placeholder="Choice A">
+
+<label>Choice B</label>
+
+<input
+class="choice2"
+placeholder="Choice B">
+
+<label>Choice C</label>
+
+<input
+class="choice3"
+placeholder="Choice C">
+
+<label>Choice D</label>
+
+<input
+class="choice4"
+placeholder="Choice D">
+
+<label>Correct Answer</label>
+
+<select class="correctAnswer">
+
+<option value="0">Choice A</option>
+
+<option value="1">Choice B</option>
+
+<option value="2">Choice C</option>
+
+<option value="3">Choice D</option>
+
+</select>
+
+`;
+
+    container.appendChild(card);
+
+    card.querySelector(".deleteQuestion")
+        .addEventListener("click", () => {
+
+            card.remove();
+
+            renumberQuestions();
+
+        });
+    card.querySelector(".questionType")
+        .addEventListener("change", function () {
+
+            updateQuestionType(card);
+
+        });
+
+    card.querySelector(".questionImage")
+        .addEventListener("change", function (e) {
+
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function () {
+
+                card.querySelector(".imagePreview").innerHTML =
+
+                    `<img src="${reader.result}">`;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+    card.querySelector(".duplicateQuestion")
+        .addEventListener("click", () => {
+
+            const copy = card.cloneNode(true);
+
+            container.appendChild(copy);
+
+            renumberQuestions();
+
+        });
+
+}
+function renumberQuestions() {
+
+    document
+        .querySelectorAll(".question-card")
+        .forEach((card, index) => {
+
+            card.querySelector("h3").innerText =
+                `Question ${index + 1}`;
+
+        });
+
+}
+function updateQuestionType(card) {
+
+    const type =
+        card.querySelector(".questionType").value;
+
+    const choice1 = card.querySelector(".choice1");
+    const choice2 = card.querySelector(".choice2");
+    const choice3 = card.querySelector(".choice3");
+    const choice4 = card.querySelector(".choice4");
+
+    const correct =
+        card.querySelector(".correctAnswer");
+
+    if (type === "multiple") {
+
+        choice1.style.display = "";
+        choice2.style.display = "";
+        choice3.style.display = "";
+        choice4.style.display = "";
+
+        correct.innerHTML = `
+
+<option value="0">Choice A</option>
+<option value="1">Choice B</option>
+<option value="2">Choice C</option>
+<option value="3">Choice D</option>
+
+`;
+
+    }
+
+    if (type === "truefalse") {
+
+        choice1.value = "True";
+        choice2.value = "False";
+
+        choice1.style.display = "";
+        choice2.style.display = "";
+
+        choice3.style.display = "none";
+        choice4.style.display = "none";
+
+        correct.innerHTML = `
+
+<option value="0">True</option>
+<option value="1">False</option>
+
+`;
+
+    }
+
+    if (type === "short") {
+
+        choice1.style.display = "none";
+        choice2.style.display = "none";
+        choice3.style.display = "none";
+        choice4.style.display = "none";
+
+        correct.innerHTML = `
+<option value="text">
+Student Text Answer
+</option>
+`;
+
+    }
+
+}
+window.saveQuiz = async function () {
+
+    const currentUser =
+        JSON.parse(
+            localStorage.getItem(
+                "currentUser"
+            ));
+
+    if (
+        currentUser.role
+        !== "headmaster"
+    ) {
+        alert("権限ありません");
+        return;
+    }
+
+    const title =
+        document.getElementById(
+            "quizTitle"
+        ).value;
+
+    const subject =
+        document.getElementById(
+            "quizSubject"
+        ).value;
+
+    const grade =
+        document.getElementById(
+            "quizGrade"
+        ).value;
+
+    const minutes =
+        parseInt(
+            document.getElementById(
+                "quizMinutes"
+            ).value
+        );
+
+    const count =
+        parseInt(
+            document.getElementById(
+                "quizQuestionCount"
+            ).value
+        );
+
+
+    // selected students
+
+    const students =
+        [
+            ...document
+                .querySelectorAll(
+                    ".student-box:checked"
+                )
+        ]
+            .map(
+                x => x.value
+            );
+
+
+    // questions
+
+    const questions =
+        [
+            ...document.querySelectorAll(".question-card")
+        ].map(card => ({
+
+            question:
+                card.querySelector(".question").value,
+
+            choices: [
+
+                card.querySelector(".choice1").value,
+
+                card.querySelector(".choice2").value,
+
+                card.querySelector(".choice3").value,
+
+                card.querySelector(".choice4").value
+
+            ],
+
+            answer:
+                parseInt(
+                    card.querySelector(".correctAnswer").value
+                )
+
+        }));
+
+
+    const {
+        error
+    }
+        =
+        await
+            window.supabase
+
+                .from(
+                    "quizzes"
+                )
+
+                .insert([{
+
+                    title,
+
+                    subject,
+
+                    grade,
+
+                    minutes,
+
+                    question_count:
+                        count,
+
+                    students,
+
+                    questions,
+
+                    created_by:
+                        currentUser.username
+
+                }]);
+
+
+    if (error) {
+
+        console.log(error);
+
+        alert(
+            "保存失敗"
+        );
+
+        return;
+
+    }
+
+    alert(
+        "🚀 Test deployed!"
+    );
+
+};
+
+window.finishQuiz = async function () {
+
+    let score = 0;
+
+    currentQuiz.questions.forEach((q, index) => {
+
+        if (studentAnswers[index] == q.correct) {
+
+            score++;
 
         }
 
-      });
+    });
 
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
 
-    document.addEventListener(
-      "pointerup",
-      () => {
+    const { error } =
+        await window.supabase
+            .from("quiz_results")
+            .insert({
 
-        moving = false;
+                quiz_id: currentQuiz.id,
 
-      });
+                student: currentUser.username,
 
-  });
+                score: score,
+
+                total: currentQuiz.questions.length,
+
+                answers: studentAnswers
+
+            });
+
+    if (error) {
+
+        console.log(error);
+
+        alert("Could not save result.");
+
+        return;
+
+    }
+
+    showResult(score);
+
+}
+
+function showResult(score) {
+
+    document.getElementById("quizChoices").innerHTML = "";
+
+    document.getElementById("quizQuestion").innerHTML = `
+
+🎉 Test Finished!
+
+<br><br>
+
+Score
+
+<br>
+
+${score} / ${currentQuiz.questions.length}
+
+`;
+
+    document.getElementById("nextQuestionBtn").style.display = "none";
+
+}
