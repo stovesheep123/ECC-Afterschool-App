@@ -62,7 +62,73 @@ window.startQuiz =
 
     };
 
+window.loadSubjectTests = async function (subject) {
 
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
+
+    document.getElementById("subjectTests").innerHTML =
+        "<h2>Loading...</h2>";
+
+    const { data, error } =
+        await window.supabase
+            .from("quizzes")
+            .select("*")
+            .eq("subject", subject);
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+
+    }
+
+    const quizzes =
+        data.filter(q =>
+            q.students.includes(currentUser.username)
+        );
+
+    let html =
+        `<h2>${subject}</h2>`;
+
+    if (quizzes.length === 0) {
+
+        html +=
+            "<p>No tests.</p>";
+
+    }
+
+    quizzes.forEach(q => {
+
+        html += `
+
+        <div class="quiz-card">
+
+            <h3>${q.title}</h3>
+
+            <p>Teacher : ${q.created_by}</p>
+
+            <p>${q.question_count} Questions</p>
+
+            <p>${q.minutes} Minutes</p>
+
+            <button onclick="startQuiz('${q.id}')">
+
+                Start
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById("subjectTests").innerHTML =
+        html;
+
+}
 
 function showQuestion() {
 
