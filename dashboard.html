@@ -472,116 +472,37 @@
 
             <section id="takeQuiz" class="section" style="display:none;">
 
-                <div class="quiz-phone">
+                <h1>🎯 Take Test</h1>
 
-                    <div class="quiz-header">
+                <div id="subjectMenu" class="subject-grid">
 
-                        <button class="quiz-exit" onclick="showSection('home')">
+                    <button onclick="loadSubjectTests('国語')">
+                        📘 国語
+                    </button>
 
-                            ✕
+                    <button onclick="loadSubjectTests('英語')">
+                        📗 英語
+                    </button>
 
-                        </button>
+                    <button onclick="loadSubjectTests('数学')">
+                        📙 数学
+                    </button>
 
-                        <div id="quizTimer">
+                    <button onclick="loadSubjectTests('理科')">
+                        📕 理科
+                    </button>
 
-                            30:00
+                    <button onclick="loadSubjectTests('社会')">
+                        📓 社会
+                    </button>
 
-                        </div>
-
-                    </div>
-
-
-                    <div class="quiz-progress-wrap">
-
-                        <div id="quizBarFill"></div>
-
-                    </div>
-
-
-                    <div class="quiz-counter">
-
-                        <span id="currentQ">
-                            1
-                        </span>
-
-                        /
-
-                        <span id="totalQ">
-                            5
-                        </span>
-
-                    </div>
-
-
-                    <div class="quiz-body">
-
-                        <h1 id="quizQuestion">
-
-                            Select Test
-
-                        </h1>
-
-                        <div id="quizChoices" class="quiz-answers">
-                        </div>
-
-
-                        <!-- RESULT SCREEN -->
-
-                        <div id="quizRanking" style="display:none;">
-
-                            <h2>
-                                🏆 Result
-                            </h2>
-
-                            <div id="quizScore">
-
-                                0 / 0
-
-                            </div>
-
-                            <p id="quizMessage">
-
-                                Good Job 🎉
-
-                            </p>
-
-                            <button onclick="loadQuizList()">
-
-                                Back
-
-                            </button>
-
-                        </div>
-
-
-                        <div id="quizList">
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <button id="nextBtn" onclick="nextQuestion()">
-
-                    Next →
-
-                </button>
-
-
-                <div id="quizFinished" style="display:none">
-
-                    <h1>
-                        ✅ Good Job
-                    </h1>
-
-                    <p>
-
-                        Test submitted
-
-                    </p>
+                    <button onclick="showQuizResultsPage()">
+                        🏆 結果
+                    </button>
 
                 </div>
+
+                <div id="subjectTests"></div>
 
             </section>
 
