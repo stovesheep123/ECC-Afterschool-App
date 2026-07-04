@@ -309,7 +309,22 @@ function addQuestionCard() {
 
     card.innerHTML = `
 
-<h3>Question ${number}</h3>
+<h3 class="question-title">
+📝 Question ${number}
+</h3>
+
+<div class="question-toolbar">
+
+<button class="duplicateQuestion">
+📋 Duplicate
+</button>
+
+<button class="deleteQuestion">
+🗑 Delete
+</button>
+
+</div>
+
 <label>Question Type</label>
 
 <select class="questionType">
@@ -328,21 +343,42 @@ Short Answer
 
 </select>
 
+<label>Question</label>
+
 <input
 class="question"
-placeholder="Question">
+placeholder="Enter your question">
+
+<label>
+📷 Question Image
+</label>
+
+<input
+type="file"
+class="questionImage"
+accept="image/*">
+
+<div class="imagePreview"></div>
+
+<label>Choice A</label>
 
 <input
 class="choice1"
 placeholder="Choice A">
 
+<label>Choice B</label>
+
 <input
 class="choice2"
 placeholder="Choice B">
 
+<label>Choice C</label>
+
 <input
 class="choice3"
 placeholder="Choice C">
+
+<label>Choice D</label>
 
 <input
 class="choice4"
@@ -361,12 +397,6 @@ placeholder="Choice D">
 <option value="3">Choice D</option>
 
 </select>
-
-<button class="deleteQuestion">
-
-🗑 Delete Question
-
-</button>
 
 `;
 
