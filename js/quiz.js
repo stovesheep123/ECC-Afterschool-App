@@ -66,66 +66,34 @@ window.startQuiz =
 
 function showQuestion() {
 
-    const q =
-        currentQuiz.questions[
-        questionIndex
-        ];
+    const q = currentQuiz.questions[questionIndex];
 
-    document.getElementById(
-        "quizQuestionNumber"
-    )
-        .innerText =
+    document.getElementById("currentQ").innerText =
         questionIndex + 1;
 
-    document.getElementById(
-        "quizWord"
-    )
-        .innerText =
-        q.word;
+    document.getElementById("totalQ").innerText =
+        currentQuiz.questions.length;
 
-    document.getElementById(
-        "quizHint"
-    )
-        .innerText =
-        q.hint || "";
+    document.getElementById("quizQuestion").innerText =
+        q.question;
 
-    document.getElementById(
-        "quizBarFill"
-    )
-        .style.width =
-        (
-            (questionIndex + 1)
-            /
-            currentQuiz.questions.length
-            *
-            100
-        )
-        + "%";
+    document.getElementById("quizBarFill").style.width =
+        ((questionIndex + 1) / currentQuiz.questions.length * 100) + "%";
 
     const answers =
-        document.getElementById(
-            "quizChoices"
-        );
+        document.getElementById("quizChoices");
 
     answers.innerHTML = "";
 
-    q.options.forEach(a => {
+    q.choices.forEach((choice, index) => {
 
         answers.innerHTML += `
 
 <button
-class=
-"quiz-answer"
+class="quiz-choice"
+onclick="answerQuiz(${index})">
 
-onclick=
-"
-answerQuiz(
-'${a}',
-'${q.answer}'
-)
-">
-
-${a}
+${choice}
 
 </button>
 
@@ -137,29 +105,38 @@ ${a}
 
 
 
-window.answerQuiz =
-    function (choice, correct) {
+function answerQuiz(selectedIndex) {
 
-        if (
-            choice ===
-            correct
-        ) {
+    const correct =
+        currentQuiz.questions[questionIndex].answer;
 
-            alert(
-                "⭕ Correct"
-            );
+    if (selectedIndex == correct) {
+        score++;
+    }
 
-        } else {
+    questionIndex++;
 
-            alert(
-                "❌ Wrong"
-            );
+    if (questionIndex >= currentQuiz.questions.length) {
 
-        }
+        finishQuiz();
 
-        nextQuestion();
+    } else {
 
-    };
+        showQuestion();
+
+    }
+
+}
+
+function finishQuiz() {
+
+    document.getElementById("quizQuestion").innerHTML =
+        "🎉 Finished!";
+
+    document.getElementById("quizChoices").innerHTML =
+        `<h2>Your score: ${score} / ${currentQuiz.questions.length}</h2>`;
+
+}
 
 
 
