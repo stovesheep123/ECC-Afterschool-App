@@ -2,6 +2,8 @@ let currentQuiz = null;
 
 let questionIndex = 0;
 
+let studentAnswers = [];
+
 window.loadQuizList =
     async function () {
 
@@ -130,34 +132,62 @@ window.loadSubjectTests = async function (subject) {
 
 }
 
+window.startQuiz = async function (id) {
+
+    const { data, error } =
+        await window.supabase
+            .from("quizzes")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+
+    }
+
+    currentQuiz = data;
+
+    currentQuestion = 0;
+
+    studentAnswers = [];
+
+    showSection("quizPlayer");
+
+    showQuestion();
+
+}
+
 function showQuestion() {
 
-    const q = currentQuiz.questions[questionIndex];
-
-    document.getElementById("currentQ").innerText =
-        questionIndex + 1;
-
-    document.getElementById("totalQ").innerText =
-        currentQuiz.questions.length;
+    const q =
+        currentQuiz.questions[currentQuestion];
 
     document.getElementById("quizQuestion").innerText =
         q.question;
 
-    document.getElementById("quizBarFill").style.width =
-        ((questionIndex + 1) / currentQuiz.questions.length * 100) + "%";
+    document.getElementById("quizProgress").innerText =
+        `Question ${currentQuestion + 1} / ${currentQuiz.questions.length}`;
 
-    const answers =
+    document.getElementById("quizBarFill").style.width =
+        ((currentQuestion + 1) /
+            currentQuiz.questions.length * 100) + "%";
+
+    const choices =
         document.getElementById("quizChoices");
 
-    answers.innerHTML = "";
+    choices.innerHTML = "";
 
     q.choices.forEach((choice, index) => {
 
-        answers.innerHTML += `
+        choices.innerHTML += `
 
 <button
 class="quiz-choice"
-onclick="answerQuiz(${index})">
+onclick="selectAnswer(${index})">
 
 ${choice}
 
@@ -169,7 +199,25 @@ ${choice}
 
 }
 
+window.selectAnswer = function (index) {
 
+    studentAnswers[currentQuestion] = index;
+
+    document
+        .querySelectorAll(".quiz-choice")
+        .forEach((button, i) => {
+
+            button.classList.remove("selected");
+
+            if (i === index) {
+
+                button.classList.add("selected");
+
+            }
+
+        });
+
+}
 
 function answerQuiz(selectedIndex) {
 
@@ -215,20 +263,21 @@ window.skipQuestion =
 
 
 
-function nextQuestion() {
+window.nextQuestion = function () {
 
-    questionIndex++;
+    if (studentAnswers[currentQuestion] == null) {
 
-    if (
-        questionIndex >=
-        currentQuiz.questions.length
-    ) {
+        alert("Please choose an answer.");
 
-        alert(
-            "Finished!"
-        );
+        return;
 
-        loadQuizList();
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion >= currentQuiz.questions.length) {
+
+        finishQuiz();
 
         return;
 
