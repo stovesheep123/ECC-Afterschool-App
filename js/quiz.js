@@ -310,6 +310,23 @@ function addQuestionCard() {
     card.innerHTML = `
 
 <h3>Question ${number}</h3>
+<label>Question Type</label>
+
+<select class="questionType">
+
+<option value="multiple">
+Multiple Choice
+</option>
+
+<option value="truefalse">
+True / False
+</option>
+
+<option value="short">
+Short Answer
+</option>
+
+</select>
 
 <input
 class="question"
@@ -363,6 +380,12 @@ placeholder="Choice D">
             renumberQuestions();
 
         });
+    card.querySelector(".questionType")
+        .addEventListener("change", function () {
+
+            updateQuestionType(card);
+
+        });
 
 }
 function renumberQuestions() {
@@ -375,6 +398,73 @@ function renumberQuestions() {
                 `Question ${index + 1}`;
 
         });
+
+}
+function updateQuestionType(card) {
+
+    const type =
+        card.querySelector(".questionType").value;
+
+    const choice1 = card.querySelector(".choice1");
+    const choice2 = card.querySelector(".choice2");
+    const choice3 = card.querySelector(".choice3");
+    const choice4 = card.querySelector(".choice4");
+
+    const correct =
+        card.querySelector(".correctAnswer");
+
+    if (type === "multiple") {
+
+        choice1.style.display = "";
+        choice2.style.display = "";
+        choice3.style.display = "";
+        choice4.style.display = "";
+
+        correct.innerHTML = `
+
+<option value="0">Choice A</option>
+<option value="1">Choice B</option>
+<option value="2">Choice C</option>
+<option value="3">Choice D</option>
+
+`;
+
+    }
+
+    if (type === "truefalse") {
+
+        choice1.value = "True";
+        choice2.value = "False";
+
+        choice1.style.display = "";
+        choice2.style.display = "";
+
+        choice3.style.display = "none";
+        choice4.style.display = "none";
+
+        correct.innerHTML = `
+
+<option value="0">True</option>
+<option value="1">False</option>
+
+`;
+
+    }
+
+    if (type === "short") {
+
+        choice1.style.display = "none";
+        choice2.style.display = "none";
+        choice3.style.display = "none";
+        choice4.style.display = "none";
+
+        correct.innerHTML = `
+<option value="text">
+Student Text Answer
+</option>
+`;
+
+    }
 
 }
 window.saveQuiz = async function () {
