@@ -502,10 +502,48 @@
 
                 </div>
 
+
+
                 <div id="subjectTests"></div>
 
             </section>
+            <section id="quizPlayer" class="section" style="display:none;">
 
+                <div class="quiz-phone">
+
+                    <div class="quiz-header">
+
+                        <button onclick="showSection('takeQuiz')">
+                            ←
+                        </button>
+
+                        <div id="quizProgress">
+                            Question 1 / 1
+                        </div>
+
+                        <div id="quizTimer">
+                            00:00
+                        </div>
+
+                    </div>
+
+                    <div class="quiz-progress-wrap">
+                        <div id="quizBarFill"></div>
+                    </div>
+
+                    <h2 id="quizQuestion"></h2>
+
+                    <div id="quizChoices"></div>
+
+                    <button id="nextQuestionBtn" onclick="nextQuestion()">
+
+                        Next →
+
+                    </button>
+
+                </div>
+
+            </section>
             <section id="quizResults">
 
                 <h2>
