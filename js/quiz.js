@@ -278,62 +278,56 @@ ${student.username}
 window.generateQuestions = function () {
 
     const container =
-        document.getElementById(
-            "questionContainer"
-        );
+        document.getElementById("questionContainer");
 
     container.innerHTML = "";
 
     const count =
         parseInt(
-            document.getElementById(
-                "quizQuestionCount"
-            ).value
+            document.getElementById("quizQuestionCount").value
         );
 
-    for (
-        let i = 1;
-        i <= count;
-        i++
-    ) {
+    for (let i = 1; i <= count; i++) {
 
         container.innerHTML += `
 
 <div class="question-card">
 
-<h3>
-問題 ${i}
-</h3>
+<h3>問題 ${i}</h3>
 
 <input
 class="question"
-
-placeholder="問題">
-
-<input
-class="answer"
-
-placeholder="正解">
+placeholder="Question">
 
 <input
 class="choice1"
-
-placeholder="選択肢1">
+placeholder="Choice 1">
 
 <input
 class="choice2"
-
-placeholder="選択肢2">
+placeholder="Choice 2">
 
 <input
 class="choice3"
-
-placeholder="選択肢3">
+placeholder="Choice 3">
 
 <input
 class="choice4"
+placeholder="Choice 4">
 
-placeholder="選択肢4">
+<label>Correct Answer</label>
+
+<select class="correctAnswer">
+
+<option value="0">Choice 1</option>
+
+<option value="1">Choice 2</option>
+
+<option value="2">Choice 3</option>
+
+<option value="3">Choice 4</option>
+
+</select>
 
 </div>
 
