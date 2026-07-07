@@ -108,6 +108,7 @@ window.startQuiz = async function (id) {
     if (error) {
 
         console.log(error);
+
         return;
 
     }
@@ -118,44 +119,45 @@ window.startQuiz = async function (id) {
 
     studentAnswers = [];
 
-    showSection("takeQuiz");
+    // Hide subject list while taking test
+    document.getElementById("subjectTests").style.display = "none";
+
+    // Show quiz player
+    document.getElementById("quizPlayer").style.display = "block";
+
+    // Show Next button
+    document.getElementById("nextQuestionBtn").style.display = "block";
 
     showQuestion();
 
-}
+};
 
 // ===============================
 // Show Quiz Function
 // ===============================
 function showQuestion() {
 
-    const q =
-        currentQuiz.questions[currentQuestion];
+    const q = currentQuiz.questions[currentQuestion];
+
+    document.getElementById("quizProgress").innerText =
+
+        `Question ${currentQuestion + 1} / ${currentQuiz.questions.length}`;
 
     document.getElementById("quizQuestion").innerText =
+
         q.question;
 
-    document.getElementById("currentQ").innerText =
-        currentQuestion + 1;
-
-    document.getElementById("totalQ").innerText =
-        currentQuiz.questions.length;
-
-    document.getElementById("quizBarFill").style.width =
-        ((currentQuestion + 1) /
-            currentQuiz.questions.length * 100) + "%";
-
-    const box =
+    const choices =
         document.getElementById("quizChoices");
 
-    box.innerHTML = "";
+    choices.innerHTML = "";
 
     q.choices.forEach((choice, index) => {
 
-        box.innerHTML += `
+        choices.innerHTML += `
 
 <button
-class="quiz-answer"
+class="quiz-choice"
 onclick="selectAnswer(${index})">
 
 ${choice}
@@ -217,7 +219,6 @@ window.nextQuestion = function () {
     showQuestion();
 
 }
-
 // ===============================
 // Finsh Quiz Function
 // ===============================
@@ -225,9 +226,9 @@ window.finishQuiz = async function () {
 
     let score = 0;
 
-    currentQuiz.questions.forEach((q, index) => {
+    currentQuiz.questions.forEach((q, i) => {
 
-        if (studentAnswers[index] == q.answer) {
+        if (studentAnswers[i] == q.answer) {
 
             score++;
 
@@ -238,42 +239,44 @@ window.finishQuiz = async function () {
     const currentUser =
         JSON.parse(localStorage.getItem("currentUser"));
 
-    const { data, error } =
+    const { error } =
         await window.supabase
+
             .from("quiz_results")
-            .insert({
+
+            .insert([{
 
                 quiz_id: currentQuiz.id,
 
                 student: currentUser.username,
 
-                score: score,
+                score,
 
                 total: currentQuiz.questions.length,
 
                 answers: studentAnswers
 
-            });
-    console.log("DATA", data);
-    console.log("ERROR", error);
+            }]);
 
     if (error) {
 
         console.log(error);
 
-        alert("Could not save result.");
+        alert(error.message);
 
         return;
 
     }
 
-    document.getElementById("quizQuestion").innerHTML =
+    alert(`🎉 Score ${score}/${currentQuiz.questions.length}`);
 
-        `🎉 Test Finished<br><br>
-        Score: ${score} / ${currentQuiz.questions.length}`;
+    // Hide player
+    document.getElementById("quizPlayer").style.display = "none";
 
-    document.getElementById("quizChoices").innerHTML = "";
+    // Show subject list again
+    document.getElementById("subjectTests").style.display = "block";
 
-    document.getElementById("nextQuestionBtn").style.display = "none";
+    // Reload the subject so completed quizzes become "Submitted"
+    loadSubjectTests(currentQuiz.subject);
 
 }
