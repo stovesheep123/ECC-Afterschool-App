@@ -490,7 +490,7 @@
 
                         <button onclick="loadSubjectTests('社会')">🌏 社会</button>
 
-                        <button onclick="showSection('studentResults')">
+                        <button onclick="showSection('studentResults');loadStudentResults();">
 
                             🏆 Results
 
@@ -560,6 +560,17 @@
                         Next →
 
                     </button>
+
+                </div>
+
+            </section>
+            <section id="studentResults" class="section" style="display:none;">
+
+                <h1>🏆 My Test Results</h1>
+
+                <div id="studentResultList">
+
+                    Loading...
 
                 </div>
 
