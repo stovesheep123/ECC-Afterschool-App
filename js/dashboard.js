@@ -3,7 +3,29 @@ let currentQuiz = null;
 let currentQuestion = 0;
 
 let studentAnswers = [];
+window.showSection = function (sectionId, element = null) {
 
+    // Hide all sections
+    document.querySelectorAll(".section").forEach(section => {
+        section.style.display = "none";
+    });
+
+    // Show selected section
+    const selected = document.getElementById(sectionId);
+
+    if (selected) {
+        selected.style.display = "block";
+    }
+
+    // Highlight active menu item
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    if (element) {
+        element.classList.add("active");
+    }
+};
 window.loadQuizList =
     async function () {
 
@@ -59,7 +81,7 @@ window.startQuiz = async function (id) {
 
     currentQuiz = data;
 
-    let currentQuestion =0;
+    let currentQuestion = 0;
 
     studentAnswers = [];
 
