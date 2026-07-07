@@ -31,7 +31,7 @@ window.loadSubjectTests = async function (subject) {
 
     console.log("Logged in user:", currentUser.username);
     console.log("Selected subject:", subject);
-    console.log("All quizzes:", data);
+    console.log("All quizzes:", quizzes);
     if (error) {
 
         console.log(error);
@@ -46,6 +46,14 @@ window.loadSubjectTests = async function (subject) {
     for (const quiz of quizzes) {
 
         // Skip quizzes not assigned to this student
+        console.log("Quiz:", quiz.title);
+        console.log("Students:", quiz.students);
+        console.log("Current user:", currentUser.username);
+        console.log(
+            "Match:",
+            quiz.students.includes(currentUser.username)
+        );
+
         if (!quiz.students.includes(currentUser.username)) {
             continue;
         }
@@ -181,7 +189,7 @@ window.selectAnswer = function (index) {
     studentAnswers[currentQuestion] = index;
 
     document
-        .querySelectorAll(".quiz-answer")
+        .querySelectorAll(".quiz-choice")
         .forEach((button, i) => {
 
             button.classList.remove("selected");
