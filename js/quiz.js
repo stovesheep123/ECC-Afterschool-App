@@ -280,3 +280,67 @@ window.finishQuiz = async function () {
     loadSubjectTests(currentQuiz.subject);
 
 }
+window.loadStudentResults = async function () {
+
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
+
+    const box =
+        document.getElementById("studentResultList");
+
+    box.innerHTML = "Loading...";
+
+    const { data, error } =
+        await window.supabase
+
+            .from("quiz_results")
+
+            .select("*")
+
+            .eq("student", currentUser.username)
+
+            .order("submitted_at", { ascending: false });
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+
+    }
+
+    if (data.length === 0) {
+
+        box.innerHTML = "<h2>No test results yet.</h2>";
+
+        return;
+
+    }
+
+    let html = "";
+
+    data.forEach(result => {
+
+        const percent = Math.round(
+            result.score / result.total * 100
+        );
+
+        html += `
+
+<div class="result-card">
+
+    <h2>${result.score} / ${result.total}</h2>
+
+    <p>${percent}%</p>
+
+    <p>${new Date(result.submitted_at).toLocaleString()}</p>
+
+</div>
+
+`;
+
+    });
+
+    box.innerHTML = html;
+
+}
