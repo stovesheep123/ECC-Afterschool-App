@@ -13,17 +13,17 @@ let currentSubject = "";
 // ===============================
 window.loadSubjectTests = async function (subject) {
 
-    currentSubject = subject;
-
     const currentUser =
         JSON.parse(localStorage.getItem("currentUser"));
 
-    const container =
-        document.getElementById("subjectTests");
+    // Hide quiz player
+    document.getElementById("quizPlayer").style.display = "none";
 
-    container.innerHTML = "<h2>Loading...</h2>";
+    document.getElementById("subjectTests").innerHTML =
+        "<h2>Loading...</h2>";
 
-    const { data, error } =
+    // Get quizzes for this subject
+    const { data: quizzes, error } =
         await window.supabase
             .from("quizzes")
             .select("*")
@@ -37,46 +37,59 @@ window.loadSubjectTests = async function (subject) {
 
     }
 
-    const quizzes =
-        data.filter(q =>
-
-            q.students.includes(currentUser.username)
-
-        );
-
     let html = `<h2>${subject}</h2>`;
 
-    if (quizzes.length === 0) {
+    // Loop through quizzes
+    for (const quiz of quizzes) {
 
-        html += "<p>No Tests</p>";
+        // Skip quizzes not assigned to this student
+        if (!quiz.students.includes(currentUser.username)) {
+            continue;
+        }
 
-    }
-
-    quizzes.forEach(q => {
+        // Has the student already submitted?
+        const { data: submitted } =
+            await window.supabase
+                .from("quiz_results")
+                .select("id")
+                .eq("quiz_id", quiz.id)
+                .eq("student", currentUser.username)
+                .maybeSingle();
 
         html += `
 
-        <div class="quiz-card">
+<div class="quiz-card">
 
-            <h3>${q.title}</h3>
+    <h3>${quiz.title}</h3>
 
-            <p>${q.question_count} Questions</p>
+    <p>👨‍🏫 ${quiz.created_by}</p>
 
-            <p>${q.minutes} Minutes</p>
+    <p>${quiz.question_count} Questions</p>
 
-            <button onclick="startQuiz('${q.id}')">
+    <p>${quiz.minutes} Minutes</p>
 
-                Start
+    ${submitted
+                ?
+                `<button disabled>✅ Submitted</button>`
+                :
+                `<button onclick="startQuiz('${quiz.id}')">
+            🚀 Start Test
+        </button>`
+            }
 
-            </button>
+</div>
 
-        </div>
+`;
 
-        `;
+    }
 
-    });
+    if (html === `<h2>${subject}</h2>`) {
 
-    container.innerHTML = html;
+        html += "<p>No tests available.</p>";
+
+    }
+
+    document.getElementById("subjectTests").innerHTML = html;
 
 }
 
