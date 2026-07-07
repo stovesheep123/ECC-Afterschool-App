@@ -1,6 +1,6 @@
 let currentQuiz = null;
 
-let questionIndex = 0;
+let currentQuestion = 0;
 
 let studentAnswers = [];
 
@@ -59,7 +59,7 @@ window.startQuiz = async function (id) {
 
     currentQuiz = data;
 
-    questionIndex = 0;
+    let currentQuestion =0;
 
     studentAnswers = [];
 
@@ -140,34 +140,6 @@ window.loadSubjectTests = async function (subject) {
 
 }
 
-window.startQuiz = async function (id) {
-
-    const { data, error } =
-        await window.supabase
-            .from("quizzes")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-    if (error) {
-
-        console.log(error);
-
-        return;
-
-    }
-
-    currentQuiz = data;
-
-    currentQuestion = 0;
-
-    studentAnswers = [];
-
-    showSection("quizPlayer");
-
-    showQuestion();
-
-}
 
 function showQuestion() {
 
@@ -227,38 +199,9 @@ window.selectAnswer = function (index) {
 
 }
 
-function answerQuiz(selectedIndex) {
 
-    const correct =
-        currentQuiz.questions[questionIndex].answer;
 
-    if (selectedIndex == correct) {
-        score++;
-    }
 
-    questionIndex++;
-
-    if (questionIndex >= currentQuiz.questions.length) {
-
-        finishQuiz();
-
-    } else {
-
-        showQuestion();
-
-    }
-
-}
-
-function finishQuiz() {
-
-    document.getElementById("quizQuestion").innerHTML =
-        "🎉 Finished!";
-
-    document.getElementById("quizChoices").innerHTML =
-        `<h2>Your score: ${score} / ${currentQuiz.questions.length}</h2>`;
-
-}
 
 
 
@@ -777,7 +720,7 @@ window.finishQuiz = async function () {
 
     currentQuiz.questions.forEach((q, index) => {
 
-        if (studentAnswers[index] == q.correct) {
+        if (studentAnswers[index] == q.answer) {
 
             score++;
 
