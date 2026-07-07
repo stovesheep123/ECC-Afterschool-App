@@ -476,29 +476,49 @@
 
                 <div id="subjectMenu" class="subject-grid">
 
-                    <button onclick="loadSubjectTests('国語')">
-                        📘 国語
-                    </button>
+                    <h1>🎯 Take Test</h1>
 
-                    <button onclick="loadSubjectTests('英語')">
-                        📗 英語
-                    </button>
+                    <div id="subjectMenu">
 
-                    <button onclick="loadSubjectTests('数学')">
-                        📙 数学
-                    </button>
+                        <button onclick="loadSubjectTests('数学')">🔢 数学</button>
 
-                    <button onclick="loadSubjectTests('理科')">
-                        📕 理科
-                    </button>
+                        <button onclick="loadSubjectTests('英語')">🇬🇧 英語</button>
 
-                    <button onclick="loadSubjectTests('社会')">
-                        📓 社会
-                    </button>
+                        <button onclick="loadSubjectTests('国語')">📘 国語</button>
 
-                    <button onclick="showQuizResultsPage()">
-                        🏆 結果
-                    </button>
+                        <button onclick="loadSubjectTests('理科')">🔬 理科</button>
+
+                        <button onclick="loadSubjectTests('社会')">🌏 社会</button>
+
+                        <button onclick="showSection('studentResults')">
+
+                            🏆 Results
+
+                        </button>
+
+                    </div>
+
+                    <hr>
+
+                    <div id="subjectTests"></div>
+
+                    <hr>
+
+                    <div id="quizPlayer" style="display:none;">
+
+                        <h2 id="quizProgress"></h2>
+
+                        <h1 id="quizQuestion"></h1>
+
+                        <div id="quizChoices"></div>
+
+                        <button id="nextQuestionBtn" onclick="nextQuestion()">
+
+                            Next →
+
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -586,7 +606,6 @@
     <script defer src="js/group-report.js"></script>
     <script defer src="js/notification.js"></script>
     <script defer src="js/quiz.js"></script>
-    <script defer src="js/quiz-player.js"></script>
     <script defer src="js/quiz-results.js"></script>
 
     <script>
