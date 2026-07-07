@@ -114,7 +114,7 @@ window.startQuiz = async function (id) {
 // ===============================
 // Show Quiz Function
 // ===============================
-function showQuestion(){
+function showQuestion() {
 
     const q =
         currentQuiz.questions[currentQuestion];
@@ -130,14 +130,14 @@ function showQuestion(){
 
     document.getElementById("quizBarFill").style.width =
         ((currentQuestion + 1) /
-        currentQuiz.questions.length * 100) + "%";
+            currentQuiz.questions.length * 100) + "%";
 
     const box =
         document.getElementById("quizChoices");
 
     box.innerHTML = "";
 
-    q.choices.forEach((choice,index)=>{
+    q.choices.forEach((choice, index) => {
 
         box.innerHTML += `
 
@@ -158,22 +158,107 @@ ${choice}
 // ===============================
 // Select Answer Function
 // ===============================
-window.selectAnswer = function(index){
+window.selectAnswer = function (index) {
 
     studentAnswers[currentQuestion] = index;
 
     document
         .querySelectorAll(".quiz-answer")
-        .forEach((button,i)=>{
+        .forEach((button, i) => {
 
             button.classList.remove("selected");
 
-            if(i===index){
+            if (i === index) {
 
                 button.classList.add("selected");
 
             }
 
         });
+
+}
+
+// ===============================
+// Next Question Function
+// ===============================
+window.nextQuestion = function () {
+
+    if (studentAnswers[currentQuestion] == null) {
+
+        alert("Please select an answer.");
+
+        return;
+
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion >= currentQuiz.questions.length) {
+
+        finishQuiz();
+
+        return;
+
+    }
+
+    showQuestion();
+
+}
+
+// ===============================
+// Finsh Quiz Function
+// ===============================
+window.finishQuiz = async function () {
+
+    let score = 0;
+
+    currentQuiz.questions.forEach((q, index) => {
+
+        if (studentAnswers[index] == q.answer) {
+
+            score++;
+
+        }
+
+    });
+
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
+
+    const { error } =
+        await window.supabase
+            .from("quiz_results")
+            .insert({
+
+                quiz_id: currentQuiz.id,
+
+                student: currentUser.username,
+
+                score: score,
+
+                total: currentQuiz.questions.length,
+
+                answers: studentAnswers
+
+            });
+
+    if (error) {
+
+        console.log(error);
+
+        alert("Could not save result.");
+
+        return;
+
+    }
+
+    document.getElementById("quizQuestion").innerHTML =
+
+        `🎉 Test Finished<br><br>
+        Score: ${score} / ${currentQuiz.questions.length}`;
+
+    document.getElementById("quizChoices").innerHTML = "";
+
+    document.getElementById("nextQuestionBtn").style.display = "none";
 
 }
