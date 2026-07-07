@@ -225,7 +225,7 @@ window.finishQuiz = async function () {
     const currentUser =
         JSON.parse(localStorage.getItem("currentUser"));
 
-    const { error } =
+    const { data, error } =
         await window.supabase
             .from("quiz_results")
             .insert({
@@ -241,6 +241,8 @@ window.finishQuiz = async function () {
                 answers: studentAnswers
 
             });
+    console.log("DATA", data);
+    console.log("ERROR", error);
 
     if (error) {
 
