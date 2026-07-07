@@ -1735,3 +1735,35 @@ FLOATING RADIAL MENU
     color: white;
 
 }
+
+.result-card {
+
+    background: white;
+
+    padding: 20px;
+
+    margin: 20px 0;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+
+    text-align: center;
+
+}
+
+.result-card h2 {
+
+    font-size: 40px;
+
+    margin: 0;
+
+}
+
+.result-card p {
+
+    margin: 8px;
+
+    font-size: 18px;
+
+}
