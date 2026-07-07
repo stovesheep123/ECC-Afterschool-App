@@ -29,6 +29,9 @@ window.loadSubjectTests = async function (subject) {
             .select("*")
             .eq("subject", subject);
 
+    console.log("Logged in user:", currentUser.username);
+    console.log("Selected subject:", subject);
+    console.log("All quizzes:", data);
     if (error) {
 
         console.log(error);
