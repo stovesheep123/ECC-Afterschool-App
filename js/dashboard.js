@@ -1,9 +1,13 @@
+// ==========================================
 // GLOBAL STATES
+// ==========================================
 let currentQuiz = null;
 let currentQuestion = 0;
 let studentAnswers = [];
 
+// ==========================================
 // SECTION MANAGER
+// ==========================================
 window.showSection = function (sectionId, element = null) {
     // Hide all sections
     document.querySelectorAll(".section").forEach(section => {
@@ -26,7 +30,9 @@ window.showSection = function (sectionId, element = null) {
     }
 };
 
+// ==========================================
 // ROLE PERMISSIONS
+// ==========================================
 function setupRolePermissions() {
     const user = JSON.parse(localStorage.getItem("currentUser"));
     if (!user) return;
@@ -36,41 +42,50 @@ function setupRolePermissions() {
         item.style.display = "none";
     });
 
-    // Visible for everyone
-    document.querySelector('[onclick*="home"]').style.display = "";
-    document.querySelector('[onclick*="notifications"]').style.display = "";
-    document.querySelector('[onclick*="chat"]').style.display = "";
-    document.querySelector('[onclick*="logout"]').style.display = "";
+    // Elements visible to everyone (with safety guards)
+    const commonSelectors = ['home', 'notifications', 'chat', 'logout'];
+    commonSelectors.forEach(action => {
+        const el = document.querySelector(`[onclick*="${action}"]`);
+        if (el) el.style.display = "";
+    });
 
-    // Headmaster
+    // Headmaster Permissions
     if (user.role === "headmaster") {
-        document.querySelector('[onclick*="notice"]').style.display = "";
-        document.querySelector('[onclick*="report"]').style.display = "";
-        document.querySelector('[onclick*="groupReport"]').style.display = "";
-        document.querySelector('[onclick*="savedReports"]').style.display = "";
-        document.querySelector('[onclick*="createQuiz"]').style.display = "";
-        document.querySelector('[onclick*="quizResultsSection"]').style.display = "";
+        const hmSelectors = ['notice', 'report', 'groupReport', 'savedReports', 'createQuiz', 'quizResultsSection'];
+        hmSelectors.forEach(act => {
+            const el = document.querySelector(`[onclick*="${act}"]`);
+            if (el) el.style.display = "";
+        });
     }
 
-    // Teacher
+    // Teacher Permissions
     if (user.role === "teacher") {
-        document.querySelector('[onclick*="report"]').style.display = "";
-        document.querySelector('[onclick*="savedReports"]').style.display = "";
+        const tSelectors = ['report', 'savedReports'];
+        tSelectors.forEach(act => {
+            const el = document.querySelector(`[onclick*="${act}"]`);
+            if (el) el.style.display = "";
+        });
     }
 
-    // Student
+    // Student Permissions
     if (user.role === "student") {
-        document.querySelector('[onclick*="studentReports"]').style.display = "";
-        document.querySelector('[onclick*="takeQuiz"]').style.display = "";
+        const sSelectors = ['studentReports', 'takeQuiz'];
+        sSelectors.forEach(act => {
+            const el = document.querySelector(`[onclick*="${act}"]`);
+            if (el) el.style.display = "";
+        });
     }
 
-    // Parent
+    // Parent Permissions
     if (user.role === "parent") {
-        document.querySelector('[onclick*="studentReports"]').style.display = "";
+        const pEl = document.querySelector('[onclick*="studentReports"]');
+        if (pEl) pEl.style.display = "";
     }
 }
 
+// ==========================================
 // LOAD ALL TESTS (GENERAL LIST)
+// ==========================================
 window.loadQuizList = async function () {
     const box = document.getElementById("quizList");
     if (!box) return;
@@ -80,27 +95,29 @@ window.loadQuizList = async function () {
         .select("*");
 
     if (error) {
-        console.error(error);
+        console.error("Error loading quiz list:", error);
         return;
     }
 
     box.innerHTML = "";
     data.forEach(q => {
         box.innerHTML += `
-            <button onclick="startQuiz('${q.id}')">
+            <button onclick="startQuiz('${q.id}')" style="margin: 5px; padding: 10px; cursor: pointer;">
                 📝 ${q.title}
             </button>
         `;
     });
 };
 
+// ==========================================
 // LOAD SUBJECT SPECIFIC TESTS
+// ==========================================
 window.loadSubjectTests = async function (subject) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const container = document.getElementById("subjectTests");
 
     if (container) {
-        container.innerHTML = "<h2>Loading...</h2>";
+        container.innerHTML = "<h2>Loading tests...</h2>";
     }
 
     const { data, error } = await window.supabase
@@ -109,25 +126,25 @@ window.loadSubjectTests = async function (subject) {
         .eq("subject", subject);
 
     if (error) {
-        console.error(error);
+        console.error("Error loading subject tests:", error);
         return;
     }
 
-    const quizzes = data.filter(q => q.students.includes(currentUser.username));
+    const quizzes = data.filter(q => q.students && q.students.includes(currentUser.username));
     let html = `<h2>${subject}</h2>`;
 
     if (quizzes.length === 0) {
-        html += "<p>No tests.</p>";
+        html += "<p>No tests available for your account.</p>";
     }
 
     quizzes.forEach(q => {
         html += `
-            <div class="quiz-card">
+            <div class="quiz-card" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ddd;">
                 <h3>${q.title}</h3>
                 <p>Teacher : ${q.created_by}</p>
-                <p>${q.question_count} Questions</p>
+                <p>${q.question_count || q.questions.length} Questions</p>
                 <p>${q.minutes} Minutes</p>
-                <button onclick="startQuiz('${q.id}')">Start</button>
+                <button onclick="startQuiz('${q.id}')" style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Start</button>
             </div>
         `;
     });
@@ -137,7 +154,9 @@ window.loadSubjectTests = async function (subject) {
     }
 };
 
+// ==========================================
 // QUIZ PLAYER ENGINE
+// ==========================================
 window.startQuiz = async function (id) {
     const { data, error } = await window.supabase
         .from("quizzes")
@@ -145,35 +164,42 @@ window.startQuiz = async function (id) {
         .eq("id", id)
         .single();
 
-    if (error) {
-        console.error(error);
+    if (error || !data) {
+        console.error("Error retrieving quiz data:", error);
+        alert("Failed to start the quiz initialization routine.");
         return;
     }
 
     currentQuiz = data;
-    currentQuestion = 0; // Fixed: Resets global scope state correctly
-    studentAnswers = [];
+    currentQuestion = 0; 
+    studentAnswers = new Array(currentQuiz.questions.length).fill(null);
 
-    // Reset UI view parameters
-    document.getElementById("nextQuestionBtn").style.display = "block";
+    const nextBtn = document.getElementById("nextQuestionBtn");
+    if (nextBtn) nextBtn.style.display = "block";
+    
     showSection("quizPlayer");
     showQuestion();
 };
 
 function showQuestion() {
+    if (!currentQuiz || !currentQuiz.questions[currentQuestion]) return;
+
     const q = currentQuiz.questions[currentQuestion];
 
     document.getElementById("quizQuestion").innerText = q.question;
     document.getElementById("quizProgress").innerText = `Question ${currentQuestion + 1} / ${currentQuiz.questions.length}`;
     document.getElementById("quizBarFill").style.width = ((currentQuestion + 1) / currentQuiz.questions.length * 100) + "%";
 
-    const choices = document.getElementById("quizChoices");
-    choices.innerHTML = "";
+    const choicesContainer = document.getElementById("quizChoices");
+    choicesContainer.innerHTML = "";
 
     q.choices.forEach((choice, index) => {
-        if (choice) { // Ensure selection choice exists
-            choices.innerHTML += `
-                <button class="quiz-choice" onclick="selectAnswer(${index})">
+        if (choice && choice.trim() !== "") { 
+            const isSelected = studentAnswers[currentQuestion] === index;
+            const selectedClass = isSelected ? "quiz-choice selected" : "quiz-choice";
+            
+            choicesContainer.innerHTML += `
+                <button class="${selectedClass}" onclick="selectAnswer(${index})" style="display: block; width: 100%; margin-bottom: 8px; text-align: left; padding: 10px;">
                     ${choice}
                 </button>
             `;
@@ -192,19 +218,20 @@ window.selectAnswer = function (index) {
 };
 
 window.skipQuestion = function () {
-    nextQuestion();
+    studentAnswers[currentQuestion] = -1; // -1 represents a explicitly skipped question state tracking token
+    window.nextQuestion();
 };
 
 window.nextQuestion = function () {
-    if (studentAnswers[currentQuestion] == null) {
-        alert("Please choose an answer.");
+    if (studentAnswers[currentQuestion] === null) {
+        alert("Please choose an answer before proceeding.");
         return;
     }
 
     currentQuestion++;
 
     if (currentQuestion >= currentQuiz.questions.length) {
-        finishQuiz();
+        window.finishQuiz();
         return;
     }
     showQuestion();
@@ -213,7 +240,7 @@ window.nextQuestion = function () {
 window.finishQuiz = async function () {
     let score = 0;
     currentQuiz.questions.forEach((q, index) => {
-        if (studentAnswers[index] == q.answer) {
+        if (studentAnswers[index] !== null && parseInt(studentAnswers[index], 10) === parseInt(q.answer, 10)) {
             score++;
         }
     });
@@ -222,16 +249,16 @@ window.finishQuiz = async function () {
 
     const { error } = await window.supabase
         .from("quiz_results")
-        .insert({
+        .insert([{
             quiz_id: currentQuiz.id,
             student: currentUser.username,
             score: score,
             total: currentQuiz.questions.length,
             answers: studentAnswers
-        });
+        }]);
 
     if (error) {
-        console.error(error);
+        console.error("Error syncing score parameters:", error);
         alert("Could not save result.");
         return;
     }
@@ -242,39 +269,48 @@ window.finishQuiz = async function () {
 function showResult(score) {
     document.getElementById("quizChoices").innerHTML = "";
     document.getElementById("quizQuestion").innerHTML = `
-        🎉 Test Finished!
-        <br><br>
-        Score
-        <br>
-        ${score} / ${currentQuiz.questions.length}
+        <div style="text-align: center; padding: 20px;">
+            <h2>🎉 Test Finished!</h2>
+            <p style="font-size: 24px; font-weight: bold; margin: 15px 0;">Score: ${score} / ${currentQuiz.questions.length}</p>
+        </div>
     `;
-    document.getElementById("nextQuestionBtn").style.display = "none";
+    const nextBtn = document.getElementById("nextQuestionBtn");
+    if (nextBtn) nextBtn.style.display = "none";
 }
 
+// ==========================================
 // QUIZ CREATOR MANAGEMENT
+// ==========================================
 window.loadQuizStudents = async function () {
-    const grade = document.getElementById("quizGrade").value;
+    const gradeEl = document.getElementById("quizGrade");
     const box = document.getElementById("quizStudentList");
-    box.innerHTML = "Loading...";
+    if (!gradeEl || !box) return;
+
+    box.innerHTML = "Loading students...";
 
     const { data, error } = await window.supabase
         .from("users")
         .select("*")
-        .eq("grade", grade)
+        .eq("grade", gradeEl.value)
         .eq("role", "student");
 
     if (error) {
-        console.error(error);
+        console.error("Error fetching class profiles:", error);
         box.innerHTML = "Error loading students.";
         return;
     }
 
     box.innerHTML = "";
+    if (data.length === 0) {
+        box.innerHTML = "<em style='color: gray;'>No students found in this grade tier.</em>";
+        return;
+    }
+
     data.forEach(student => {
         box.innerHTML += `
-            <label class="student-check">
+            <label class="student-check" style="display: block; margin-bottom: 5px;">
                 <input type="checkbox" value="${student.username}" class="student-box">
-                ${student.username}
+                ${student.name || student.username}
             </label>
         `;
     });
@@ -282,6 +318,7 @@ window.loadQuizStudents = async function () {
 
 window.generateQuestions = function () {
     const container = document.getElementById("questionContainer");
+    if (!container) return;
     container.innerHTML = "";
 
     const count = parseInt(document.getElementById("quizQuestionCount").value) || 0;
@@ -290,56 +327,8 @@ window.generateQuestions = function () {
     }
 };
 
-function addQuestionCard() {
-    const container = document.getElementById("questionContainer");
-    const number = container.querySelectorAll(".question-card").length + 1;
-    const card = document.createElement("div");
-    card.className = "question-card";
-
-    card.innerHTML = `
-        <h3 class="question-title">📝 Question ${number}</h3>
-        <div class="question-toolbar">
-            <button class="duplicateQuestion" type="button">📋 Duplicate</button>
-            <button class="deleteQuestion" type="button">🗑 Delete</button>
-        </div>
-        
-        <label>Question Type</label>
-        <select class="questionType">
-            <option value="multiple">Multiple Choice</option>
-            <option value="truefalse">True / False</option>
-            <option value="short">Short Answer</option>
-        </select>
-
-        <label>Question</label>
-        <input class="question" placeholder="Enter your question">
-
-        <label>📷 Question Image</label>
-        <input type="file" class="questionImage" accept="image/*">
-        <div class="imagePreview"></div>
-
-        <div class="choices-area">
-            <label class="lbl-c1">Choice A</label>
-            <input class="choice1" placeholder="Choice A">
-            <label class="lbl-c2">Choice B</label>
-            <input class="choice2" placeholder="Choice B">
-            <label class="lbl-c3">Choice C</label>
-            <input class="choice3" placeholder="Choice C">
-            <label class="lbl-c4">Choice D</label>
-            <input class="choice4" placeholder="Choice D">
-        </div>
-
-        <label>Correct Answer</label>
-        <select class="correctAnswer">
-            <option value="0">Choice A</option>
-            <option value="1">Choice B</option>
-            <option value="2">Choice C</option>
-            <option value="3">Choice D</option>
-        </select>
-    `;
-
-    container.appendChild(card);
-
-    // Dynamic Creator Events
+// Helper function to dynamically map event hooks back to duplicated element segments safely
+function bindCardEvents(card) {
     card.querySelector(".deleteQuestion").addEventListener("click", () => {
         card.remove();
         renumberQuestions();
@@ -355,17 +344,78 @@ function addQuestionCard() {
 
         const reader = new FileReader();
         reader.onload = function () {
-            card.querySelector(".imagePreview").innerHTML = `<img src="${reader.result}" style="max-width:100%; margin-top:10px;">`;
+            card.querySelector(".imagePreview").innerHTML = `<img src="${reader.result}" style="max-width:100%; margin-top:10px; border-radius: 6px;">`;
         };
         reader.readAsDataURL(file);
     });
 
     card.querySelector(".duplicateQuestion").addEventListener("click", () => {
+        const container = document.getElementById("questionContainer");
         const copy = card.cloneNode(true);
+        
+        // Re-inject pristine listener hooks onto the clone context manually
+        bindCardEvents(copy);
         container.appendChild(copy);
-        // Re-bind listeners onto duplicated element context manually if saving functional properties
         renumberQuestions();
     });
+}
+
+function addQuestionCard() {
+    const container = document.getElementById("questionContainer");
+    const number = container.querySelectorAll(".question-card").length + 1;
+    const card = document.createElement("div");
+    card.className = "question-card";
+    card.style.border = "1px solid #ccc";
+    card.style.padding = "15px";
+    card.style.marginBottom = "15px";
+    card.style.borderRadius = "8px";
+    card.style.background = "#f9f9f9";
+
+    card.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="question-title" style="margin: 0;">📝 Question ${number}</h3>
+            <div class="question-toolbar">
+                <button class="duplicateQuestion" type="button">📋 Duplicate</button>
+                <button class="deleteQuestion" type="button" style="background: crimson; color: white; border: none; padding: 3px 8px; border-radius: 4px; cursor: pointer;">🗑 Delete</button>
+            </div>
+        </div>
+        
+        <label style="display:block; margin-top:10px;">Question Type</label>
+        <select class="questionType" style="width: 100%; padding: 6px; margin-bottom: 10px;">
+            <option value="multiple">Multiple Choice</option>
+            <option value="truefalse">True / False</option>
+            <option value="short">Short Answer</option>
+        </select>
+
+        <label style="display:block;">Question</label>
+        <input class="question" placeholder="Enter your question" style="width: 100%; padding: 6px; margin-bottom: 10px; box-sizing: border-box;">
+
+        <label style="display:block;">📷 Question Image</label>
+        <input type="file" class="questionImage" accept="image/*" style="margin-bottom: 10px;">
+        <div class="imagePreview"></div>
+
+        <div class="choices-area">
+            <label class="lbl-c1">Choice A</label>
+            <input class="choice1" placeholder="Choice A" style="width: 100%; padding: 6px; margin-bottom: 5px; box-sizing: border-box;">
+            <label class="lbl-c2">Choice B</label>
+            <input class="choice2" placeholder="Choice B" style="width: 100%; padding: 6px; margin-bottom: 5px; box-sizing: border-box;">
+            <label class="lbl-c3">Choice C</label>
+            <input class="choice3" placeholder="Choice C" style="width: 100%; padding: 6px; margin-bottom: 5px; box-sizing: border-box;">
+            <label class="lbl-c4">Choice D</label>
+            <input class="choice4" placeholder="Choice D" style="width: 100%; padding: 6px; margin-bottom: 10px; box-sizing: border-box;">
+        </div>
+
+        <label style="display:block;">Correct Answer Option</label>
+        <select class="correctAnswer" style="width: 100%; padding: 6px; box-sizing: border-box;">
+            <option value="0">Choice A</option>
+            <option value="1">Choice B</option>
+            <option value="2">Choice C</option>
+            <option value="3">Choice D</option>
+        </select>
+    `;
+
+    container.appendChild(card);
+    bindCardEvents(card);
 }
 
 function renumberQuestions() {
@@ -380,10 +430,16 @@ function updateQuestionType(card) {
     const choice2 = card.querySelector(".choice2");
     const choice3 = card.querySelector(".choice3");
     const choice4 = card.querySelector(".choice4");
+    
+    const lbl1 = card.querySelector(".lbl-c1");
+    const lbl2 = card.querySelector(".lbl-c2");
+    const lbl3 = card.querySelector(".lbl-c3");
+    const lbl4 = card.querySelector(".lbl-c4");
+    
     const correct = card.querySelector(".correctAnswer");
 
     if (type === "multiple") {
-        [choice1, choice2, choice3, choice4].forEach(el => el.style.display = "");
+        [choice1, choice2, choice3, choice4, lbl1, lbl2, lbl3, lbl4].forEach(el => el.style.display = "");
         correct.innerHTML = `
             <option value="0">Choice A</option>
             <option value="1">Choice B</option>
@@ -393,16 +449,14 @@ function updateQuestionType(card) {
     } else if (type === "truefalse") {
         choice1.value = "True";
         choice2.value = "False";
-        choice1.style.display = "";
-        choice2.style.display = "";
-        choice3.style.display = "none";
-        choice4.style.display = "none";
+        [choice1, choice2, lbl1, lbl2].forEach(el => el.style.display = "");
+        [choice3, choice4, lbl3, lbl4].forEach(el => el.style.display = "none");
         correct.innerHTML = `
             <option value="0">True</option>
             <option value="1">False</option>
         `;
     } else if (type === "short") {
-        [choice1, choice2, choice3, choice4].forEach(el => el.style.display = "none");
+        [choice1, choice2, choice3, choice4, lbl1, lbl2, lbl3, lbl4].forEach(el => el.style.display = "none");
         correct.innerHTML = `<option value="text">Student Text Answer</option>`;
     }
 }
@@ -410,29 +464,52 @@ function updateQuestionType(card) {
 window.saveQuiz = async function () {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (currentUser.role !== "headmaster") {
-        alert("権限ありません");
+    if (!currentUser || currentUser.role !== "headmaster") {
+        alert("権限がありません");
         return;
     }
 
-    const title = document.getElementById("quizTitle").value;
+    const title = document.getElementById("quizTitle").value.trim();
     const subject = document.getElementById("quizSubject").value;
     const grade = document.getElementById("quizGrade").value;
-    const minutes = parseInt(document.getElementById("quizMinutes").value) || 10;
-    const count = parseInt(document.getElementById("quizQuestionCount").value) || 0;
+    const minutes = parseInt(document.getElementById("quizMinutes").value, 10) || 10;
+    
+    if (!title) {
+        alert("テストのタイトルを入力してください");
+        return;
+    }
 
     const students = [...document.querySelectorAll(".student-box:checked")].map(x => x.value);
+    const cardElements = [...document.querySelectorAll(".question-card")];
+    
+    if (cardElements.length === 0) {
+        alert("最低1つの質問を追加してください");
+        return;
+    }
 
-    const questions = [...document.querySelectorAll(".question-card")].map(card => ({
-        question: card.querySelector(".question").value,
-        choices: [
-            card.querySelector(".choice1").value,
-            card.querySelector(".choice2").value,
-            card.querySelector(".choice3").value,
-            card.querySelector(".choice4").value
-        ],
-        answer: parseInt(card.querySelector(".correctAnswer").value) || 0
-    }));
+    const questions = cardElements.map(card => {
+        const type = card.querySelector(".questionType").value;
+        let choicesArray = [];
+        
+        if (type === "multiple") {
+            choicesArray = [
+                card.querySelector(".choice1").value,
+                card.querySelector(".choice2").value,
+                card.querySelector(".choice3").value,
+                card.querySelector(".choice4").value
+            ];
+        } else if (type === "truefalse") {
+            choicesArray = ["True", "False"];
+        } else {
+            choicesArray = ["Short Text Field Container"];
+        }
+
+        return {
+            question: card.querySelector(".question").value,
+            choices: choicesArray,
+            answer: card.querySelector(".correctAnswer").value
+        };
+    });
 
     const { error } = await window.supabase
         .from("quizzes")
@@ -441,25 +518,28 @@ window.saveQuiz = async function () {
             subject,
             grade,
             minutes,
-            question_count: count,
+            question_count: questions.length,
             students,
             questions,
             created_by: currentUser.username
         }]);
 
     if (error) {
-        console.error(error);
-        alert("保存失敗");
+        console.error("Deployment failed:", error);
+        alert("保存失敗: " + error.message);
         return;
     }
 
-    alert("🚀 Test deployed!");
+    alert("🚀 Test deployed successfully!");
 };
 
+// ==========================================
 // INITIALIZATION
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     loadQuizList();
     setupRolePermissions();
+
     const videos = [
         "assets/Videos/Video1.mp4",
         "assets/Videos/Video2.mp4",
@@ -470,16 +550,17 @@ document.addEventListener("DOMContentLoaded", () => {
         "assets/Videos/Video7.mp4",
     ];
 
-    const random =
-        videos[Math.floor(Math.random() * videos.length)];
+    const random = videos[Math.floor(Math.random() * videos.length)];
+    const video = document.getElementById("bgVideo");
 
-    const video =
-        document.getElementById("bgVideo");
-
-    video.src = random;
-
-    video.load();
-
-    video.play();
-
+    // Guard statement protects the app framework lifecycle if video container is missing
+    if (video) {
+        video.src = random;
+        video.load();
+        
+        // Auto-play is handled contextually by explicit element configuration values
+        video.play().catch(err => {
+            console.log("Autoplay blocked by standard browser container policies:", err);
+        });
+    }
 });
