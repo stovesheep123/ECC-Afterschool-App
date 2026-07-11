@@ -1,107 +1,103 @@
 console.log("CHAT JS LOADED");
+
 // ===============================
 // LOAD USERS
 // ===============================
-
 window.loadUsers = async function () {
-
     console.log("loadUsers started");
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
-
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     console.log("Current User:", currentUser);
 
-    const reportSearch =
-        document.getElementById("reportSearch");
+    // Grab DOM elements
+    const userSelect = document.getElementById("userSelect"); // Fixed: Was missing declaration!
+    const reportSearch = document.getElementById("reportSearch");
+    const studentSelect = document.getElementById("student_name");
 
-    const studentSelect =
-        document.getElementById("student_name");
-
+    // Fetch users from Supabase
     const { data, error } = await supabase
         .from("users")
         .select("*");
 
     console.log("USERS:", data);
-    console.log("ERROR:", error);
+    if (error) {
+        console.error("ERROR FETCHING USERS:", error);
+        return;
+    }
 
-    if (error) return;
-
+    // Reset Dropdowns properly before filling them
     if (userSelect) {
-        userSelect.innerHTML = "";
+        userSelect.innerHTML = '<option value="">宛先を選択してください</option>';
     }
-
     if (studentSelect) {
-        studentSelect.innerHTML =
-            '<option value="">選択してください</option>';
+        studentSelect.innerHTML = '<option value="">選択してください</option>';
+    }
+    if (reportSearch) {
+        // Fixed: Clear previous options so names don't duplicate on reload
+        reportSearch.innerHTML = '<option value="">生徒で絞り込む</option>'; 
     }
 
+    // Populate drop-downs based on roles
     data.forEach(user => {
-
         console.log("Checking user:", user);
 
-        // CHAT
-        if (userSelect) {
-
+        // --- CHAT SELECTION INTERFACE ---
+        if (userSelect && currentUser) {
+            // Headmasters can chat with everyone except themselves
             if (currentUser.role === "headmaster") {
-
                 if (user.username !== currentUser.username) {
-                    userSelect.innerHTML +=
-                        `<option value="${user.username}">
-                            ${user.username}
-                        </option>`;
+                    userSelect.innerHTML += `<option value="${user.username}">${user.username}</option>`;
                 }
-
             } else {
-
+                // Regular users (students/teachers) can only chat with the headmaster
                 if (user.role === "headmaster") {
-                    userSelect.innerHTML +=
-                        `<option value="${user.username}">
-                            ${user.username}
-                        </option>`;
+                    userSelect.innerHTML += `<option value="${user.username}">${user.username}</option>`;
                 }
             }
         }
 
-        // REPORT STUDENTS
-        if (studentSelect && user.role === "student") {
-            studentSelect.innerHTML +=
-                `<option value="${user.username}">
-                    ${user.username}
-                </option>`;
-        }
-        if (reportSearch && user.role === "student") {
-            reportSearch.innerHTML +=
-                `<option value="${user.username}">
-            ${user.username}
-        </option>`;
+        // --- STUDENT REPORT FILTERS ---
+        if (user.role === "student") {
+            if (studentSelect) {
+                studentSelect.innerHTML += `<option value="${user.username}">${user.username}</option>`;
+            }
+            if (reportSearch) {
+                reportSearch.innerHTML += `<option value="${user.username}">${user.username}</option>`;
+            }
         }
     });
 
-    console.log("DONE");
+    console.log("DONE LOADING USERS");
 };
 
 
 // ===============================
 // SEND MESSAGE
 // ===============================
-
 window.sendMessage = async function () {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const toUserField = document.getElementById("userSelect");
+    const messageField = document.getElementById("messageInput");
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
-
-    const toUser =
-        document.getElementById("userSelect").value;
-
-    const message =
-        document.getElementById("messageInput").value;
-
-    if (!toUser || !message) {
-        alert("入力してください");
+    if (!toUserField || !messageField) {
+        console.error("Chat elements missing from the DOM.");
         return;
     }
 
+    const toUser = toUserField.value;
+    const message = messageField.value.trim(); // Trim trailing/leading whitespace spaces
+
+    if (!toUser || !message) {
+        alert("宛先とメッセージを入力してください");
+        return;
+    }
+
+    if (!currentUser || !currentUser.username) {
+        alert("ログインセッションが切れています。再ログインしてください。");
+        return;
+    }
+
+    // Insert payload into Supabase messages table
     const { error } = await supabase
         .from("messages")
         .insert([{
@@ -111,12 +107,11 @@ window.sendMessage = async function () {
         }]);
 
     if (error) {
-        console.log(error);
-        alert("送信失敗");
+        console.error("Supabase error sending message:", error);
+        alert("送信失敗しました");
         return;
     }
 
     alert("送信しました");
-
-    document.getElementById("messageInput").value = "";
+    messageField.value = ""; // Clear out input bar upon successful transmission
 };
