@@ -98,7 +98,7 @@ window.loadQuizList = async function () {
 window.loadSubjectTests = async function (subject) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const container = document.getElementById("subjectTests");
-    
+
     if (container) {
         container.innerHTML = "<h2>Loading...</h2>";
     }
@@ -422,7 +422,7 @@ window.saveQuiz = async function () {
     const count = parseInt(document.getElementById("quizQuestionCount").value) || 0;
 
     const students = [...document.querySelectorAll(".student-box:checked")].map(x => x.value);
-    
+
     const questions = [...document.querySelectorAll(".question-card")].map(card => ({
         question: card.querySelector(".question").value,
         choices: [
@@ -460,4 +460,25 @@ window.saveQuiz = async function () {
 document.addEventListener("DOMContentLoaded", () => {
     loadQuizList();
     setupRolePermissions();
+    const videos = [
+        "videos/bg1.mp4",
+        "videos/bg2.mp4",
+        "videos/bg3.mp4",
+        "videos/bg4.mp4",
+        "videos/bg5.mp4",
+        "videos/bg6.mp4"
+    ];
+
+    const random =
+        videos[Math.floor(Math.random() * videos.length)];
+
+    const video =
+        document.getElementById("bgVideo");
+
+    video.src = random;
+
+    video.load();
+
+    video.play();
+
 });
