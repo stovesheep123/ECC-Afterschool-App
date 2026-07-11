@@ -1,357 +1,266 @@
 // ===============================
-// QUIZ SYSTEM
+// QUIZ SYSTEM STATE ENGINE
 // ===============================
-
 let currentQuiz = null;
 let currentQuestion = 0;
 let studentAnswers = [];
 let currentSubject = "";
 
-
 // ===============================
 // Load Subject Function
 // ===============================
 window.loadSubjectTests = async function (subject) {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) return;
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
+    currentSubject = subject;
 
-    // Hide quiz player
+    // Reset layout display views cleanly
     document.getElementById("quizPlayer").style.display = "none";
-
-    document.getElementById("subjectTests").innerHTML =
-        "<h2>Loading...</h2>";
+    
+    const subjectContainer = document.getElementById("subjectTests");
+    subjectContainer.style.display = "block"; // Fixed: Ensure container is visible!
+    subjectContainer.innerHTML = "<h2>Loading tests...</h2>";
 
     // Get quizzes for this subject
-    const { data: quizzes, error } =
-        await window.supabase
-            .from("quizzes")
-            .select("*")
-            .eq("subject", subject);
+    const { data: quizzes, error } = await window.supabase
+        .from("quizzes")
+        .select("*")
+        .eq("subject", subject);
 
-    console.log("Logged in user:", currentUser.username);
-    console.log("Selected subject:", subject);
-    console.log("All quizzes:", quizzes);
     if (error) {
-
-        console.log(error);
-
+        console.error("Error fetching quizzes:", error);
+        subjectContainer.innerHTML = "<p>Error loading tests.</p>";
         return;
-
     }
 
     let html = `<h2>${subject}</h2>`;
+    let availableTestsCount = 0;
 
-    // Loop through quizzes
+    // Loop through quizzes sequentially
     for (const quiz of quizzes) {
-
         // Skip quizzes not assigned to this student
-        console.log("Quiz:", quiz.title);
-        console.log("Students:", quiz.students);
-        console.log("Current user:", currentUser.username);
-        console.log(
-            "Match:",
-            quiz.students.includes(currentUser.username)
-        );
-
-        if (!quiz.students.includes(currentUser.username)) {
+        if (!quiz.students || !quiz.students.includes(currentUser.username)) {
             continue;
         }
 
-        // Has the student already submitted?
-        const { data: submitted } =
-            await window.supabase
-                .from("quiz_results")
-                .select("id")
-                .eq("quiz_id", quiz.id)
-                .eq("student", currentUser.username)
-                .maybeSingle();
+        availableTestsCount++;
+
+        // Has the student already submitted this test?
+        const { data: submitted } = await window.supabase
+            .from("quiz_results")
+            .select("id")
+            .eq("quiz_id", quiz.id)
+            .eq("student", currentUser.username)
+            .maybeSingle();
 
         html += `
-
-<div class="quiz-card">
-
-    <h3>${quiz.title}</h3>
-
-    <p>👨‍🏫 ${quiz.created_by}</p>
-
-    <p>${quiz.question_count} Questions</p>
-
-    <p>${quiz.minutes} Minutes</p>
-
-    ${submitted
-                ?
-                `<button disabled>✅ Submitted</button>`
-                :
-                `<button onclick="startQuiz('${quiz.id}')">
-            🚀 Start Test
-        </button>`
-            }
-
-</div>
-
-`;
-
+            <div class="quiz-card">
+                <h3>${quiz.title}</h3>
+                <p>👨‍🏫 Created by: ${quiz.created_by}</p>
+                <p>📝 ${quiz.question_count || quiz.questions.length} Questions</p>
+                <p>⏱️ ${quiz.minutes} Minutes</p>
+                ${submitted
+                    ? `<button disabled style="background: #ccc; cursor: not-allowed;">✅ Submitted</button>`
+                    : `<button onclick="startQuiz('${quiz.id}')">🚀 Start Test</button>`
+                }
+            </div>
+        `;
     }
 
-    if (html === `<h2>${subject}</h2>`) {
-
-        html += "<p>No tests available.</p>";
-
+    if (availableTestsCount === 0) {
+        html += "<p>No tests available for your account in this subject.</p>";
     }
 
-    document.getElementById("subjectTests").innerHTML = html;
-
-}
+    subjectContainer.innerHTML = html;
+};
 
 // ===============================
 // Start Quiz Function
 // ===============================
 window.startQuiz = async function (id) {
+    const { data, error } = await window.supabase
+        .from("quizzes")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    const { data, error } =
-        await window.supabase
-            .from("quizzes")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-    if (error) {
-
-        console.log(error);
-
+    if (error || !data) {
+        console.error("Error starting quiz:", error);
+        alert("Failed to initialize test session.");
         return;
-
     }
 
     currentQuiz = data;
-
     currentQuestion = 0;
+    studentAnswers = new Array(currentQuiz.questions.length).fill(null); // Explicit clean array mapping
 
-    studentAnswers = [];
-
-    // Hide subject list while taking test
+    // Adjust structural visibility matrix
     document.getElementById("subjectTests").style.display = "none";
-
-    // Show quiz player
     document.getElementById("quizPlayer").style.display = "block";
-
-    // Show Next button
     document.getElementById("nextQuestionBtn").style.display = "block";
 
     showQuestion();
-
 };
 
 // ===============================
 // Show Quiz Function
 // ===============================
 function showQuestion() {
+    if (!currentQuiz || !currentQuiz.questions[currentQuestion]) return;
 
     const q = currentQuiz.questions[currentQuestion];
 
-    document.getElementById("quizProgress").innerText =
-
+    // Update progress numbers & counters
+    document.getElementById("quizProgress").innerText = 
         `Question ${currentQuestion + 1} / ${currentQuiz.questions.length}`;
+    
+    document.getElementById("quizQuestion").innerText = q.question;
 
-    document.getElementById("quizQuestion").innerText =
+    const choicesContainer = document.getElementById("quizChoices");
+    choicesContainer.innerHTML = "";
 
-        q.question;
-
-    const choices =
-        document.getElementById("quizChoices");
-
-    choices.innerHTML = "";
-
+    // Generate answer node blocks safely
     q.choices.forEach((choice, index) => {
+        // Look ahead to see if the user has already tapped or saved an answer position
+        const isSelected = studentAnswers[currentQuestion] === index;
+        const selectedClass = isSelected ? "quiz-choice selected" : "quiz-choice";
 
-        choices.innerHTML += `
-
-<button
-class="quiz-choice"
-onclick="selectAnswer(${index})">
-
-${choice}
-
-</button>
-
-`;
-
+        choicesContainer.innerHTML += `
+            <button class="${selectedClass}" onclick="selectAnswer(${index})">
+                ${choice}
+            </button>
+        `;
     });
-
 }
 
 // ===============================
 // Select Answer Function
 // ===============================
 window.selectAnswer = function (index) {
-
     studentAnswers[currentQuestion] = index;
 
-    document
-        .querySelectorAll(".quiz-choice")
-        .forEach((button, i) => {
-
+    // Fast layout node selection update loop
+    document.querySelectorAll(".quiz-choice").forEach((button, i) => {
+        if (i === index) {
+            button.classList.add("selected");
+        } else {
             button.classList.remove("selected");
-
-            if (i === index) {
-
-                button.classList.add("selected");
-
-            }
-
-        });
-
-}
+        }
+    });
+};
 
 // ===============================
 // Next Question Function
 // ===============================
 window.nextQuestion = function () {
-
-    if (studentAnswers[currentQuestion] == null) {
-
-        alert("Please select an answer.");
-
+    if (studentAnswers[currentQuestion] === null) {
+        alert("Please select an answer before continuing.");
         return;
-
     }
 
     currentQuestion++;
 
     if (currentQuestion >= currentQuiz.questions.length) {
-
         finishQuiz();
-
         return;
-
     }
 
     showQuestion();
+};
 
-}
 // ===============================
-// Finsh Quiz Function
+// Finish Quiz Function
 // ===============================
 window.finishQuiz = async function () {
-
     let score = 0;
 
     currentQuiz.questions.forEach((q, i) => {
-
-        if (studentAnswers[i] == q.answer) {
-
+        if (parseInt(studentAnswers[i]) === parseInt(q.answer)) {
             score++;
-
         }
-
     });
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    const { error } =
-        await window.supabase
-
-            .from("quiz_results")
-
-            .insert([{
-
-                quiz_id: currentQuiz.id,
-
-                student: currentUser.username,
-
-                score,
-
-                total: currentQuiz.questions.length,
-
-                answers: studentAnswers
-
-            }]);
+    const { error } = await window.supabase
+        .from("quiz_results")
+        .insert([{
+            quiz_id: currentQuiz.id,
+            student: currentUser.username,
+            score: score,
+            total: currentQuiz.questions.length,
+            answers: studentAnswers
+        }]);
 
     if (error) {
-
-        console.log(error);
-
-        alert(error.message);
-
+        console.error("Error submitting evaluation score details:", error);
+        alert("Submission failed: " + error.message);
         return;
-
     }
 
-    alert(`🎉 Score ${score}/${currentQuiz.questions.length}`);
+    alert(`🎉 Quiz Finished! Score: ${score}/${currentQuiz.questions.length}`);
 
-    // Hide player
+    // Hide UI runtime views back to safety profile grid
     document.getElementById("quizPlayer").style.display = "none";
-
-    // Show subject list again
-    document.getElementById("subjectTests").style.display = "block";
-
-    // Reload the subject so completed quizzes become "Submitted"
+    
+    // Refresh parent state arrays cleanly
     loadSubjectTests(currentQuiz.subject);
+};
 
-}
+// ===============================
+// Load Student Results History
+// ===============================
 window.loadStudentResults = async function () {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const box = document.getElementById("studentResultList");
+    if (!box) return;
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
+    box.innerHTML = "Loading your performance results...";
 
-    const box =
-        document.getElementById("studentResultList");
-
-    box.innerHTML = "Loading...";
-
-    const { data, error } =
-        await window.supabase
-
-            .from("quiz_results")
-
-            .select("*")
-
-            .eq("student", currentUser.username)
-
-            .order("submitted_at", { ascending: false });
+    // Fixed: Inner-join select setup fetches quiz properties dynamically from referencing foreign tables!
+    const { data, error } = await window.supabase
+        .from("quiz_results")
+        .select(`
+            id,
+            score,
+            total,
+            submitted_at,
+            quizzes (
+                title,
+                subject
+            )
+        `)
+        .eq("student", currentUser.username)
+        .order("submitted_at", { ascending: false });
 
     if (error) {
-
-        console.log(error);
-
+        console.error("Error loading performance charts:", error);
+        box.innerHTML = "<p>Could not retrieve grading data.</p>";
         return;
-
     }
 
-    if (data.length === 0) {
-
-        box.innerHTML = "<h2>No test results yet.</h2>";
-
+    if (!data || data.length === 0) {
+        box.innerHTML = "<h2>No test results found yet.</h2>";
         return;
-
     }
 
     let html = "";
-
     data.forEach(result => {
-
-        const percent = Math.round(
-            result.score / result.total * 100
-        );
+        const percent = Math.round((result.score / result.total) * 100);
+        // Fallback protection string if database joins resolve asynchronously or read null fields
+        const testTitle = result.quizzes ? result.quizzes.title : "Unknown Quiz Module";
+        const testSubject = result.quizzes ? result.quizzes.subject : "General Evaluation";
 
         html += `
-
-<div class="result-card">
-
-    <h2>${result.score} / ${result.total}</h2>
-
-    <p>${percent}%</p>
-
-    <p>${new Date(result.submitted_at).toLocaleString()}</p>
-
-</div>
-
-`;
-
+            <div class="result-card">
+                <h3>${testTitle} (${testSubject})</h3>
+                <h2>${result.score} / ${result.total}</h2>
+                <p class="percentage">${percent}%</p>
+                <p class="timestamp">📅 ${new Date(result.submitted_at).toLocaleString()}</p>
+            </div>
+        `;
     });
 
     box.innerHTML = html;
-
-}
+};
