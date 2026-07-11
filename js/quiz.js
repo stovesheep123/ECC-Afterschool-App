@@ -7,7 +7,7 @@ let studentAnswers = [];
 let currentSubject = "";
 
 // ===============================
-// Load Subject Function
+// Load Subject Function (Optimized Batch Requests)
 // ===============================
 window.loadSubjectTests = async function (subject) {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -19,7 +19,9 @@ window.loadSubjectTests = async function (subject) {
     document.getElementById("quizPlayer").style.display = "none";
     
     const subjectContainer = document.getElementById("subjectTests");
-    subjectContainer.style.display = "block"; // Fixed: Ensure container is visible!
+    if (!subjectContainer) return;
+    
+    subjectContainer.style.display = "block"; 
     subjectContainer.innerHTML = "<h2>Loading tests...</h2>";
 
     // Get quizzes for this subject
@@ -34,43 +36,44 @@ window.loadSubjectTests = async function (subject) {
         return;
     }
 
-    let html = `<h2>${subject}</h2>`;
-    let availableTestsCount = 0;
+    // Filter down to only quizzes assigned to this specific student first
+    const assignedQuizzes = quizzes.filter(quiz => 
+        quiz.students && quiz.students.includes(currentUser.username)
+    );
 
-    // Loop through quizzes sequentially
-    for (const quiz of quizzes) {
-        // Skip quizzes not assigned to this student
-        if (!quiz.students || !quiz.students.includes(currentUser.username)) {
-            continue;
-        }
+    if (assignedQuizzes.length === 0) {
+        subjectContainer.innerHTML = `<h2>${subject}</h2><p>No tests available for your account in this subject.</p>`;
+        return;
+    }
 
-        availableTestsCount++;
-
-        // Has the student already submitted this test?
+    // Batch check submission statuses simultaneously instead of blocking inside a for-loop
+    const statusPromises = assignedQuizzes.map(async (quiz) => {
         const { data: submitted } = await window.supabase
             .from("quiz_results")
             .select("id")
             .eq("quiz_id", quiz.id)
             .eq("student", currentUser.username)
             .maybeSingle();
+        return { ...quiz, isSubmitted: !!submitted };
+    });
 
+    const processedQuizzes = await Promise.all(statusPromises);
+
+    let html = `<h2>${subject}</h2>`;
+    processedQuizzes.forEach(quiz => {
         html += `
-            <div class="quiz-card">
+            <div class="quiz-card" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                 <h3>${quiz.title}</h3>
                 <p>👨‍🏫 Created by: ${quiz.created_by}</p>
                 <p>📝 ${quiz.question_count || quiz.questions.length} Questions</p>
                 <p>⏱️ ${quiz.minutes} Minutes</p>
-                ${submitted
-                    ? `<button disabled style="background: #ccc; cursor: not-allowed;">✅ Submitted</button>`
-                    : `<button onclick="startQuiz('${quiz.id}')">🚀 Start Test</button>`
+                ${quiz.isSubmitted
+                    ? `<button disabled style="background: #ccc; color: #666; cursor: not-allowed; padding: 10px 20px; border: none; border-radius: 6px;">✅ Submitted</button>`
+                    : `<button onclick="startQuiz('${quiz.id}')" style="background: #007bff; color: white; cursor: pointer; padding: 10px 20px; border: none; border-radius: 6px;">🚀 Start Test</button>`
                 }
             </div>
         `;
-    }
-
-    if (availableTestsCount === 0) {
-        html += "<p>No tests available for your account in this subject.</p>";
-    }
+    });
 
     subjectContainer.innerHTML = html;
 };
@@ -93,18 +96,17 @@ window.startQuiz = async function (id) {
 
     currentQuiz = data;
     currentQuestion = 0;
-    studentAnswers = new Array(currentQuiz.questions.length).fill(null); // Explicit clean array mapping
+    studentAnswers = new Array(currentQuiz.questions.length).fill(null); 
 
     // Adjust structural visibility matrix
     document.getElementById("subjectTests").style.display = "none";
     document.getElementById("quizPlayer").style.display = "block";
-    document.getElementById("nextQuestionBtn").style.display = "block";
 
     showQuestion();
 };
 
 // ===============================
-// Show Quiz Function
+// Show Quiz Function (Handles Submit Button Transformation)
 // ===============================
 function showQuestion() {
     if (!currentQuiz || !currentQuiz.questions[currentQuestion]) return;
@@ -122,16 +124,30 @@ function showQuestion() {
 
     // Generate answer node blocks safely
     q.choices.forEach((choice, index) => {
-        // Look ahead to see if the user has already tapped or saved an answer position
         const isSelected = studentAnswers[currentQuestion] === index;
-        const selectedClass = isSelected ? "quiz-choice selected" : "quiz-choice";
+        const selectedStyle = isSelected 
+            ? "background: #007bff; color: white; border-color: #007bff;" 
+            : "background: #f8f9fa; color: #333; border: 1px solid #ddd;";
 
+        // Using explicit styling directly to guarantee the selection visual states trigger immediately
         choicesContainer.innerHTML += `
-            <button class="${selectedClass}" onclick="selectAnswer(${index})">
+            <button class="quiz-choice" style="display: block; width: 100%; text-align: left; margin-bottom: 10px; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.2s; ${selectedStyle}" onclick="selectAnswer(${index})">
                 ${choice}
             </button>
         `;
     });
+
+    // Transform the control button text dynamically if the student hits the final question
+    const nextBtn = document.getElementById("nextQuestionBtn");
+    if (nextBtn) {
+        if (currentQuestion === currentQuiz.questions.length - 1) {
+            nextBtn.innerText = "🏁 Finish & Submit";
+            nextBtn.style.background = "#28a745";
+        } else {
+            nextBtn.innerText = "Next Question ➡️";
+            nextBtn.style.background = "#007bff";
+        }
+    }
 }
 
 // ===============================
@@ -139,15 +155,7 @@ function showQuestion() {
 // ===============================
 window.selectAnswer = function (index) {
     studentAnswers[currentQuestion] = index;
-
-    // Fast layout node selection update loop
-    document.querySelectorAll(".quiz-choice").forEach((button, i) => {
-        if (i === index) {
-            button.classList.add("selected");
-        } else {
-            button.classList.remove("selected");
-        }
-    });
+    showQuestion(); // Re-render instantly to lock in visual selected styles cleanly
 };
 
 // ===============================
@@ -159,13 +167,13 @@ window.nextQuestion = function () {
         return;
     }
 
-    currentQuestion++;
-
-    if (currentQuestion >= currentQuiz.questions.length) {
+    // If it's the last question, routing triggers final calculations instead of incrementing out of index bounds
+    if (currentQuestion === currentQuiz.questions.length - 1) {
         finishQuiz();
         return;
     }
 
+    currentQuestion++;
     showQuestion();
 };
 
@@ -176,7 +184,7 @@ window.finishQuiz = async function () {
     let score = 0;
 
     currentQuiz.questions.forEach((q, i) => {
-        if (parseInt(studentAnswers[i]) === parseInt(q.answer)) {
+        if (parseInt(studentAnswers[i], 10) === parseInt(q.answer, 10)) {
             score++;
         }
     });
@@ -218,7 +226,6 @@ window.loadStudentResults = async function () {
 
     box.innerHTML = "Loading your performance results...";
 
-    // Fixed: Inner-join select setup fetches quiz properties dynamically from referencing foreign tables!
     const { data, error } = await window.supabase
         .from("quiz_results")
         .select(`
@@ -248,16 +255,15 @@ window.loadStudentResults = async function () {
     let html = "";
     data.forEach(result => {
         const percent = Math.round((result.score / result.total) * 100);
-        // Fallback protection string if database joins resolve asynchronously or read null fields
         const testTitle = result.quizzes ? result.quizzes.title : "Unknown Quiz Module";
         const testSubject = result.quizzes ? result.quizzes.subject : "General Evaluation";
 
         html += `
-            <div class="result-card">
+            <div class="result-card" style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                 <h3>${testTitle} (${testSubject})</h3>
                 <h2>${result.score} / ${result.total}</h2>
-                <p class="percentage">${percent}%</p>
-                <p class="timestamp">📅 ${new Date(result.submitted_at).toLocaleString()}</p>
+                <p class="percentage" style="font-weight: bold; color: #28a745; font-size: 18px;">${percent}%</p>
+                <p class="timestamp" style="color: gray; font-size: 12px;">📅 ${new Date(result.submitted_at).toLocaleString()}</p>
             </div>
         `;
     });
