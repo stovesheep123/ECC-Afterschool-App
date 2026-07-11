@@ -4,12 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="manifest" href="manifest.json">
-
     <meta name="theme-color" content="#4facfe">
 </head>
 
@@ -22,92 +19,56 @@
 
     <div class="video-overlay"></div>
 
-    <!-- MOBILE MENU -->
-
     <div class="app">
 
         <!-- SIDEBAR -->
         <div class="sidebar">
-
             <div class="logo-area">
                 <h2 class="logo">ベストワン</h2>
                 <p id="welcome"></p>
             </div>
 
             <div class="circle-menu" id="circleMenu">
-
-                <button id="menuCenter" class="menu-center">
-
-                    ☰
-
-                </button>
-
+                <button id="menuCenter" class="menu-center">☰</button>
                 <nav class="circle-items">
-
                     <a href="#" class="nav-item active" onclick="showSection('home',this)">
                         <span class="icon">🏠</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('notifications',this)">
                         <span class="icon">🔔</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('notice',this)">
                         <span class="icon">📢</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('report',this)">
                         <span class="icon">📄</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('groupReport',this)">
                         <span class="icon">👥</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('chat',this)">
                         <span class="icon">💬</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('savedReports',this)">
                         <span class="icon">💾</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('studentReports',this)">
                         <span class="icon">📘</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('createQuiz',this)">
                         <span class="icon">📝</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('takeQuiz',this)">
                         <span class="icon">🎯</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="showSection('quizResultsSection',this);loadQuizResults();">
-
-                        <span class="icon">
-                            🏆
-                        </span>
-
+                        <span class="icon">🏆</span>
                     </a>
-
                     <a href="#" class="nav-item" onclick="logout()">
-
-                        <span class="icon">
-
-                            🚪
-
-                        </span>
-
+                        <span class="icon">🚪</span>
                     </a>
-
                 </nav>
-
             </div>
-
-
-
         </div>
 
         <!-- MAIN CONTENT -->
@@ -115,97 +76,65 @@
 
             <!-- HOME -->
             <div id="home" class="section">
-
-                <h1 id="dashboardGreeting">
-                    🌈👋✨ Welcome
-                </h1>
-
+                <h1 id="dashboardGreeting">🌈👋✨ Welcome</h1>
                 <div class="dashboard-cards">
-
                     <div class="stat-card">
                         <h3>📄 Reports Today</h3>
                         <span id="reportsToday">0</span>
                     </div>
-
                     <div class="stat-card">
                         <h3>👥 Group Reports</h3>
                         <span id="groupReportsCount">0</span>
                     </div>
-
                     <div class="stat-card">
                         <h3>💬 Messages</h3>
                         <span id="chatCount">0</span>
                     </div>
-
                     <div class="stat-card">
                         <h3>🔔 Notifications</h3>
                         <span id="notificationCount">0</span>
                     </div>
-
                 </div>
 
                 <div class="weather-widget">
-
                     <h2>🌤 Weather</h2>
-
-                    <p id="weatherText">
-                        Loading weather...
-                    </p>
-
+                    <p id="weatherText">Loading weather...</p>
                 </div>
 
                 <div class="activity-widget">
-
                     <h2>📢 Recent Activity</h2>
-
-                    <div id="activityFeed">
-                        No activity
-                    </div>
-
+                    <div id="activityFeed">No activity</div>
                 </div>
-
             </div>
+
             <!-- CHAT -->
             <div id="chat" class="section" style="display:none;">
-
                 <div class="chat-container">
-
                     <!-- LEFT SIDE -->
                     <div class="chat-sidebar">
                         <h2>💬 Chats</h2>
                         <select id="userSelect" size="1"></select>
                     </div>
-
                     <!-- RIGHT SIDE -->
                     <div class="chat-main">
-
                         <div class="chat-header">
                             <h3 id="chatWith">Select User</h3>
                         </div>
-
                         <div id="chatBox" class="chat-box"></div>
-
                         <div class="chat-input-area">
                             <input type="text" id="messageInput" placeholder="Type message...">
-
                             <button onclick="sendMessage()">➤</button>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
 
             <!-- NOTICE -->
             <div id="notice" class="section" style="display:none;">
                 <h1>📢 Notice Board</h1>
-
                 <input type="text" id="noticeTitle" placeholder="Title">
                 <textarea id="noticeContent" placeholder="Notice"></textarea>
-
                 <button onclick="saveNotice()">Save Notice</button>
-
                 <div id="noticeList"></div>
             </div>
 
@@ -217,29 +146,21 @@
 
             <!-- REPORT -->
             <div id="report" class="section" style="display:none;">
-
                 <h2>📄 Create Report</h2>
-
-                <button onclick="toggleReportForm()" class="open-report-btn">
-                    ➕ レポートを書く
-                </button>
-
+                <button onclick="toggleReportForm()" class="open-report-btn">➕ レポートを書く</button>
+                
                 <div id="reportForm" style="display:none;">
-
                     <div class="report-row">
-
                         <div>
                             <label>教師名</label>
                             <input type="text" id="teacher_name" readonly>
                         </div>
-
                         <div>
                             <label>生徒名</label>
                             <select id="student_name" size="1">
                                 <option value="">選択してください</option>
                             </select>
                         </div>
-
                     </div>
 
                     <label>日付</label>
@@ -275,29 +196,21 @@
                     <label>画像追加（任意）</label>
                     <input type="file" id="reportImage" accept="image/*">
 
-                    <button onclick="saveReport()" class="save-report-btn">
-                        保存
-                    </button>
-
+                    <button onclick="saveReport()" class="save-report-btn">保存</button>
                 </div>
             </div>
 
             <!-- SAVED REPORTS -->
             <div id="savedReports" class="section" style="display:none;">
                 <h2>📂 Saved Reports</h2>
-
                 <select id="reportSearch" onchange="loadSavedReports()" size="1">
                     <option value="">すべての生徒</option>
                 </select>
-
                 <label>
-                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
-                    承認待ち
+                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()"> 承認待ち
                 </label>
-
                 <label>
-                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
-                    承認済み
+                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()"> 承認済み
                 </label>
                 <div id="savedReportList"></div>
             </div>
@@ -308,17 +221,11 @@
                 <div id="studentReportList"></div>
             </div>
 
-
-
             <!-- GROUP REPORT -->
             <div id="groupReport" class="section" style="display:none;">
-
                 <h2>👥 Group Report</h2>
-
                 <label>Grade</label>
-
                 <select id="groupGrade" onchange="loadStudentsByGrade()">
-
                     <option value="">学年選択</option>
                     <option value="Grade1">中1</option>
                     <option value="Grade2">中2</option>
@@ -326,13 +233,10 @@
                     <option value="High1">高1</option>
                     <option value="High2">高2</option>
                     <option value="High3">高3</option>
-
                 </select>
 
                 <div id="studentCheckboxList"></div>
-
                 <hr>
-
                 <input type="date" id="groupDate">
 
                 <select id="groupSubject">
@@ -345,247 +249,105 @@
                 </select>
 
                 <textarea id="groupContent"></textarea>
-
                 <textarea id="groupHomework"></textarea>
-
-                <button onclick="saveGroupReport()">
-                    保存
-                </button>
-
+                <button onclick="saveGroupReport()">保存</button>
             </div>
 
             <!-- CREATE TEST -->
-
             <section id="createQuiz" class="section" style="display:none;">
-
                 <div class="quiz-create-card quiz-builder">
-
-                    <h1>
-                        📝 Create Test
-                    </h1>
-
+                    <h1>📝 Create Test</h1>
                     <div class="quiz-grid quiz-settings">
-
                         <div>
-
-                            <label>
-                                対象学年
-                            </label>
-
+                            <label>対象学年</label>
                             <select id="quizGrade">
-
-                                <option value="">
-                                    選択
-                                </option>
-
+                                <option value="">選択</option>
                                 <option>小1</option>
                                 <option>小2</option>
                                 <option>小3</option>
                                 <option>小4</option>
                                 <option>小5</option>
                                 <option>小6</option>
-
                                 <option>中1</option>
                                 <option>中2</option>
                                 <option>中3</option>
-
                                 <option>高1</option>
                                 <option>高2</option>
                                 <option>高3</option>
-
                             </select>
-
                         </div>
-
-
                         <div>
-
-                            <label>
-                                問題数
-                            </label>
-
+                            <label>問題数</label>
                             <input id="quizQuestionCount" type="number" min="1" max="50" value="5">
-
                         </div>
-
-
                         <div>
-
-                            <label>
-                                制限時間（分）
-                            </label>
-
+                            <label>制限時間（分）</label>
                             <input id="quizMinutes" type="number" min="1" value="10">
-
                         </div>
-
                     </div>
 
-
-                    <button class="quiz-btn" onclick="loadQuizStudents()">
-
-                        👥 Load Students
-
-                    </button>
-
-
-                    <div id="quizStudentList">
-
-                    </div>
-
-
+                    <button class="quiz-btn" onclick="loadQuizStudents()">👥 Load Students</button>
+                    <div id="quizStudentList"></div>
                     <hr>
-
-
                     <input id="quizTitle" placeholder="例）単語テスト">
-
-
                     <input id="quizSubject" placeholder="例）English">
 
-
-                    <button class="quiz-btn" onclick="generateQuestions()">
-
-                        ✨ Generate Questions
-
-                    </button>
-
-
+                    <button class="quiz-btn" onclick="generateQuestions()">✨ Generate Questions</button>
                     <div id="questionContainer">
-                        <button type="button" class="quiz-btn" onclick="addQuestionCard()">
-
-                            ➕ Add Question
-
-                        </button>
-
+                        <button type="button" class="quiz-btn" onclick="addQuestionCard()">➕ Add Question</button>
                     </div>
-
-
-                    <button class="deploy-btn" onclick="saveQuiz()">
-
-                        🚀 Deploy Test
-
-                    </button>
-
+                    <button class="deploy-btn" onclick="saveQuiz()">🚀 Deploy Test</button>
                 </div>
-
             </section>
 
+            <!-- TAKE TEST -->
             <section id="takeQuiz" class="section" style="display:none;">
-
                 <h1>🎯 Take Test</h1>
-
                 <div id="subjectMenu" class="subject-grid">
-
-                    <h1>🎯 Take Test</h1>
-
-                    <div id="subjectMenu">
-
-                        <button onclick="loadSubjectTests('数学')">🔢 数学</button>
-
-                        <button onclick="loadSubjectTests('英語')">🇬🇧 英語</button>
-
-                        <button onclick="loadSubjectTests('国語')">📘 国語</button>
-
-                        <button onclick="loadSubjectTests('理科')">🔬 理科</button>
-
-                        <button onclick="loadSubjectTests('社会')">🌏 社会</button>
-
-                        <button onclick="showSection('studentResults');loadStudentResults();">
-
-                            🏆 Results
-
-                        </button>
-
-                    </div>
-
-                    <hr>
-
-                    <div id="subjectTests"></div>
-
+                    <button onclick="loadSubjectTests('数学')">🔢 数学</button>
+                    <button onclick="loadSubjectTests('英語')">🇬🇧 英語</button>
+                    <button onclick="loadSubjectTests('国語')">📘 国語</button>
+                    <button onclick="loadSubjectTests('理科')">🔬 理科</button>
+                    <button onclick="loadSubjectTests('社会')">🌏 社会</button>
+                    <button onclick="showSection('studentResults');loadStudentResults();">🏆 Results</button>
+                </div>
+                <hr> 
             </section>
             
+            <!-- QUIZ PLAYER -->
             <section id="quizPlayer" class="section" style="display:none;">
-
                 <div class="quiz-phone">
-
                     <div class="quiz-header">
-
-                        <button onclick="showSection('takeQuiz')">
-                            ←
-                        </button>
-
-                        <div id="quizProgress">
-                            Question 1 / 1
-                        </div>
-
-                        <div id="quizTimer">
-                            00:00
-                        </div>
-
+                        <button onclick="showSection('takeQuiz')">←</button>
+                        <div id="quizProgress">Question 1 / 1</div>
+                        <div id="quizTimer">00:00</div>
                     </div>
-
                     <div class="quiz-progress-wrap">
                         <div id="quizBarFill"></div>
                     </div>
-
                     <h2 id="quizQuestion"></h2>
-
                     <div id="quizChoices"></div>
-
-                    <button id="nextQuestionBtn" onclick="nextQuestion()">
-
-                        Next →
-
-                    </button>
-
+                    <button id="nextQuestionBtn" onclick="nextQuestion()">Next →</button>
                 </div>
-
             </section>
+
+            <!-- STUDENT RESULTS -->
             <section id="studentResults" class="section" style="display:none;">
-
                 <h1>🏆 My Test Results</h1>
-
-                <div id="studentResultList">
-
-                    Loading...
-
-                </div>
-
+                <div id="studentResultList">Loading...</div>
             </section>
-            <section id="quizResults">
 
-                <h2>
-                    📊 Test Results
-                </h2>
-
-                <div id="quizResultList">
-
-                    No results
-
-                </div>
-                <!-- QUIZ RESULTS -->
-
-                <section id="quizResultsSection" class="section" style="display:none;">
-
-                    <h1>
-
-                        🏆 Test Results
-
-                    </h1>
-
-                </section>
-
+            <!-- QUIZ RESULTS ADMIN -->
+            <section id="quizResultsSection" class="section" style="display:none;">
+                <h1>🏆 Test Results</h1>
+                <div id="quizResultList">No results</div>
             </section>
 
         </div>
-
     </div>
-
-
 
     <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script defer src="js/supabase.js"></script>
     <script defer src="js/dashboard.js"></script>
     <script defer src="js/report.js"></script>
@@ -603,118 +365,47 @@
     </script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const menu = document.getElementById("circleMenu");
+            const center = document.getElementById("menuCenter");
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            () => {
+            if (!menu || !center) return;
 
-                const menu =
-                    document.getElementById(
-                        "circleMenu"
-                    );
-
-                const center =
-                    document.getElementById(
-                        "menuCenter"
-                    );
-
-                if (!menu || !center) return;
-
-                // OPEN CLOSE
-
-                center.addEventListener(
-                    "click",
-                    e => {
-
-                        e.stopPropagation();
-
-                        menu.classList.toggle(
-                            "open"
-                        );
-
-                    });
-
-                // CLOSE IF OUTSIDE
-
-                document.addEventListener(
-                    "click",
-                    e => {
-
-                        if (
-                            !menu.contains(
-                                e.target
-                            )
-                        ) {
-
-                            menu.classList.remove(
-                                "open"
-                            );
-
-                        }
-
-                    });
-
-                // DRAG
-
-                let drag = false;
-
-                let startX = 0;
-
-                let startY = 0;
-
-                center.addEventListener(
-                    "touchstart",
-                    e => {
-
-                        drag = true;
-
-                        startX =
-                            e.touches[0].clientX -
-                            menu.offsetLeft;
-
-                        startY =
-                            e.touches[0].clientY -
-                            menu.offsetTop;
-
-                    }
-                );
-
-                document.addEventListener(
-                    "touchmove",
-                    e => {
-
-                        if (!drag) return;
-
-                        menu.style.left =
-                            (
-                                e.touches[0].clientX -
-                                startX
-                            ) + "px";
-
-                        menu.style.top =
-                            (
-                                e.touches[0].clientY -
-                                startY
-                            ) + "px";
-
-                        menu.style.bottom =
-                            "auto";
-
-                    }
-                );
-
-                document.addEventListener(
-                    "touchend",
-                    () => {
-
-                        drag = false;
-
-                    });
-
+            // OPEN CLOSE
+            center.addEventListener("click", e => {
+                e.stopPropagation();
+                menu.classList.toggle("open");
             });
 
+            // CLOSE IF OUTSIDE
+            document.addEventListener("click", e => {
+                if (!menu.contains(e.target)) {
+                    menu.classList.remove("open");
+                }
+            });
+
+            // DRAG
+            let drag = false;
+            let startX = 0;
+            let startY = 0;
+
+            center.addEventListener("touchstart", e => {
+                drag = true;
+                startX = e.touches[0].clientX - menu.offsetLeft;
+                startY = e.touches[0].clientY - menu.offsetTop;
+            });
+
+            document.addEventListener("touchmove", e => {
+                if (!drag) return;
+                menu.style.left = (e.touches[0].clientX - startX) + "px";
+                menu.style.top = (e.touches[0].clientY - startY) + "px";
+                menu.style.bottom = "auto";
+            });
+
+            document.addEventListener("touchend", () => {
+                drag = false;
+            });
+        });
     </script>
-
 </body>
-
 </html>
