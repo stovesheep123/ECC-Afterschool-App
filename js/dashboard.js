@@ -461,12 +461,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loadQuizList();
     setupRolePermissions();
     const videos = [
-        "videos/bg1.mp4",
-        "videos/bg2.mp4",
-        "videos/bg3.mp4",
-        "videos/bg4.mp4",
-        "videos/bg5.mp4",
-        "videos/bg6.mp4"
+        "assets/Videos/Video1.mp4",
+        "assets/Videos/Video2.mp4",
+        "assets/Videos/Video3.mp4",
+        "assets/Videos/Video4.mp4",
+        "assets/Videos/Video5.mp4",
+        "assets/Videos/Video6.mp4",
+        "assets/Videos/Video7.mp4",
     ];
 
     const random =
