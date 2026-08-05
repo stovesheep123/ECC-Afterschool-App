@@ -1,9 +1,4 @@
-// ==========================================
-// GLOBAL STATES
-// ==========================================
-let currentQuiz = null;
-let currentQuestion = 0;
-let studentAnswers = [];
+
 
 // ==========================================
 // SECTION MANAGER
