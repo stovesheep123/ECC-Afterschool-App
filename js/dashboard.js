@@ -1,9 +1,5 @@
 
-/* ==========================================
-   SECTION MANAGER
-========================================== */
 
-/* SECTION MANAGER */
 window.showSection = function (sectionId, element = null) {
     document.querySelectorAll(".section").forEach(section => {
         section.style.display = "none";
@@ -26,16 +22,19 @@ window.showSection = function (sectionId, element = null) {
         element.classList.add("active");
     }
 
-    // Automatically load reports when opening these sections
-    if (sectionId === "savedReports") {
-        if (typeof window.loadSavedReports === "function") {
-            window.loadSavedReports();
-        }
-    }
-
     if (sectionId === "studentReports") {
         if (typeof window.loadStudentReports === "function") {
             window.loadStudentReports();
+        } else {
+            console.error("loadStudentReports is not available.");
+        }
+    }
+
+    if (sectionId === "savedReports") {
+        if (typeof window.loadSavedReports === "function") {
+            window.loadSavedReports();
+        } else {
+            console.error("loadSavedReports is not available.");
         }
     }
 };
