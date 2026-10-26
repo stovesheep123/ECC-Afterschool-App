@@ -371,7 +371,7 @@ window.editReport = async function (id) {
 // LOAD STUDENT PERFORMANCE PORTAL (STUDENT/PARENT VIEW)
 // ===============================
 
-window.loadStudentReports = async function () {
+
 let studentReportOffset = 0;
 const STUDENT_REPORT_PAGE_SIZE = 30;
 
@@ -485,7 +485,7 @@ window.loadStudentReports = async function (loadMore = false) {
         container.appendChild(retryButton);
     }
 };
-};
+
 
 
 // ===============================
@@ -524,4 +524,3 @@ window.approveReport = async function (id) {
 
     loadSavedReports();
 };
-
