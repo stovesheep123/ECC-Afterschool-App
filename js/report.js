@@ -139,49 +139,159 @@ window.saveReport = async function () {
 // ===============================
 // LOAD SAVED REPORTS (MANAGEMENT VIEW)
 // ===============================
-window.loadSavedReports = async function () {
-    console.log("1. Saved Reports started");
 
+window.loadSavedReports = async function () {
     const currentUser = JSON.parse(
-        localStorage.getItem("currentUser")
+        localStorage.getItem("currentUser") || "null"
     );
 
-    console.log("2. Logged-in user:", currentUser);
-
     const container = document.getElementById("savedReportList");
-    console.log("3. Report container:", container);
-
-    if (!currentUser) {
-        console.error("No logged-in user found");
-        return;
-    }
 
     if (!container) {
-        console.error("savedReportList element is missing");
+        console.error("Missing #savedReportList in HTML");
         return;
     }
 
-    container.innerHTML = "読み込み中...";
-
-    const { data: reports, error } = await window.supabase
-        .from("reports")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-    console.log("4. Reports from Supabase:", reports);
-    console.log("5. Supabase error:", error);
-
-    if (error) {
-        console.error("Report loading failed:", error);
-        container.innerHTML = "読み込み失敗: " + error.message;
+    if (!currentUser) {
+        container.textContent = "ログイン情報がありません。再ログインしてください。";
         return;
     }
 
-    console.log("6. Number of reports:", reports?.length);
+    if (!window.supabase) {
+        container.textContent = "Supabase is not initialized.";
+        return;
+    }
 
-    // Stop here temporarily so we can inspect the query result.
-    container.innerHTML = `Supabase returned ${reports.length} reports.`;
+    container.textContent = "レポートを読み込み中...";
+
+    try {
+        const { data: reports, error } = await window.supabase
+            .from("reports")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        const role = (currentUser.role || "").toLowerCase();
+        const username = (currentUser.username || "").trim();
+
+        let filteredReports = reports || [];
+
+        // Students and parents see reports addressed to them.
+        if (role === "student" || role === "parent") {
+            filteredReports = filteredReports.filter(report =>
+                (report.student_name || "").trim() === username
+            );
+        }
+
+        // Teachers see reports they wrote.
+        if (role === "teacher") {
+            filteredReports = filteredReports.filter(report =>
+                (report.teacher_name || "").trim() === username
+            );
+        }
+
+        // HeadMaster can see all reports.
+        const pendingOnly = document.getElementById("pendingOnly")?.checked;
+        const approvedOnly = document.getElementById("approvedOnly")?.checked;
+        const search = document.getElementById("reportSearch")?.value || "";
+
+        if (pendingOnly && !approvedOnly) {
+            filteredReports = filteredReports.filter(
+                report => report.status === "pending"
+            );
+        } else if (approvedOnly && !pendingOnly) {
+            filteredReports = filteredReports.filter(
+                report => report.status === "approved"
+            );
+        }
+
+        if (search) {
+            filteredReports = filteredReports.filter(
+                report => report.student_name === search
+            );
+        }
+
+        if (!filteredReports.length) {
+            container.textContent = "該当するレポートはありません。";
+            return;
+        }
+
+        container.innerHTML = "";
+
+        filteredReports.forEach(report => {
+            const card = document.createElement("article");
+            card.className = "saved-report-card";
+
+            const heading = document.createElement("h3");
+            heading.textContent =
+                `${report.student_name || "生徒"} — ${report.subject || ""}`;
+
+            const details = document.createElement("div");
+            details.className = "report-details";
+
+            const fields = [
+                ["教師", report.teacher_name],
+                ["日付", report.date],
+                ["授業内容", report.content],
+                ["宿題", report.homework],
+                ["宿題状況", report.homework_status],
+                ["理解度", `${report.understanding ?? 0}/10`],
+                ["状況", report.status || "未設定"]
+            ];
+
+            fields.forEach(([label, value]) => {
+                const p = document.createElement("p");
+                const strong = document.createElement("strong");
+                strong.textContent = `${label}: `;
+                p.append(strong, document.createTextNode(value ?? ""));
+                details.appendChild(p);
+            });
+
+            card.append(heading, details);
+
+            if (report.image_url) {
+                const img = document.createElement("img");
+                img.src = report.image_url;
+                img.alt = "レポート画像";
+                img.style.maxWidth = "300px";
+                img.style.width = "100%";
+                img.style.borderRadius = "12px";
+                card.appendChild(img);
+            }
+
+            // Editing and deleting are only for teachers and HeadMaster.
+            if (role === "teacher" || role === "headmaster") {
+                const actions = document.createElement("div");
+                actions.className = "report-actions";
+
+                if (role === "headmaster" && report.status !== "approved") {
+                    const approve = document.createElement("button");
+                    approve.textContent = "✅ Approve";
+                    approve.onclick = () => window.approveReport(report.id);
+                    actions.appendChild(approve);
+                }
+
+                const edit = document.createElement("button");
+                edit.textContent = "✏️ Edit";
+                edit.onclick = () => window.editReport(report.id);
+
+                const remove = document.createElement("button");
+                remove.textContent = "🗑 Delete";
+                remove.onclick = () => window.deleteReport(report.id);
+
+                actions.append(edit, remove);
+                card.appendChild(actions);
+            }
+
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Load saved reports failed:", error);
+        container.textContent = "レポートの読み込みに失敗しました: " + error.message;
+    }
 };
+
 
 // ===============================
 // DELETE REPORT
@@ -260,54 +370,92 @@ window.editReport = async function (id) {
 // ===============================
 // LOAD STUDENT PERFORMANCE PORTAL (STUDENT/PARENT VIEW)
 // ===============================
+
 window.loadStudentReports = async function () {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "null"
+    );
+
     const container = document.getElementById("studentReportList");
 
-    if (!container) return;
-    container.innerHTML = "読み込み中...";
-
-    const cleanUsername = currentUser.username.trim();
-
-    // Pull directly matching rows cleanly
-    const { data, error } = await window.supabase
-        .from("reports")
-        .select("*")
-        .eq("status", "approved")
-        .eq("student_name", cleanUsername)
-        .order("date", { ascending: false });
-
-    if (error) {
-        console.error("Student portal query error:", error);
-        container.innerHTML = "読み込み失敗";
+    if (!container) {
+        console.error("Missing #studentReportList in HTML");
         return;
     }
 
-    if (!data || data.length === 0) {
-        container.innerHTML = "<p class='no-data'>承認されたレポートはありません</p>";
+    if (!currentUser) {
+        container.textContent = "ログイン情報がありません。再ログインしてください。";
         return;
     }
 
-    container.innerHTML = "";
+    container.textContent = "レポートを読み込み中...";
 
-    data.forEach(report => {
-        container.innerHTML += `
-            <div class="saved-report-card">
-                <h3>${report.subject}</h3>
-                <div class="report-details" style="margin-top:10px;">
-                    <p><strong>教師:</strong> ${report.teacher_name}</p>
-                    <p><strong>日付:</strong> ${report.date}</p>
-                    <p><strong>授業内容:</strong> ${report.content}</p>
-                    <p><strong>宿題:</strong> ${report.homework}</p>
-                    <p><strong>理解度:</strong> ${report.understanding}/10</p>
-                </div>
-                ${report.image_url ? `
-                    <img src="${report.image_url}" style="width:100%; max-width:400px; border-radius:12px; margin-top:12px; display:block;">
-                ` : ""}
-            </div>
-        `;
-    });
+    try {
+        const username = (currentUser.username || "").trim();
+
+        const { data: reports, error } = await window.supabase
+            .from("reports")
+            .select("*")
+            .order("date", { ascending: false });
+
+        if (error) throw error;
+
+        const myReports = (reports || []).filter(report =>
+            (report.student_name || "").trim() === username
+        );
+
+        if (!myReports.length) {
+            container.textContent =
+                "レポートが見つかりません。生徒名とログインユーザー名が一致しているか確認してください。";
+            return;
+        }
+
+        container.innerHTML = "";
+
+        myReports.forEach(report => {
+            const card = document.createElement("article");
+            card.className = "saved-report-card";
+
+            const title = document.createElement("h3");
+            title.textContent =
+                `${report.subject || "授業レポート"} — ${report.date || ""}`;
+
+            const fields = [
+                ["教師", report.teacher_name],
+                ["授業内容", report.content],
+                ["宿題", report.homework],
+                ["宿題状況", report.homework_status],
+                ["理解度", `${report.understanding ?? 0}/10`],
+                ["状況", report.status || "未設定"]
+            ];
+
+            card.appendChild(title);
+
+            fields.forEach(([label, value]) => {
+                const p = document.createElement("p");
+                const strong = document.createElement("strong");
+                strong.textContent = `${label}: `;
+                p.append(strong, document.createTextNode(value ?? ""));
+                card.appendChild(p);
+            });
+
+            if (report.image_url) {
+                const img = document.createElement("img");
+                img.src = report.image_url;
+                img.alt = "レポート画像";
+                img.style.width = "100%";
+                img.style.maxWidth = "400px";
+                card.appendChild(img);
+            }
+
+            container.appendChild(card);
+        });
+    } catch (error) {
+        console.error("Load student reports failed:", error);
+        container.textContent = "レポートの読み込みに失敗しました: " + error.message;
+    }
 };
+
 
 // ===============================
 // APPROVE PENDING ENTRY RECORD
