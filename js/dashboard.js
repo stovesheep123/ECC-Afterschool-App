@@ -2,23 +2,22 @@
 /* ==========================================
    SECTION MANAGER
 ========================================== */
+
+/* SECTION MANAGER */
 window.showSection = function (sectionId, element = null) {
-    // Hide all sections
     document.querySelectorAll(".section").forEach(section => {
         section.style.display = "none";
     });
 
-    // Show selected section
     const selected = document.getElementById(sectionId);
 
-    if (selected) {
-        selected.style.display = "block";
-    } else {
+    if (!selected) {
         console.warn("Section not found:", sectionId);
         return;
     }
 
-    // Highlight active menu item
+    selected.style.display = "block";
+
     document.querySelectorAll(".nav-item").forEach(item => {
         item.classList.remove("active");
     });
@@ -27,23 +26,20 @@ window.showSection = function (sectionId, element = null) {
         element.classList.add("active");
     }
 
-    // Load reports only when the relevant section is opened
+    // Automatically load reports when opening these sections
     if (sectionId === "savedReports") {
         if (typeof window.loadSavedReports === "function") {
             window.loadSavedReports();
-        } else {
-            console.error("loadSavedReports() is not available. Check report.js.");
         }
     }
 
     if (sectionId === "studentReports") {
         if (typeof window.loadStudentReports === "function") {
             window.loadStudentReports();
-        } else {
-            console.error("loadStudentReports() is not available. Check report.js.");
         }
     }
 };
+
 
 
 
