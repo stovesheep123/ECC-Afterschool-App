@@ -23,6 +23,14 @@ window.showSection = function (sectionId, element = null) {
     if (element) {
         element.classList.add("active");
     }
+
+    if (sectionName === "savedReports") {
+        window.loadSavedReports();
+    }
+
+    if (sectionName === "studentReports") {
+        window.loadStudentReports();
+    }
 };
 
 // ==========================================
@@ -166,12 +174,12 @@ window.startQuiz = async function (id) {
     }
 
     currentQuiz = data;
-    currentQuestion = 0; 
+    currentQuestion = 0;
     studentAnswers = new Array(currentQuiz.questions.length).fill(null);
 
     const nextBtn = document.getElementById("nextQuestionBtn");
     if (nextBtn) nextBtn.style.display = "block";
-    
+
     showSection("quizPlayer");
     showQuestion();
 };
@@ -189,10 +197,10 @@ function showQuestion() {
     choicesContainer.innerHTML = "";
 
     q.choices.forEach((choice, index) => {
-        if (choice && choice.trim() !== "") { 
+        if (choice && choice.trim() !== "") {
             const isSelected = studentAnswers[currentQuestion] === index;
             const selectedClass = isSelected ? "quiz-choice selected" : "quiz-choice";
-            
+
             choicesContainer.innerHTML += `
                 <button class="${selectedClass}" onclick="selectAnswer(${index})" style="display: block; width: 100%; margin-bottom: 8px; text-align: left; padding: 10px;">
                     ${choice}
@@ -347,7 +355,7 @@ function bindCardEvents(card) {
     card.querySelector(".duplicateQuestion").addEventListener("click", () => {
         const container = document.getElementById("questionContainer");
         const copy = card.cloneNode(true);
-        
+
         // Re-inject pristine listener hooks onto the clone context manually
         bindCardEvents(copy);
         container.appendChild(copy);
@@ -425,12 +433,12 @@ function updateQuestionType(card) {
     const choice2 = card.querySelector(".choice2");
     const choice3 = card.querySelector(".choice3");
     const choice4 = card.querySelector(".choice4");
-    
+
     const lbl1 = card.querySelector(".lbl-c1");
     const lbl2 = card.querySelector(".lbl-c2");
     const lbl3 = card.querySelector(".lbl-c3");
     const lbl4 = card.querySelector(".lbl-c4");
-    
+
     const correct = card.querySelector(".correctAnswer");
 
     if (type === "multiple") {
@@ -468,7 +476,7 @@ window.saveQuiz = async function () {
     const subject = document.getElementById("quizSubject").value;
     const grade = document.getElementById("quizGrade").value;
     const minutes = parseInt(document.getElementById("quizMinutes").value, 10) || 10;
-    
+
     if (!title) {
         alert("テストのタイトルを入力してください");
         return;
@@ -476,7 +484,7 @@ window.saveQuiz = async function () {
 
     const students = [...document.querySelectorAll(".student-box:checked")].map(x => x.value);
     const cardElements = [...document.querySelectorAll(".question-card")];
-    
+
     if (cardElements.length === 0) {
         alert("最低1つの質問を追加してください");
         return;
@@ -485,7 +493,7 @@ window.saveQuiz = async function () {
     const questions = cardElements.map(card => {
         const type = card.querySelector(".questionType").value;
         let choicesArray = [];
-        
+
         if (type === "multiple") {
             choicesArray = [
                 card.querySelector(".choice1").value,
@@ -552,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (video) {
         video.src = random;
         video.load();
-        
+
         // Auto-play is handled contextually by explicit element configuration values
         video.play().catch(err => {
             console.log("Autoplay blocked by standard browser container policies:", err);
