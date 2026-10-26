@@ -1,8 +1,7 @@
 
-
-// ==========================================
-// SECTION MANAGER
-// ==========================================
+/* ==========================================
+   SECTION MANAGER
+========================================== */
 window.showSection = function (sectionId, element = null) {
     // Hide all sections
     document.querySelectorAll(".section").forEach(section => {
@@ -11,8 +10,12 @@ window.showSection = function (sectionId, element = null) {
 
     // Show selected section
     const selected = document.getElementById(sectionId);
+
     if (selected) {
         selected.style.display = "block";
+    } else {
+        console.warn("Section not found:", sectionId);
+        return;
     }
 
     // Highlight active menu item
@@ -24,14 +27,26 @@ window.showSection = function (sectionId, element = null) {
         element.classList.add("active");
     }
 
-    if (sectionName === "savedReports") {
-        window.loadSavedReports();
+    // Load reports only when the relevant section is opened
+    if (sectionId === "savedReports") {
+        if (typeof window.loadSavedReports === "function") {
+            window.loadSavedReports();
+        } else {
+            console.error("loadSavedReports() is not available. Check report.js.");
+        }
     }
 
-    if (sectionName === "studentReports") {
-        window.loadStudentReports();
+    if (sectionId === "studentReports") {
+        if (typeof window.loadStudentReports === "function") {
+            window.loadStudentReports();
+        } else {
+            console.error("loadStudentReports() is not available. Check report.js.");
+        }
     }
 };
+
+
+
 
 // ==========================================
 // ROLE PERMISSIONS
