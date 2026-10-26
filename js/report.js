@@ -140,96 +140,47 @@ window.saveReport = async function () {
 // LOAD SAVED REPORTS (MANAGEMENT VIEW)
 // ===============================
 window.loadSavedReports = async function () {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const container = document.getElementById("savedReportList");
-    const search = document.getElementById("reportSearch")?.value || "";
-    const pendingOnly = document.getElementById("pendingOnly")?.checked;
-    const approvedOnly = document.getElementById("approvedOnly")?.checked;
+    console.log("1. Saved Reports started");
 
-    if (!container) return;
+    const currentUser = JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+    console.log("2. Logged-in user:", currentUser);
+
+    const container = document.getElementById("savedReportList");
+    console.log("3. Report container:", container);
+
+    if (!currentUser) {
+        console.error("No logged-in user found");
+        return;
+    }
+
+    if (!container) {
+        console.error("savedReportList element is missing");
+        return;
+    }
+
     container.innerHTML = "読み込み中...";
 
-    let query = window.supabase
+    const { data: reports, error } = await window.supabase
         .from("reports")
         .select("*")
         .order("created_at", { ascending: false });
 
-    // Enforce row isolation for non-privileged client ranks
-    if (currentUser.role === "student" || currentUser.role === "parent") {
-        query = query.eq("student_name", currentUser.username);
-    }
-
-    const { data: reports, error } = await query;
+    console.log("4. Reports from Supabase:", reports);
+    console.log("5. Supabase error:", error);
 
     if (error) {
-        console.error("Load reports error:", error);
-        container.innerHTML = "読み込み失敗";
+        console.error("Report loading failed:", error);
+        container.innerHTML = "読み込み失敗: " + error.message;
         return;
     }
 
-    // Process inline filtering systems
-    let filteredReports = reports;
+    console.log("6. Number of reports:", reports?.length);
 
-    if (pendingOnly && !approvedOnly) {
-        filteredReports = filteredReports.filter(r => r.status === "pending");
-    }
-    if (approvedOnly && !pendingOnly) {
-        filteredReports = filteredReports.filter(r => r.status === "approved");
-    }
-    if (search) {
-        filteredReports = filteredReports.filter(r => r.student_name === search);
-    }
-
-    if (!filteredReports.length) {
-        container.innerHTML = "<p class='no-data'>該当するレポートはありません</p>";
-        return;
-    }
-
-    container.innerHTML = "";
-
-    filteredReports.forEach(report => {
-        container.innerHTML += `
-            <div class="saved-report-card" style="position:relative;">
-                <div class="report-header">
-                    <h3>${report.student_name}</h3>
-                    <span class="subject-badge">${report.subject}</span>
-                </div>
-
-                <div class="report-details" style="margin-top: 10px;">
-                    <p><strong>教師:</strong> ${report.teacher_name}</p>
-                    <p><strong>日付:</strong> ${report.date}</p>
-                    <p><strong>授業内容:</strong> ${report.content}</p>
-                    <p><strong>宿題:</strong> ${report.homework}</p>
-                    <p><strong>宿題状況:</strong> ${report.homework_status}</p>
-                    <p><strong>理解度:</strong> ${report.understanding || 0}/10</p>
-                    <p><strong>状況:</strong> ${report.status === "approved" ? "承認済み" : "承認待ち"}</p>
-                </div>
-
-                ${report.image_url ? `
-                    <div class="report-image-preview" style="margin-top:12px;">
-                        <img src="${report.image_url}" style="width:100%; max-width:300px; border-radius:12px; display:block;">
-                    </div>
-                ` : ""}
-
-                ${report.status === "approved" ? `
-                    <div class="approved-stamp" style="position: absolute; top: 10px; right: 10px;">
-                        <img src="assets/images/approved.png" style="width:100px; opacity:0.85; transform:rotate(-12deg);">
-                    </div>
-                ` : ""}
-
-                <div class="report-actions" style="margin-top:15px; display:flex; gap:10px;">
-                    ${currentUser.role === "headmaster" && report.status !== "approved" ? `
-                        <button onclick="approveReport('${report.id}')" style="background:#28a745; color:white;">✅ Approve</button>
-                    ` : ""}
-                    
-                    ${currentUser.role === "teacher" || currentUser.role === "headmaster" ? `
-                        <button onclick="editReport('${report.id}')" style="background:#ffc107; color:black;">✏️ Edit</button>
-                        <button onclick="deleteReport('${report.id}')" style="background:#dc3545; color:white;">🗑 Delete</button>
-                    ` : ""}
-                </div>
-            </div>
-        `;
-    });
+    // Stop here temporarily so we can inspect the query result.
+    container.innerHTML = `Supabase returned ${reports.length} reports.`;
 };
 
 // ===============================
