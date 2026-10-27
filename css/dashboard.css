@@ -1,656 +1,1138 @@
-/* ==========================================================================
-   1. GLOBAL RESET & BASE STYLES
-   ========================================================================== */
-/* VIDEO BACKGROUND */
-body.dashboard-page {
-    position: relative;
-    min-height: 100vh;
-    overflow-x: hidden;
-    background: #101426;
+
+/* =========================================================
+   ECC BEST-ONE DASHBOARD
+   Theme: Dark Navy + Purple
+   Responsive: PC / iPhone / Android
+   ========================================================= */
+
+/* 1. GLOBAL RESET
+   ========================================================= */
+
+:root {
+    --bg: #0b1020;
+    --bg-soft: #111831;
+    --panel: #151d38;
+    --panel-hover: #1c2748;
+    --border: rgba(255, 255, 255, 0.09);
+    --text: #f5f7ff;
+    --muted: #a3aecb;
+    --purple: #8b5cf6;
+    --purple-light: #a78bfa;
+    --cyan: #38bdf8;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --pink: #f472b6;
+    --orange: #fb923c;
+    --radius: 20px;
+    --shadow: 0 14px 35px rgba(0, 0, 0, 0.22);
 }
 
-.bg-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-    background: #101426;
+* {
+    box-sizing: border-box;
 }
 
-.video-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(10, 15, 35, 0.48);
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* Keep all app content above the video */
-.app {
-    position: relative;
-    z-index: 2;
-    min-height: 100vh;
-}
 html {
     min-height: 100%;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body.dashboard-page {
     margin: 0;
-    isolation: isolate;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background:
+        radial-gradient(
+            ellipse at top left,
+            rgba(99, 102, 241, 0.16),
+            transparent 42%
+        ),
+        radial-gradient(
+            ellipse at top right,
+            rgba(139, 92, 246, 0.10),
+            transparent 35%
+        ),
+        var(--bg);
+    color: var(--text);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        Meiryo,
+        sans-serif;
+    line-height: 1.6;
 }
 
-.app {
-    background: transparent;
-}
-
-
-/* ==========================================================================
-   2. APP COMMON COMPONENTS & LAYOUT CONTAINERS
-   ========================================================================== */
-
-
-.logo {
-    color: white;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-#welcome {
-    color: white;
-    font-size: 13px;
-    text-align: center;
-}
-
-.section {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(16px);
-    border-radius: 24px;
-    padding: 25px;
-    color: white;
-    min-height: 90vh;
-}
-
-/* Form Native Controls */
+body,
+button,
 input,
 select,
 textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    border: none;
-    margin: 10px 0;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.95);
-    color: #4facfe;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        Meiryo,
+        sans-serif;
 }
 
-option {
-    color: #4facfe;
-    background: white;
+button,
+input,
+select,
+textarea {
+    font-size: 16px;
 }
 
 button {
-    padding: 12px 18px;
-    border: none;
-    border-radius: 14px;
-    background: #4facfe;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--purple-light);
+    outline-offset: 3px;
+}
+
+a {
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* 2. MAIN APP LAYOUT
+   ========================================================= */
+
+.app {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.main {
+    width: 100%;
+    max-width: 1600px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+.section {
+    width: 100%;
+    min-width: 0;
+    min-height: 70vh;
+    padding: 28px;
+    margin-bottom: 24px;
+    color: var(--text);
+    background: rgba(17, 24, 49, 0.76);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    overflow-wrap: anywhere;
+}
+
+/* Don't display a section unless it is selected.
+   Inline style="display:none" is also respected. */
+.section[style*="display: none"] {
+    display: none !important;
+}
+
+.section h1 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: clamp(25px, 3vw, 36px);
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+}
+
+.section h2 {
+    font-size: 22px;
+}
+
+.section h3 {
+    font-size: 17px;
+}
+
+/* 3. DASHBOARD HEADER
+   ========================================================= */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    text-decoration: none;
+}
+
+.brand-icon {
+    display: flex;
+    flex: 0 0 56px;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #8b5cf6, #5b5ce2);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.28);
+    font-size: 28px;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.brand-text strong {
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+}
+
+.brand-text small {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.header-notification {
+    display: inline-flex;
+    flex: 0 0 48px;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--panel);
     color: white;
+    font-size: 22px;
     cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
 }
 
-/* Icons Styles */
-.icon {
-    font-size: 26px;
+.header-notification:hover {
+    background: var(--panel-hover);
+    transform: translateY(-2px);
 }
 
-.icon:not(:first-child) {
-    display: none;
+/* 4. WELCOME PANEL
+   ========================================================= */
+
+.welcome-panel {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(24px, 4vw, 42px);
+    margin-bottom: 36px;
+    border: 1px solid rgba(167, 139, 250, 0.24);
+    border-radius: 24px;
+    background:
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(167, 139, 250, 0.24),
+            transparent 32%
+        ),
+        linear-gradient(120deg, #20234b, #282052 55%, #172344);
 }
 
-.text {
+.welcome-panel::after {
+    content: "";
+    position: absolute;
+    right: -45px;
+    bottom: -100px;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.welcome-panel .eyebrow {
+    margin: 0 0 12px;
+    color: #c4b5fd;
     font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-/* ==========================================================================
-   3. DASHBOARD MAIN INTERFACE PANELS
-   ========================================================================== */
-.welcome-card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(16px);
-    padding: 25px;
+.welcome-panel h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 12px;
+    font-size: clamp(27px, 4vw, 42px);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.welcome-panel > p:last-child {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #d6daf0;
+    font-size: 15px;
+}
+
+/* 5. SECTION HEADINGS
+   ========================================================= */
+
+.dashboard-heading {
+    margin: 36px 0 18px;
+    color: var(--text);
+    font-size: 21px;
+    font-weight: 750;
+}
+
+.dashboard-heading:first-of-type {
+    margin-top: 0;
+}
+
+/* 6. DASHBOARD MENU CARDS
+   ========================================================= */
+
+.dashboard-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.dashboard-nav-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: 170px;
+    padding: 22px;
+    overflow: hidden;
+    text-align: left;
+    color: var(--text);
+    background: linear-gradient(
+        145deg,
+        rgba(25, 34, 65, 0.98),
+        rgba(18, 26, 49, 0.98)
+    );
+    border: 1px solid var(--border);
     border-radius: 20px;
-    margin-bottom: 20px;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.welcome-card h1 {
-    color: white;
-    margin-bottom: 10px;
+.dashboard-nav-card:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(
+        145deg,
+        rgba(35, 45, 83, 0.98),
+        rgba(23, 31, 59, 0.98)
+    );
+    border-color: rgba(167, 139, 250, 0.48);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
 }
 
-.welcome-card p {
-    color: white;
-    opacity: 0.9;
+.dashboard-nav-card:active {
+    transform: scale(0.985);
 }
+
+.nav-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 17px;
+    border-radius: 15px;
+    font-size: 23px;
+}
+
+.nav-card-icon.purple {
+    background: rgba(139, 92, 246, 0.18);
+}
+
+.nav-card-icon.yellow {
+    background: rgba(251, 191, 36, 0.16);
+}
+
+.nav-card-icon.cyan {
+    background: rgba(56, 189, 248, 0.16);
+}
+
+.nav-card-icon.green {
+    background: rgba(52, 211, 153, 0.16);
+}
+
+.nav-card-icon.pink {
+    background: rgba(244, 114, 182, 0.16);
+}
+
+.nav-card-icon.orange {
+    background: rgba(251, 146, 60, 0.16);
+}
+
+.nav-card-title {
+    display: block;
+    max-width: 100%;
+    padding-right: 16px;
+    font-size: 16px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.nav-card-description {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.nav-card-arrow {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    color: var(--purple-light);
+    font-size: 20px;
+    transition: transform 0.2s;
+}
+
+.dashboard-nav-card:hover .nav-card-arrow {
+    transform: translateX(4px);
+}
+
+/* 7. DASHBOARD STATISTICS
+   ========================================================= */
 
 .dashboard-cards,
 .dashboard-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(14px);
-    border-radius: 20px;
-    padding: 25px;
-    text-align: center;
+    min-width: 0;
+    padding: 22px;
+    background: linear-gradient(
+        145deg,
+        rgba(26, 36, 68, 0.96),
+        rgba(18, 26, 49, 0.96)
+    );
+    border: 1px solid var(--border);
+    border-radius: 19px;
+    text-align: left;
 }
 
 .stat-card h3 {
-    color: white;
-    margin-bottom: 15px;
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 650;
 }
 
 .stat-card span,
 .stat-card p {
-    font-size: 32px;
-    font-weight: bold;
-    color: white;
+    display: block;
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(25px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+/* 8. WEATHER AND RECENT ACTIVITY
+   ========================================================= */
+
+.dashboard-bottom-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 18px;
+    margin-top: 22px;
 }
 
 .weather-widget,
 .activity-widget {
-    margin-top: 20px;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(15px);
-    padding: 20px;
+    min-width: 0;
+    padding: 24px;
+    margin-top: 0;
+    background: rgba(21, 29, 56, 0.92);
+    border: 1px solid var(--border);
     border-radius: 20px;
 }
 
-/* ==========================================================================
-   4. SUBJECT GRID & TEST CARDS SELECTION
-   ========================================================================== */
+.weather-widget h2,
+.activity-widget h2 {
+    margin: 0 0 14px;
+    font-size: 18px;
+}
+
+.weather-widget p,
+.activity-widget > div {
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+/* 9. BUTTONS
+   ========================================================= */
+
+button {
+    max-width: 100%;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: white;
+    background: linear-gradient(135deg, #7958e8, #6347ce);
+    font-weight: 650;
+    cursor: pointer;
+    transition:
+        filter 0.2s ease,
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:active {
+    transform: scale(0.985);
+}
+
+.back-home-btn {
+    margin-bottom: 24px;
+    padding: 10px 16px;
+    background: #202a49;
+    border: 1px solid var(--border);
+}
+
+.dashboard-logout {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    min-height: 48px;
+    margin: 32px auto 0;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(251, 113, 133, 0.24);
+    color: #fda4af;
+}
+
+.dashboard-logout:hover {
+    background: rgba(244, 63, 94, 0.22);
+}
+
+.open-report-btn,
+.save-report-btn {
+    margin: 8px 0 20px;
+}
+
+/* 10. FORM CONTROLS
+   ========================================================= */
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    color: #dce3fa;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    margin: 8px 0 14px;
+    padding: 12px 14px;
+    color: #17213a;
+    background: #f7f8ff;
+    border: 1px solid #dce1f0;
+    border-radius: 11px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #7b849d;
+    opacity: 1;
+}
+
+select {
+    cursor: pointer;
+}
+
+select option {
+    color: #17213a;
+    background: #ffffff;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    min-height: auto !important;
+    padding: 10px !important;
+    color: #17213a;
+}
+
+input[type="date"] {
+    width: 100%;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0 8px 0 0;
+    accent-color: var(--purple);
+    vertical-align: middle;
+}
+
+input[type="range"] {
+    display: block;
+    width: 100%;
+    accent-color: var(--purple);
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    margin: 14px 0;
+}
+
+.filter-row label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+}
+
+.filter-row input[type="checkbox"] {
+    flex: 0 0 auto;
+}
+
+.content-card {
+    width: 100%;
+    min-width: 0;
+    padding: 24px;
+    margin: 18px 0;
+    background: rgba(21, 29, 56, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+.report-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.report-row > div {
+    min-width: 0;
+}
+
+hr {
+    height: 1px;
+    margin: 24px 0;
+    border: 0;
+    background: var(--border);
+}
+
+/* 11. SUBJECT SELECTION
+   ========================================================= */
+
 .subject-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 24px;
 }
 
 .subject-grid button {
-    height: 120px;
-    border-radius: 25px;
-    font-size: 28px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    backdrop-filter: blur(20px);
-    transition: .25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 90px;
+    padding: 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    font-size: 18px;
+    overflow-wrap: anywhere;
 }
 
 .subject-grid button:hover {
-    transform: scale(1.05);
-    background: #4facfe;
+    background: var(--panel-hover);
+    border-color: var(--purple-light);
 }
 
+/* 12. QUIZ CARDS AND TEST PLAYER
+   ========================================================= */
+
 .quiz-card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    padding: 25px;
-    border-radius: 20px;
-    margin-top: 20px;
-    color: white;
+    padding: 22px;
+    margin-top: 18px;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
 }
 
 .quiz-card button {
-    margin-top: 15px;
-    width: 180px;
+    margin-top: 12px;
 }
 
-/* ==========================================================================
-   5. QUIZ RUNTIME INTERFACE (PLAYER ENGINE)
-   ========================================================================== */
 .quiz-phone {
-    max-width: 650px;
-    margin: auto;
-    background: white;
-    color: black;
-    padding: 25px;
-    border-radius: 30px;
-    min-height: 90vh;
     display: flex;
     flex-direction: column;
-    position: relative;
+    width: 100%;
+    max-width: 650px;
+    min-height: 600px;
+    margin: 0 auto;
+    padding: 24px;
+    color: #182039;
+    background: #ffffff;
+    border-radius: 24px;
 }
 
-.quiz-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
+.quiz-header,
 .quiz-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
 }
 
 .quiz-exit,
 .quiz-close {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #ddd;
-    color: black;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 auto;
+    padding: 0;
+    color: #182039;
+    background: #e8ebf4;
+    border-radius: 50%;
 }
 
 #quizTimer {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffb300;
+    color: #d99a00;
+    font-size: 28px;
+    font-weight: 800;
 }
 
 .quiz-progress-wrap,
 .quiz-bar {
-    height: 10px;
-    background: #ddd;
-    border-radius: 999px;
-    margin: 20px 0;
+    height: 9px;
+    margin: 18px 0;
     overflow: hidden;
+    background: #e5e7eb;
+    border-radius: 999px;
 }
 
 #quizBarFill {
-    height: 100%;
     width: 0%;
-    background: #3f8cff;
-    transition: .3s;
+    height: 100%;
+    background: linear-gradient(90deg, #8b5cf6, #38bdf8);
+    transition: width 0.3s;
 }
 
 .quiz-progress {
-    width: 48px;
-    height: 48px;
-    border: 4px solid gold;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    width: 44px;
+    height: 44px;
+    border: 3px solid #fbbf24;
+    border-radius: 50%;
+    font-weight: 800;
 }
 
 .quiz-counter {
     text-align: center;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .quiz-body,
 .quiz-content {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
+    padding: 28px 8px;
     text-align: center;
-    padding: 40px 10px;
 }
 
 #quizQuestion,
 .quiz-content h1 {
-    font-size: 38px;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
+    font-size: clamp(24px, 4vw, 36px);
 }
 
 .skip-btn {
-    position: absolute;
-    right: 25px;
-    top: 180px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: gold;
-    color: black;
-    font-weight: bold;
+    position: static;
+    align-self: flex-end;
+    width: auto;
+    min-width: 60px;
+    min-height: 44px;
+    margin: 12px 0;
+    color: #3c2d00;
+    background: #fbbf24;
 }
 
 .quiz-choices,
 .quiz-answers {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .quiz-choice,
 .quiz-answer {
-    padding: 22px;
-    border-radius: 20px;
-    background: #f2f2f2;
-    cursor: pointer;
-    font-size: 20px;
-    border: none;
+    width: 100%;
+    padding: 16px;
+    color: #202944;
+    background: #f0f2f8;
+    border: 1px solid #dfe3ee;
+    border-radius: 14px;
     text-align: left;
-    transition: transform 0.2s, background 0.2s;
+    font-size: 16px;
+    overflow-wrap: anywhere;
 }
 
 .quiz-choice:hover,
 .quiz-answer:hover {
-    transform: scale(1.02);
-    background: #4facfe;
     color: white;
+    background: #7054dc;
 }
 
 .quiz-choice.selected,
 .selected {
-    background: #4facfe;
     color: white;
+    background: #7054dc;
 }
 
 #nextBtn,
 #nextQuestionBtn {
-    margin-top: 30px;
-    padding: 18px;
-    font-size: 22px;
+    width: 100%;
+    margin-top: 24px;
+    padding: 15px;
+    font-size: 17px;
 }
 
-/* ==========================================================================
-   6. QUIZ CREATOR & BUILDER DEV TOOLS
-   ========================================================================== */
+/* 13. QUIZ CREATOR
+   ========================================================= */
+
 #createQuiz {
     width: 100%;
     max-width: none;
-    padding: 20px 30px 120px;
-    overflow-y: auto;
+    padding: 28px;
+    overflow: visible;
 }
 
 .quiz-builder,
 .quiz-create-card {
     width: 100%;
-    max-width: 900px;
-    margin: auto;
-    padding: 40px;
-    border-radius: 40px;
-    background: rgba(255, 255, 255, .15);
-    backdrop-filter: blur(30px);
+    max-width: 1000px;
+    min-width: 0;
+    margin: 0 auto;
+    padding: clamp(18px, 3vw, 32px);
+    background: rgba(21, 29, 56, 0.92);
+    border: 1px solid var(--border);
+    border-radius: 22px;
 }
 
 .quiz-builder h1,
 .quiz-create-card h1 {
-    font-size: 64px;
-    margin-bottom: 40px;
-    text-align: center;
-    color: white;
+    margin-bottom: 24px;
+    color: var(--text);
+    font-size: clamp(27px, 3vw, 38px);
+    text-align: left;
 }
 
 .quiz-settings,
 .quiz-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.quiz-settings > div,
+.quiz-grid > div {
+    min-width: 0;
 }
 
 .quiz-settings label,
 .quiz-grid label {
     display: block;
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: white;
+    margin-bottom: 6px;
+    color: #dce3fa;
+    font-size: 14px;
 }
 
-#createQuiz input,
+#createQuiz input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 #createQuiz select,
-.quiz-create-card input,
+.quiz-create-card input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 .quiz-create-card select {
-    width: 100%;
-    min-height: 85px;
-    padding: 25px;
-    font-size: 28px;
-    border-radius: 30px;
+    min-height: 46px;
+    padding: 11px 13px;
+    font-size: 16px;
+    border-radius: 11px;
 }
 
 #createQuiz button,
 .quiz-btn,
 .deploy-btn {
     width: 100%;
-    min-height: 85px;
-    padding: 25px;
-    font-size: 30px;
-    border-radius: 34px;
-    margin-top: 30px;
+    min-height: 48px;
+    margin-top: 14px;
+    padding: 13px 16px;
+    font-size: 16px;
+    border-radius: 12px;
+    white-space: normal;
 }
 
 .quiz-btn {
-    background: linear-gradient(135deg, #ffc107, #ffb300);
+    color: white;
+    background: linear-gradient(135deg, #7c5ce7, #5d48c7);
 }
 
 .deploy-btn {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, #059669, #10b981);
 }
 
 #quizStudentList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 18px;
 }
 
 .student-check {
-    padding: 25px;
-    background: white;
-    color: black;
-    border-radius: 22px;
-    font-size: 24px;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 14px;
+    color: #202944;
+    background: #f7f8ff;
+    border-radius: 12px;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.student-check input {
+    flex: 0 0 auto;
 }
 
 #questionContainer {
-    margin-top: 40px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 16px;
+    margin-top: 24px;
 }
 
 .question-card {
-    background: rgba(255, 255, 255, .18);
-    padding: 25px;
-    border-radius: 24px;
-    margin-top: 20px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .2);
-    transition: .3s;
+    min-width: 0;
+    padding: 20px;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    transition: border-color 0.2s;
 }
 
 .question-card:hover {
-    transform: translateY(-5px);
+    border-color: rgba(167, 139, 250, 0.4);
 }
 
 .question-title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: white;
+    margin-bottom: 16px;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: 750;
 }
 
 .question-toolbar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 14px;
 }
 
 .question-toolbar button {
-    padding: 10px 18px;
-    border-radius: 12px;
-    cursor: pointer;
+    padding: 9px 13px;
+    font-size: 14px;
 }
 
 .question-card label {
     display: block;
-    margin-top: 15px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: white;
+    margin: 12px 0 6px;
+    color: #dce3fa;
+    font-weight: 650;
 }
 
 .question-card input,
 .question-card select {
     width: 100%;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
 }
 
 .imagePreview {
-    margin-top: 15px;
+    margin-top: 14px;
     text-align: center;
 }
 
 .imagePreview img {
     max-width: 100%;
-    border-radius: 20px;
+    border-radius: 14px;
 }
 
-/* ==========================================================================
-   7. SCORING, RANKING & END GAME GRAPHICS
-   ========================================================================== */
+/* 14. QUIZ RESULTS AND RANKING
+   ========================================================= */
+
 .quiz-finished {
+    padding: 48px 20px;
     text-align: center;
-    padding: 80px 20px;
-    animation: success .5s;
+    animation: success 0.4s ease;
 }
 
 .quiz-finished h2 {
-    font-size: 48px;
-    color: #00cc66;
+    color: #34d399;
+    font-size: clamp(27px, 4vw, 40px);
 }
 
 #quizRanking {
     display: none;
+    padding: 24px;
     text-align: center;
-    padding: 40px;
-    animation: fade .5s;
+    animation: fade 0.4s ease;
 }
 
 #quizScore {
-    font-size: 60px;
-    font-weight: bold;
-    color: #ffb400;
-    margin: 20px;
+    margin: 18px;
+    color: #fbbf24;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 800;
 }
 
 #quizMessage {
-    font-size: 24px;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
+    font-size: 18px;
 }
 
 .result-card {
-    background: white;
-    padding: 25px;
-    margin: 20px 0;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+    padding: 22px;
+    margin: 16px 0;
+    color: #182039;
+    background: #f7f8ff;
+    border-radius: 18px;
     text-align: center;
-    color: black;
 }
 
 .result-card h2,
 .result-card h3 {
-    font-size: 40px;
     margin: 0;
-    color: black;
+    color: #182039;
+    font-size: clamp(23px, 4vw, 32px);
 }
 
 .result-card p {
     margin: 8px;
-    font-size: 24px;
-    color: gold;
+    color: #9b7200;
+    font-size: 17px;
 }
 
 .rank-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 24px;
-    background: linear-gradient(45deg, gold, orange);
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    animation: rankPop .4s;
-    backdrop-filter: blur(15px);
-    transition: transform 0.2s;
-}
-
-.rank-card:hover {
-    transform: scale(1.02);
+    gap: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    color: #ffffff;
+    background: linear-gradient(135deg, #b8860b, #e58c21);
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+    animation: rankPop 0.35s ease;
 }
 
 #rankingTable {
-    margin-top: 20px;
-}
-
-@keyframes rankPop {
-    from {
-        opacity: 0;
-        transform: scale(.7);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes success {
-    from {
-        transform: scale(.5);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes fade {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ==========================================================================
-   8. STUDENT GRADE REPORTS & CARD SIGN-OFF STAMPS
-   ========================================================================== */
-#savedReportList {
     width: 100%;
+    margin-top: 18px;
+    overflow-x: auto;
+}
+
+/* 15. SAVED REPORTS
+   ========================================================= */
+
+#savedReportList,
+#studentReportList,
+#studentResultList,
+#noticeList,
+#notificationList,
+#quizResultList {
+    width: 100%;
+    min-width: 0;
 }
 
 .saved-report-card {
-    width: 100%;
     position: relative;
-    background: rgba(255, 255, 255, 0.12);
+    width: 100%;
+    min-width: 0;
     padding: 20px;
-    border-radius: 20px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow-wrap: anywhere;
 }
 
 .report-actions {
     display: flex;
-    gap: 10px;
     flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
 }
 
 .approved-stamp {
@@ -661,64 +1143,101 @@ button {
 }
 
 .approved-stamp img {
-    width: 120px;
+    width: 90px;
     opacity: 0.9;
     transform: rotate(-10deg);
 }
 
-/* ==========================================================================
-   9. MESSAGING & CHAT SYSTEM INTERACTION LAYOUT
-   ========================================================================== */
+/* 16. CHAT
+   ========================================================= */
+
 .chat-container {
     display: flex;
-    height: 75vh;
-    border-radius: 20px;
+    width: 100%;
+    height: min(72vh, 760px);
+    min-height: 420px;
     overflow: hidden;
+    background: rgba(15, 23, 45, 0.65);
+    border: 1px solid var(--border);
+    border-radius: 18px;
 }
 
 .chat-sidebar {
-    width: 280px;
-    background: rgba(255, 255, 255, 0.12);
-    padding: 20px;
+    flex: 0 0 250px;
+    width: 250px;
+    min-width: 0;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.035);
+    border-right: 1px solid var(--border);
+}
+
+.chat-sidebar h2 {
+    margin-top: 0;
+    font-size: 18px;
 }
 
 .chat-main {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
+    min-width: 0;
+    min-height: 0;
 }
 
 .chat-header {
-    padding: 18px;
-    background: rgba(255, 255, 255, 0.1);
+    flex: 0 0 auto;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.035);
+    border-bottom: 1px solid var(--border);
+}
+
+.chat-header h3 {
+    margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .chat-box {
     flex: 1;
+    min-height: 0;
+    padding: 18px;
     overflow-y: auto;
-    padding: 20px;
+    overscroll-behavior: contain;
 }
 
 .chat-input-area {
     display: flex;
+    align-items: center;
     gap: 10px;
-    padding: 15px;
+    padding: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.chat-input-area input {
+    flex: 1;
+    min-width: 0;
+    margin: 0 !important;
 }
 
 .chat-input-area button {
-    width: 60px;
+    flex: 0 0 48px;
+    width: 48px;
+    min-height: 44px;
+    padding: 8px;
 }
 
 .message {
     margin: 10px 0;
+    overflow-wrap: anywhere;
 }
 
 .bubble {
-    padding: 14px;
-    border-radius: 18px;
-    background: white;
-    color: black;
-    max-width: 70%;
+    display: inline-block;
+    max-width: min(80%, 520px);
+    padding: 12px 15px;
+    color: #202944;
+    background: #f7f8ff;
+    border-radius: 16px;
+    overflow-wrap: anywhere;
 }
 
 .sent {
@@ -726,235 +1245,495 @@ button {
 }
 
 .sent .bubble {
-    background: #4facfe;
     color: white;
+    background: #7054dc;
 }
 
-/* ==========================================================================
-   10. FLOATING RADIAL DOCK SYSTEM MENU
-   ========================================================================== */
-.sidebar {
-    position: fixed;
-    left: 20px;
-    bottom: 20px;
-    z-index: 99999;
-    background: none;
-    width: 0;
-    height: 0;
+/* 17. TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.circle-menu {
-    position: fixed;
-    left: 30px;
-    bottom: 30px;
-    width: 80px;
-    height: 80px;
-    z-index: 99999;
-    touch-action: none;
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    overflow-wrap: anywhere;
 }
 
-.menu-center {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: black;
-    color: white;
-    font-size: 34px;
-    border: none;
-    cursor: pointer;
-    z-index: 100;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+th {
+    color: #e4e7ff;
+    background: rgba(255, 255, 255, 0.04);
 }
 
-.circle-items {
-    position: absolute;
-    width: 320px;
-    height: 320px;
-    left: -120px;
-    top: -120px;
-    overflow: visible;
+td {
+    color: var(--muted);
 }
 
-.nav-item {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #111;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    opacity: 0;
-    transform: translate(110px, 110px) scale(.2);
-    transition: .35s;
-    pointer-events: none;
-}
+/* 18. ANIMATIONS
+   ========================================================= */
 
-.circle-menu.open .nav-item {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
-}
-
-/* Perfect Radial Positioning Paths */
-.circle-menu.open .nav-item:nth-child(1) {
-    transform: translate(110px, 0);
-}
-
-.circle-menu.open .nav-item:nth-child(2) {
-    transform: translate(170px, 20px);
-}
-
-.circle-menu.open .nav-item:nth-child(3) {
-    transform: translate(220px, 70px);
-}
-
-.circle-menu.open .nav-item:nth-child(4) {
-    transform: translate(240px, 130px);
-}
-
-.circle-menu.open .nav-item:nth-child(5) {
-    transform: translate(220px, 190px);
-}
-
-.circle-menu.open .nav-item:nth-child(6) {
-    transform: translate(170px, 240px);
-}
-
-.circle-menu.open .nav-item:nth-child(7) {
-    transform: translate(110px, 260px);
-}
-
-.circle-menu.open .nav-item:nth-child(8) {
-    transform: translate(50px, 240px);
-}
-
-.circle-menu.open .nav-item:nth-child(9) {
-    left: 0px;
-    top: 190px;
-}
-
-.circle-menu.open .nav-item:nth-child(10) {
-    left: -20px;
-    top: 130px;
-}
-
-.circle-menu.open .nav-item:nth-child(11) {
-    left: 0px;
-    top: 70px;
-}
-
-.circle-menu.open .nav-item:nth-child(12) {
-    left: 50px;
-    top: 20px;
-}
-
-/* ==========================================================================
-   11. SMARTPHONE RESPONSIVE RESPONSIVENESS MEDIA HOOKS
-   ========================================================================== */
-@media (max-width: 900px) {
-    #createQuiz {
-        margin-left: 0;
-        padding: 20px 20px 200px;
+@keyframes rankPop {
+    from {
+        opacity: 0;
+        transform: scale(0.94);
     }
 
-    #createQuiz .quiz-settings,
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes success {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 19. TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .main {
+        padding: 24px;
+    }
+
+    .dashboard-nav-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-cards,
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-bottom-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .quiz-settings,
     .quiz-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    #createQuiz button,
-    .quiz-btn,
-    .deploy-btn {
-        font-size: 22px;
-        min-height: 80px;
-        padding: 22px;
-    }
-
-    #createQuiz input,
-    #createQuiz select,
-    .quiz-create-card input,
-    .quiz-create-card select {
-        font-size: 22px;
-        min-height: 75px;
-    }
-
-    .quiz-create-card {
-        padding: 25px;
-    }
-
-    .quiz-create-card h1 {
-        font-size: 44px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* 20. MOBILE
+   ========================================================= */
 
 @media (max-width: 768px) {
-
-    html,
-    body {
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        -webkit-overflow-scrolling: touch;
+    html {
+        scroll-padding-top: 12px;
     }
 
     body.dashboard-page {
-        overflow: auto !important;
-        height: auto;
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
-
-
-    .text {
-        display: none;
+    .app {
+        min-height: 100vh;
     }
-
 
     .main {
         width: 100%;
         min-height: 100vh;
         height: auto;
+        padding: 14px;
         overflow: visible;
-        padding: 20px;
-        position: relative;
-        z-index: 2;
     }
-
 
     .section {
         width: 100%;
-        min-height: 100vh;
-        padding: 30px;
-        border-radius: 30px;
+        min-height: 60vh;
+        padding: 20px;
+        margin-bottom: 14px;
+        border-radius: 20px;
+    }
+
+    .dashboard-header {
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .brand {
+        gap: 10px;
+    }
+
+    .brand-icon {
+        flex-basis: 46px;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        font-size: 23px;
+    }
+
+    .brand-text strong {
+        font-size: 19px;
+    }
+
+    .brand-text small {
+        font-size: 12px;
+    }
+
+    .header-notification {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .welcome-panel {
+        padding: 23px 19px;
+        margin-bottom: 28px;
+        border-radius: 19px;
+    }
+
+    .welcome-panel h1 {
+        font-size: clamp(25px, 7vw, 34px);
+    }
+
+    .welcome-panel > p:last-child {
+        font-size: 14px;
+    }
+
+    .dashboard-heading {
+        margin-top: 28px;
+        font-size: 19px;
+    }
+
+    .dashboard-nav-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .dashboard-nav-card {
+        min-height: 155px;
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .nav-card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        font-size: 20px;
+    }
+
+    .nav-card-title {
+        padding-right: 0;
+        font-size: 14px;
+    }
+
+    .nav-card-description {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .nav-card-arrow {
+        right: 12px;
+        bottom: 10px;
+        font-size: 17px;
+    }
+
+    .dashboard-cards,
+    .dashboard-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
+    }
+
+    .stat-card {
+        padding: 16px;
+        border-radius: 15px;
+    }
+
+    .stat-card h3 {
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+
+    .stat-card span,
+    .stat-card p {
+        font-size: 27px;
+    }
+
+    .dashboard-bottom-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .weather-widget,
+    .activity-widget {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .dashboard-logout {
+        max-width: none;
+        margin-top: 25px;
+    }
+
+    .content-card {
+        padding: 16px;
+    }
+
+    .report-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .subject-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .subject-grid button {
+        min-height: 75px;
+        padding: 12px;
+        border-radius: 14px;
+        font-size: 16px;
+    }
+
+    #createQuiz {
+        padding: 0;
+    }
+
+    .quiz-builder,
+    .quiz-create-card {
+        padding: 18px;
+        border-radius: 17px;
+    }
+
+    .quiz-builder h1,
+    .quiz-create-card h1 {
+        font-size: 27px;
+        margin-bottom: 20px;
+    }
+
+    .quiz-settings,
+    .quiz-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    #quizStudentList {
+        grid-template-columns: 1fr;
+    }
+
+    #createQuiz button,
+    .quiz-btn,
+    .deploy-btn {
+        min-height: 46px;
+        margin-top: 12px;
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .question-card {
+        padding: 14px;
+    }
+
+    .question-title {
+        font-size: 18px;
     }
 
     .chat-container {
+        display: flex;
         flex-direction: column;
         height: auto;
+        min-height: 65vh;
+        overflow: visible;
     }
 
-    .chat-sidebar,
-    .chat-main {
+    .chat-sidebar {
+        flex: 0 0 auto;
         width: 100%;
+        padding: 12px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
     }
 
-    input,
-    select,
-    textarea {
-        font-size: 16px;
-        max-width: 100%;
+    .chat-sidebar h2 {
+        margin: 0;
+    }
+
+    .chat-sidebar select {
+        margin-bottom: 0;
+    }
+
+    .chat-main {
+        flex: 1;
+        min-height: 360px;
+    }
+
+    .chat-box {
+        min-height: 220px;
+        max-height: 50vh;
+    }
+
+    .chat-input-area {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .chat-input-area button {
+        flex-basis: 44px;
+        width: 44px;
     }
 
     .quiz-phone {
-        border-radius: 0;
-        min-height: 100vh;
+        min-height: 75vh;
+        padding: 18px;
+        border-radius: 18px;
     }
 
-    .student-check {
-        font-size: 18px;
+    .quiz-body,
+    .quiz-content {
+        padding: 24px 4px;
+    }
+
+    .quiz-choice,
+    .quiz-answer {
+        padding: 14px;
+        font-size: 15px;
+    }
+
+    #quizScore {
+        font-size: 40px;
+    }
+
+    .rank-card {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .saved-report-card {
+        padding: 15px;
+    }
+
+    .approved-stamp img {
+        width: 65px;
+    }
+
+    .report-actions {
+        gap: 8px;
+    }
+
+    .report-actions button {
+        flex: 1 1 auto;
+    }
+
+    .back-home-btn {
+        margin-bottom: 18px;
+    }
+
+    th,
+    td {
+        padding: 9px;
+        font-size: 13px;
+    }
+}
+
+/* 21. SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+    .main {
+        padding: 9px;
+    }
+
+    .section {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .brand-text strong {
+        font-size: 17px;
+    }
+
+    .brand-text small {
+        font-size: 11px;
+    }
+
+    .dashboard-nav-grid {
+        gap: 8px;
+    }
+
+    .dashboard-nav-card {
+        min-height: 148px;
+        padding: 11px;
+    }
+
+    .nav-card-title {
+        font-size: 13px;
+    }
+
+    .nav-card-description {
+        font-size: 11px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-card h3 {
+        font-size: 11px;
+    }
+
+    .stat-card span,
+    .stat-card p {
+        font-size: 24px;
+    }
+
+    .welcome-panel {
+        padding: 19px 15px;
+    }
+
+    .quiz-builder,
+    .quiz-create-card {
+        padding: 13px;
+    }
+}
+
+/* 22. REDUCE MOTION FOR ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
