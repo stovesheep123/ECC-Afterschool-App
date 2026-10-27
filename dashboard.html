@@ -1,124 +1,141 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#11152b">
+
+    <title>ECC Best-One | Dashboard</title>
 
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="manifest" href="manifest.json">
-
-    <meta name="theme-color" content="#4facfe">
 </head>
 
 <body class="dashboard-page">
 
-    <!-- VIDEO BACKGROUND -->
-    <video id="bgVideo" class="bg-video" autoplay muted loop playsinline>
-        <source id="videoSource" src="assets/Videos/video1.mp4" type="video/mp4">
-    </video>
-
-    <div class="video-overlay"></div>
-
-    <!-- MOBILE MENU -->
-
     <div class="app">
+        <main class="main">
 
-        <!-- SIDEBAR -->
-        <div class="sidebar">
+            <!-- =========================
+                 HOME DASHBOARD
+            ========================== -->
+            <section id="home" class="section">
 
-            <div class="logo-area">
-                <h2 class="logo">ベストワン</h2>
-                <p id="welcome"></p>
-            </div>
-
-            <div class="circle-menu" id="circleMenu">
-
-                <button id="menuCenter" class="menu-center">
-
-                    ☰
-
-                </button>
-
-                <nav class="circle-items">
-
-                    <a href="#" class="nav-item active" onclick="showSection('home',this)">
-                        <span class="icon">🏠</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('notifications',this)">
-                        <span class="icon">🔔</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('notice',this)">
-                        <span class="icon">📢</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('report',this)">
-                        <span class="icon">📄</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('groupReport',this)">
-                        <span class="icon">👥</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('chat',this)">
-                        <span class="icon">💬</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('savedReports',this)">
-                        <span class="icon">💾</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('studentReports',this)">
-                        <span class="icon">📘</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('createQuiz',this)">
-                        <span class="icon">📝</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('takeQuiz',this)">
-                        <span class="icon">🎯</span>
-                    </a>
-
-                    <a href="#" class="nav-item" onclick="showSection('quizResultsSection',this);loadQuizResults();">
-
-                        <span class="icon">
-                            🏆
+                <header class="dashboard-header">
+                    <a class="brand" href="#" onclick="showSection('home'); return false;">
+                        <span class="brand-icon">🎓</span>
+                        <span class="brand-text">
+                            <strong>ECC Best-One</strong>
+                            <small>Learning Dashboard</small>
                         </span>
-
                     </a>
 
-                    <a href="#" class="nav-item" onclick="logout()">
+                    <button
+                        type="button"
+                        class="header-notification"
+                        onclick="showSection('notifications', this)"
+                        aria-label="通知を開く">
+                        🔔
+                    </button>
+                </header>
 
-                        <span class="icon">
+                <section class="welcome-panel">
+                    <p class="eyebrow">YOUR LEARNING SPACE</p>
+                    <h1 id="dashboardGreeting">Welcome back!</h1>
+                    <p>学習・連絡・レポートをここから管理できます。</p>
+                </section>
 
-                            🚪
+                <!-- MAIN MENU -->
+                <h2 class="dashboard-heading">メニュー</h2>
 
-                        </span>
+                <div class="dashboard-nav-grid">
 
-                    </a>
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('notifications', this)">
+                        <span class="nav-card-icon purple">🔔</span>
+                        <span class="nav-card-title">Notifications</span>
+                        <span class="nav-card-description">通知を確認</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-                </nav>
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('notice', this)">
+                        <span class="nav-card-icon yellow">📢</span>
+                        <span class="nav-card-title">Notice Board</span>
+                        <span class="nav-card-description">塾からのお知らせ</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-            </div>
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('report', this)">
+                        <span class="nav-card-icon cyan">📄</span>
+                        <span class="nav-card-title">Create Report</span>
+                        <span class="nav-card-description">授業レポートを作成</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('savedReports', this); loadSavedReports();">
+                        <span class="nav-card-icon green">💾</span>
+                        <span class="nav-card-title">Saved Reports</span>
+                        <span class="nav-card-description">保存済みレポート</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('studentReports', this); loadStudentReports();">
+                        <span class="nav-card-icon pink">📘</span>
+                        <span class="nav-card-title">My Reports</span>
+                        <span class="nav-card-description">自分のレポート</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-        </div>
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('groupReport', this)">
+                        <span class="nav-card-icon orange">👥</span>
+                        <span class="nav-card-title">Group Reports</span>
+                        <span class="nav-card-description">学年別レポート</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-        <!-- MAIN CONTENT -->
-        <div class="main">
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('chat', this)">
+                        <span class="nav-card-icon cyan">💬</span>
+                        <span class="nav-card-title">Chat</span>
+                        <span class="nav-card-description">メッセージを送る</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-            <!-- HOME -->
-            <div id="home" class="section">
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('createQuiz', this)">
+                        <span class="nav-card-icon purple">📝</span>
+                        <span class="nav-card-title">Create Test</span>
+                        <span class="nav-card-description">テストを作成</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
 
-                <h1 id="dashboardGreeting">
-                    🌈👋✨ Welcome
-                </h1>
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('takeQuiz', this)">
+                        <span class="nav-card-icon green">🎯</span>
+                        <span class="nav-card-title">Take Test</span>
+                        <span class="nav-card-description">テストを受験</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
+
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('studentResults', this); loadStudentResults();">
+                        <span class="nav-card-icon yellow">🏆</span>
+                        <span class="nav-card-title">My Test Results</span>
+                        <span class="nav-card-description">テスト結果を確認</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
+
+                </div>
+
+                <!-- STATISTICS -->
+                <h2 class="dashboard-heading">Overview</h2>
 
                 <div class="dashboard-cards">
 
@@ -144,41 +161,47 @@
 
                 </div>
 
-                <div class="weather-widget">
+                <!-- WEATHER AND ACTIVITY -->
+                <div class="dashboard-bottom-grid">
 
-                    <h2>🌤 Weather</h2>
+                    <div class="weather-widget">
+                        <h2>🌤 Weather</h2>
+                        <p id="weatherText">Loading weather...</p>
+                    </div>
 
-                    <p id="weatherText">
-                        Loading weather...
-                    </p>
-
-                </div>
-
-                <div class="activity-widget">
-
-                    <h2>📢 Recent Activity</h2>
-
-                    <div id="activityFeed">
-                        No activity
+                    <div class="activity-widget">
+                        <h2>📢 Recent Activity</h2>
+                        <div id="activityFeed">No activity</div>
                     </div>
 
                 </div>
 
-            </div>
-            <!-- CHAT -->
-            <div id="chat" class="section" style="display:none;">
+                <button type="button" class="dashboard-logout" onclick="logout()">
+                    🚪 Logout
+                </button>
+
+            </section>
+
+
+            <!-- =========================
+                 CHAT
+            ========================== -->
+            <section id="chat" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
+                <h1>💬 Chat</h1>
 
                 <div class="chat-container">
-
-                    <!-- LEFT SIDE -->
                     <div class="chat-sidebar">
-                        <h2>💬 Chats</h2>
-                        <select id="userSelect" size="1"></select>
+                        <h2>Chats</h2>
+                        <select id="userSelect" size="1" aria-label="チャット相手">
+                            <option value="">相手を選択してください</option>
+                        </select>
                     </div>
 
-                    <!-- RIGHT SIDE -->
                     <div class="chat-main">
-
                         <div class="chat-header">
                             <h3 id="chatWith">Select User</h3>
                         </div>
@@ -186,66 +209,98 @@
                         <div id="chatBox" class="chat-box"></div>
 
                         <div class="chat-input-area">
-                            <input type="text" id="messageInput" placeholder="Type message...">
+                            <input
+                                type="text"
+                                id="messageInput"
+                                placeholder="メッセージを入力..."
+                                aria-label="メッセージ">
 
-                            <button onclick="sendMessage()">➤</button>
+                            <button type="button" onclick="sendMessage()" aria-label="送信">
+                                ➤
+                            </button>
                         </div>
-
                     </div>
-
                 </div>
 
-            </div>
+            </section>
 
-            <!-- NOTICE -->
-            <div id="notice" class="section" style="display:none;">
+
+            <!-- =========================
+                 NOTICE BOARD
+            ========================== -->
+            <section id="notice" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
                 <h1>📢 Notice Board</h1>
 
-                <input type="text" id="noticeTitle" placeholder="Title">
-                <textarea id="noticeContent" placeholder="Notice"></textarea>
+                <div class="content-card">
+                    <label for="noticeTitle">タイトル</label>
+                    <input type="text" id="noticeTitle" placeholder="お知らせのタイトル">
 
-                <button onclick="saveNotice()">Save Notice</button>
+                    <label for="noticeContent">内容</label>
+                    <textarea id="noticeContent" placeholder="お知らせの内容"></textarea>
+
+                    <button type="button" onclick="saveNotice()">Save Notice</button>
+                </div>
 
                 <div id="noticeList"></div>
-            </div>
 
-            <!-- NOTIFICATIONS -->
-            <div id="notifications" class="section" style="display:none;">
+            </section>
+
+
+            <!-- =========================
+                 NOTIFICATIONS
+            ========================== -->
+            <section id="notifications" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
                 <h1>🔔 Notifications</h1>
+
                 <div id="notificationList"></div>
-            </div>
 
-            <!-- REPORT -->
-            <div id="report" class="section" style="display:none;">
+            </section>
 
-                <h2>📄 Create Report</h2>
 
-                <button onclick="toggleReportForm()" class="open-report-btn">
+            <!-- =========================
+                 CREATE REPORT
+            ========================== -->
+            <section id="report" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
+                <h1>📄 Create Report</h1>
+
+                <button type="button" onclick="toggleReportForm()" class="open-report-btn">
                     ➕ レポートを書く
                 </button>
 
-                <div id="reportForm" style="display:none;">
+                <div id="reportForm" style="display: none;" class="content-card">
 
                     <div class="report-row">
 
                         <div>
-                            <label>教師名</label>
+                            <label for="teacher_name">教師名</label>
                             <input type="text" id="teacher_name" readonly>
                         </div>
 
                         <div>
-                            <label>生徒名</label>
-                            <select id="student_name" size="1">
+                            <label for="student_name">生徒名</label>
+                            <select id="student_name">
                                 <option value="">選択してください</option>
                             </select>
                         </div>
 
                     </div>
 
-                    <label>日付</label>
+                    <label for="date">日付</label>
                     <input type="date" id="date">
 
-                    <label>教科</label>
+                    <label for="subject">教科</label>
                     <select id="subject">
                         <option>算数</option>
                         <option>数学</option>
@@ -257,329 +312,304 @@
                         <option>テスト勉強</option>
                     </select>
 
-                    <label>授業内容</label>
+                    <label for="content">授業内容</label>
                     <textarea id="content"></textarea>
 
-                    <label>宿題</label>
+                    <label for="homework">宿題</label>
                     <textarea id="homework"></textarea>
 
-                    <label>宿題チェック</label>
+                    <label for="homeworkStatus">宿題チェック</label>
                     <select id="homeworkStatus">
                         <option value="やった">やった</option>
                         <option value="やっていない">やっていない</option>
                     </select>
 
-                    <label>理解度</label>
+                    <label for="understanding">理解度</label>
                     <input type="range" min="1" max="10" value="5" id="understanding">
 
-                    <label>画像追加（任意）</label>
+                    <label for="reportImage">画像追加（任意）</label>
                     <input type="file" id="reportImage" accept="image/*">
 
-                    <button onclick="saveReport()" class="save-report-btn">
+                    <button type="button" onclick="saveReport()" class="save-report-btn">
                         保存
                     </button>
 
                 </div>
-            </div>
 
-            <!-- SAVED REPORTS -->
-            <div id="savedReports" class="section" style="display:none;">
-                <h2>📂 Saved Reports</h2>
+            </section>
 
-                <select id="reportSearch" onchange="loadSavedReports()" size="1">
+
+            <!-- =========================
+                 SAVED REPORTS
+            ========================== -->
+            <section id="savedReports" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
+                <h1>📂 Saved Reports</h1>
+
+                <label for="reportSearch">生徒で絞り込む</label>
+                <select id="reportSearch" onchange="loadSavedReports()">
                     <option value="">すべての生徒</option>
                 </select>
 
-                <label>
-                    <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
-                    承認待ち
-                </label>
+                <div class="filter-row">
+                    <label>
+                        <input type="checkbox" id="pendingOnly" onchange="loadSavedReports()">
+                        承認待ち
+                    </label>
 
-                <label>
-                    <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
-                    承認済み
-                </label>
-                <div id="savedReportList"></div>
-            </div>
-
-            <!-- STUDENT REPORTS -->
-            <div id="studentReports" class="section" style="display:none;">
-                <h2>📘 My Reports</h2>
-                <div id="studentReportList"></div>
-            </div>
-
-
-
-            <!-- GROUP REPORT -->
-            <div id="groupReport" class="section" style="display:none;">
-
-                <h2>👥 Group Report</h2>
-
-                <!-- Grade Picker Selector Dropdown -->
-                <label for="gradeFilter">対象学年:</label>
-                <select id="gradeFilter" onchange="loadStudentsByGrade()">
-                    <option value="">-- 学年を選択 --</option>
-                    <option value="小学1年">小学1年</option>
-                    <option value="小学2年">小学2年</option>
-                    <!-- Add your custom school grade tiers here -->
-                </select>
-
-                <!-- Student Checkbox Group Container Layout Target -->
-                <div id="studentCheckboxContainer"
-                    style="margin: 15px 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
-                    学年を選択すると、ここに生徒一覧が表示されます。
+                    <label>
+                        <input type="checkbox" id="approvedOnly" onchange="loadSavedReports()">
+                        承認済み
+                    </label>
                 </div>
-                <hr>
 
-                <input type="date" id="groupDate">
+                <div id="savedReportList"></div>
 
-                <select id="groupSubject">
-                    <option>数学</option>
-                    <option>英語</option>
-                    <option>理科</option>
-                    <option>国語</option>
-                    <option>社会</option>
-                    <option>テスト勉強</option>
-                </select>
+            </section>
 
-                <textarea id="groupContent"></textarea>
 
-                <textarea id="groupHomework"></textarea>
+            <!-- =========================
+                 MY REPORTS
+            ========================== -->
+            <section id="studentReports" class="section" style="display: none;">
 
-                <button onclick="saveGroupReport()">
-                    保存
-                </button>
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
 
-            </div>
+                <h1>📘 My Reports</h1>
 
-            <!-- CREATE TEST -->
+                <div id="studentReportList"></div>
 
-            <section id="createQuiz" class="section" style="display:none;">
+            </section>
+
+
+            <!-- =========================
+                 GROUP REPORTS
+            ========================== -->
+            <section id="groupReport" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
+                <h1>👥 Group Reports</h1>
+
+                <div class="content-card">
+
+                    <label for="gradeFilter">対象学年</label>
+                    <select id="gradeFilter" onchange="loadStudentsByGrade()">
+                        <option value="">-- 学年を選択 --</option>
+                        <option value="小学1年">小学1年</option>
+                        <option value="小学2年">小学2年</option>
+                        <option value="小学3年">小学3年</option>
+                        <option value="小学4年">小学4年</option>
+                        <option value="小学5年">小学5年</option>
+                        <option value="小学6年">小学6年</option>
+                        <option value="中学1年">中学1年</option>
+                        <option value="中学2年">中学2年</option>
+                        <option value="中学3年">中学3年</option>
+                        <option value="高校1年">高校1年</option>
+                        <option value="高校2年">高校2年</option>
+                        <option value="高校3年">高校3年</option>
+                    </select>
+
+                    <div
+                        id="studentCheckboxContainer"
+                        style="margin: 15px 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
+                        学年を選択すると、ここに生徒一覧が表示されます。
+                    </div>
+
+                    <hr>
+
+                    <label for="groupDate">日付</label>
+                    <input type="date" id="groupDate">
+
+                    <label for="groupSubject">教科</label>
+                    <select id="groupSubject">
+                        <option>数学</option>
+                        <option>英語</option>
+                        <option>理科</option>
+                        <option>国語</option>
+                        <option>社会</option>
+                        <option>テスト勉強</option>
+                    </select>
+
+                    <label for="groupContent">授業内容</label>
+                    <textarea id="groupContent"></textarea>
+
+                    <label for="groupHomework">宿題</label>
+                    <textarea id="groupHomework"></textarea>
+
+                    <button type="button" onclick="saveGroupReport()">保存</button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 CREATE TEST
+            ========================== -->
+            <section id="createQuiz" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <div class="quiz-create-card quiz-builder">
 
-                    <h1>
-                        📝 Create Test
-                    </h1>
+                    <h1>📝 Create Test</h1>
 
                     <div class="quiz-grid quiz-settings">
 
                         <div>
-
-                            <label>
-                                対象学年
-                            </label>
-
+                            <label for="quizGrade">対象学年</label>
                             <select id="quizGrade">
-
-                                <option value="">
-                                    選択
-                                </option>
-
+                                <option value="">選択</option>
                                 <option>小1</option>
                                 <option>小2</option>
                                 <option>小3</option>
                                 <option>小4</option>
                                 <option>小5</option>
                                 <option>小6</option>
-
                                 <option>中1</option>
                                 <option>中2</option>
                                 <option>中3</option>
-
                                 <option>高1</option>
                                 <option>高2</option>
                                 <option>高3</option>
-
                             </select>
-
                         </div>
 
-
                         <div>
-
-                            <label>
-                                問題数
-                            </label>
-
+                            <label for="quizQuestionCount">問題数</label>
                             <input id="quizQuestionCount" type="number" min="1" max="50" value="5">
-
                         </div>
 
-
                         <div>
-
-                            <label>
-                                制限時間（分）
-                            </label>
-
+                            <label for="quizMinutes">制限時間（分）</label>
                             <input id="quizMinutes" type="number" min="1" value="10">
-
                         </div>
 
                     </div>
 
-
-                    <button class="quiz-btn" onclick="loadQuizStudents()">
-
+                    <button type="button" class="quiz-btn" onclick="loadQuizStudents()">
                         👥 Load Students
-
                     </button>
 
-
-                    <div id="quizStudentList">
-
-                    </div>
-
+                    <div id="quizStudentList"></div>
 
                     <hr>
 
-
+                    <label for="quizTitle">テスト名</label>
                     <input id="quizTitle" placeholder="例）単語テスト">
 
-
+                    <label for="quizSubject">教科</label>
                     <input id="quizSubject" placeholder="例）English">
 
-
-                    <button class="quiz-btn" onclick="generateQuestions()">
-
+                    <button type="button" class="quiz-btn" onclick="generateQuestions()">
                         ✨ Generate Questions
-
                     </button>
-
 
                     <div id="questionContainer">
                         <button type="button" class="quiz-btn" onclick="addQuestionCard()">
-
                             ➕ Add Question
-
                         </button>
-
                     </div>
 
-
-                    <button class="deploy-btn" onclick="saveQuiz()">
-
+                    <button type="button" class="deploy-btn" onclick="saveQuiz()">
                         🚀 Deploy Test
-
                     </button>
 
                 </div>
 
             </section>
 
-            <section id="takeQuiz" class="section" style="display:none;">
+
+            <!-- =========================
+                 TAKE TEST
+            ========================== -->
+            <section id="takeQuiz" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>🎯 Take Test</h1>
 
                 <div id="subjectMenu" class="subject-grid">
 
-                    <h1>🎯 Take Test</h1>
+                    <button type="button" onclick="loadSubjectTests('数学')">🔢 数学</button>
+                    <button type="button" onclick="loadSubjectTests('英語')">🔤 英語</button>
+                    <button type="button" onclick="loadSubjectTests('国語')">📚 国語</button>
+                    <button type="button" onclick="loadSubjectTests('理科')">🔬 理科</button>
+                    <button type="button" onclick="loadSubjectTests('社会')">🌏 社会</button>
 
-                    <div id="subjectMenu">
-
-                        <button onclick="loadSubjectTests('数学')">🔢 数学</button>
-
-                        <button onclick="loadSubjectTests('英語')">🇬🇧 英語</button>
-
-                        <button onclick="loadSubjectTests('国語')">📘 国語</button>
-
-                        <button onclick="loadSubjectTests('理科')">🔬 理科</button>
-
-                        <button onclick="loadSubjectTests('社会')">🌏 社会</button>
-
-                        <button onclick="showSection('studentResults');loadStudentResults();">
-
-                            🏆 Results
-
-                        </button>
-
-                    </div>
-
-                    <hr>
-
-            </section>
-
-            <section id="quizPlayer" class="section" style="display:none;">
-
-                <div class="quiz-phone">
-
-                    <div class="quiz-header">
-
-                        <button onclick="showSection('takeQuiz')">
-                            ←
-                        </button>
-
-                        <div id="quizProgress">
-                            Question 1 / 1
-                        </div>
-
-                        <div id="quizTimer">
-                            00:00
-                        </div>
-
-                    </div>
-
-                    <div class="quiz-progress-wrap">
-                        <div id="quizBarFill"></div>
-                    </div>
-
-                    <h2 id="quizQuestion"></h2>
-
-                    <div id="quizChoices"></div>
-
-                    <button id="nextQuestionBtn" onclick="nextQuestion()">
-
-                        Next →
-
+                    <button type="button"
+                        onclick="showSection('studentResults', this); loadStudentResults();">
+                        🏆 Results
                     </button>
 
                 </div>
 
             </section>
-            <section id="studentResults" class="section" style="display:none;">
+
+
+            <!-- =========================
+                 QUIZ PLAYER
+            ========================== -->
+            <section id="quizPlayer" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('takeQuiz', this)">← テスト一覧へ戻る</button>
+
+                <h1>🎯 Test</h1>
+
+                <div id="quizContainer"></div>
+
+                <button type="button" id="submitQuizBtn" onclick="submitQuiz()">
+                    テストを提出
+                </button>
+
+            </section>
+
+
+            <!-- =========================
+                 MY TEST RESULTS
+            ========================== -->
+            <section id="studentResults" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>🏆 My Test Results</h1>
 
-                <div id="studentResultList">
-
-                    Loading...
-
-                </div>
-
-            </section>
-            <section id="quizResults">
-
-                <h2>
-                    📊 Test Results
-                </h2>
-
-                <div id="quizResultList">
-
-                    No results
-
-                </div>
-                <!-- QUIZ RESULTS -->
-
-                <section id="quizResultsSection" class="section" style="display:none;">
-
-                    <h1>
-
-                        🏆 Test Results
-
-                    </h1>
-
-                </section>
+                <div id="studentResultList">Loading...</div>
 
             </section>
 
-        </div>
 
+            <!-- =========================
+                 TEST RESULTS
+            ========================== -->
+            <section id="quizResultsSection" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn"
+                    onclick="showSection('home', this)">← ホームへ戻る</button>
+
+                <h1>📊 Test Results</h1>
+
+                <div id="quizResultList">No results</div>
+
+            </section>
+
+        </main>
     </div>
 
+    <!-- =========================
+         JAVASCRIPT FILES
+    ========================== -->
 
-
-    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script defer src="js/supabase.js"></script>
@@ -594,123 +624,11 @@
 
     <script>
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js");
+            navigator.serviceWorker.register("./sw.js").catch(function (error) {
+                console.error("Service worker registration failed:", error);
+            });
         }
     </script>
 
-    <script>
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            () => {
-
-                const menu =
-                    document.getElementById(
-                        "circleMenu"
-                    );
-
-                const center =
-                    document.getElementById(
-                        "menuCenter"
-                    );
-
-                if (!menu || !center) return;
-
-                // OPEN CLOSE
-
-                center.addEventListener(
-                    "click",
-                    e => {
-
-                        e.stopPropagation();
-
-                        menu.classList.toggle(
-                            "open"
-                        );
-
-                    });
-
-                // CLOSE IF OUTSIDE
-
-                document.addEventListener(
-                    "click",
-                    e => {
-
-                        if (
-                            !menu.contains(
-                                e.target
-                            )
-                        ) {
-
-                            menu.classList.remove(
-                                "open"
-                            );
-
-                        }
-
-                    });
-
-                // DRAG
-
-                let drag = false;
-
-                let startX = 0;
-
-                let startY = 0;
-
-                center.addEventListener(
-                    "touchstart",
-                    e => {
-
-                        drag = true;
-
-                        startX =
-                            e.touches[0].clientX -
-                            menu.offsetLeft;
-
-                        startY =
-                            e.touches[0].clientY -
-                            menu.offsetTop;
-
-                    }
-                );
-
-                document.addEventListener(
-                    "touchmove",
-                    e => {
-
-                        if (!drag) return;
-
-                        menu.style.left =
-                            (
-                                e.touches[0].clientX -
-                                startX
-                            ) + "px";
-
-                        menu.style.top =
-                            (
-                                e.touches[0].clientY -
-                                startY
-                            ) + "px";
-
-                        menu.style.bottom =
-                            "auto";
-
-                    }
-                );
-
-                document.addEventListener(
-                    "touchend",
-                    () => {
-
-                        drag = false;
-
-                    });
-
-            });
-
-    </script>
-
 </body>
-
 </html>
