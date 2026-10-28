@@ -112,35 +112,36 @@ window.showSection = function (sectionId, element = null) {
 // ==========================================
 // ROLE PERMISSIONS
 // ==========================================
+
 function setupRolePermissions() {
     const user = getCurrentUser();
 
     if (!user) {
-        console.warn("ログインユーザーが見つかりません。");
+        window.location.href = "index.html";
         return;
     }
 
     const role = normalizeRole(user.role);
 
-    // いったんすべてのナビゲーションを隠す
+    // 最初にすべてのメニューを非表示にする
     document.querySelectorAll(".nav-item").forEach(item => {
         item.style.display = "none";
     });
 
-    // 指定された onclick を持つメニューを表示する
+    // メニューを表示する
     function showActions(actions) {
         actions.forEach(action => {
-            const item = document.querySelector(
-                `.nav-item[onclick*="${action}"]`
-            );
+            document.querySelectorAll(".nav-item").forEach(item => {
+                const onclick = item.getAttribute("onclick") || "";
 
-            if (item) {
-                item.style.display = "";
-            }
+                if (onclick.includes(action)) {
+                    item.style.display = "";
+                }
+            });
         });
     }
 
-    // 全ロール共通
+    // 全ユーザー共通
     showActions([
         "home",
         "notifications",
@@ -148,27 +149,7 @@ function setupRolePermissions() {
         "logout"
     ]);
 
-    // HeadMaster
-    if (role === "headmaster") {
-        showActions([
-            "notice",
-            "report",
-            "groupReport",
-            "savedReports",
-            "createQuiz",
-            "quizResultsSection"
-        ]);
-    }
-
-    // Teacher
-    if (role === "teacher") {
-        showActions([
-            "report",
-            "savedReports"
-        ]);
-    }
-
-    // Student
+    // Student：生徒向け機能だけ
     if (role === "student") {
         showActions([
             "studentReports",
@@ -177,14 +158,49 @@ function setupRolePermissions() {
         ]);
     }
 
-    // Parent
+    // Parent：保護者向け機能
     if (role === "parent") {
         showActions([
             "studentReports"
         ]);
     }
 
-    // ログイン中のユーザー名を表示
+    // Teacher：すべての既存機能
+    if (role === "teacher") {
+        showActions([
+            "notice",
+            "report",
+            "studentReports",
+            "savedReports",
+            "groupReport",
+            "createQuiz",
+            "takeQuiz",
+            "studentResults",
+            "quizResultsSection"
+        ]);
+    }
+
+    // HeadMaster：すべての既存機能
+    if (role === "headmaster") {
+        showActions([
+            "notice",
+            "report",
+            "studentReports",
+            "savedReports",
+            "groupReport",
+            "createQuiz",
+            "takeQuiz",
+            "studentResults",
+            "quizResultsSection"
+        ]);
+
+        // HeadMaster専用のユーザー管理メニュー
+        showActions([
+            "userManagement"
+        ]);
+    }
+
+    // ログインユーザー名
     const userLabel = document.getElementById("currentUserLabel");
 
     if (userLabel) {
@@ -192,17 +208,18 @@ function setupRolePermissions() {
             user.username || user.name || "ログイン中";
     }
 
-    // 挨拶を表示
+    // 挨拶
     const greeting = document.getElementById("dashboardGreeting");
 
     if (greeting) {
         const name = user.name || user.username || "";
+
         greeting.textContent = name
             ? `${name} さん、今日も学習を進めましょう。`
             : "今日も学習を進めましょう。";
     }
 
-    // 今日の日付を表示
+    // 日付
     const todayLabel = document.getElementById("todayLabel");
 
     if (todayLabel) {
@@ -213,6 +230,7 @@ function setupRolePermissions() {
         }).format(new Date());
     }
 }
+
 
 // ==========================================
 // LOGOUT
@@ -936,7 +954,9 @@ window.saveQuiz = async function () {
     const user = getCurrentUser();
     const client = getSupabaseClient();
 
-    if (!user || normalizeRole(user.role) !== "headmaster") {
+    const role = normalizeRole(user?.role);
+
+    if (!user || !["headmaster", "teacher"].includes(role)) {
         alert("テストを作成する権限がありません。");
         return;
     }
