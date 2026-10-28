@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -32,10 +31,7 @@
                         </span>
                     </a>
 
-                    <button
-                        type="button"
-                        class="header-notification"
-                        onclick="showSection('notifications', this)"
+                    <button type="button" class="header-notification" onclick="showSection('notifications', this)"
                         aria-label="通知を開く">
                         🔔
                     </button>
@@ -52,24 +48,21 @@
 
                 <div class="dashboard-nav-grid">
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('notifications', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('notifications', this)">
                         <span class="nav-card-icon purple">🔔</span>
                         <span class="nav-card-title">Notifications</span>
                         <span class="nav-card-description">通知を確認</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('notice', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('notice', this)">
                         <span class="nav-card-icon yellow">📢</span>
                         <span class="nav-card-title">Notice Board</span>
                         <span class="nav-card-description">塾からのお知らせ</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('report', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('report', this)">
                         <span class="nav-card-icon cyan">📄</span>
                         <span class="nav-card-title">Create Report</span>
                         <span class="nav-card-description">授業レポートを作成</span>
@@ -92,32 +85,28 @@
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('groupReport', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('groupReport', this)">
                         <span class="nav-card-icon orange">👥</span>
                         <span class="nav-card-title">Group Reports</span>
                         <span class="nav-card-description">学年別レポート</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('chat', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('chat', this)">
                         <span class="nav-card-icon cyan">💬</span>
                         <span class="nav-card-title">Chat</span>
                         <span class="nav-card-description">メッセージを送る</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('createQuiz', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('createQuiz', this)">
                         <span class="nav-card-icon purple">📝</span>
                         <span class="nav-card-title">Create Test</span>
                         <span class="nav-card-description">テストを作成</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
 
-                    <button type="button" class="dashboard-nav-card"
-                        onclick="showSection('takeQuiz', this)">
+                    <button type="button" class="dashboard-nav-card" onclick="showSection('takeQuiz', this)">
                         <span class="nav-card-icon green">🎯</span>
                         <span class="nav-card-title">Take Test</span>
                         <span class="nav-card-description">テストを受験</span>
@@ -131,6 +120,17 @@
                         <span class="nav-card-description">テスト結果を確認</span>
                         <span class="nav-card-arrow">→</span>
                     </button>
+
+
+                    <button type="button" class="dashboard-nav-card"
+                        onclick="showSection('userManagement', this); loadManagedUsers();">
+
+                        <span class="nav-card-icon purple">👤</span>
+                        <span class="nav-card-title">User Management</span>
+                        <span class="nav-card-description">ユーザーの追加・管理</span>
+                        <span class="nav-card-arrow">→</span>
+                    </button>
+
 
                 </div>
 
@@ -188,8 +188,7 @@
             ========================== -->
             <section id="chat" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>💬 Chat</h1>
 
@@ -209,11 +208,7 @@
                         <div id="chatBox" class="chat-box"></div>
 
                         <div class="chat-input-area">
-                            <input
-                                type="text"
-                                id="messageInput"
-                                placeholder="メッセージを入力..."
-                                aria-label="メッセージ">
+                            <input type="text" id="messageInput" placeholder="メッセージを入力..." aria-label="メッセージ">
 
                             <button type="button" onclick="sendMessage()" aria-label="送信">
                                 ➤
@@ -230,8 +225,7 @@
             ========================== -->
             <section id="notice" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>📢 Notice Board</h1>
 
@@ -255,8 +249,7 @@
             ========================== -->
             <section id="notifications" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>🔔 Notifications</h1>
 
@@ -270,8 +263,7 @@
             ========================== -->
             <section id="report" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>📄 Create Report</h1>
 
@@ -344,8 +336,7 @@
             ========================== -->
             <section id="savedReports" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>📂 Saved Reports</h1>
 
@@ -376,8 +367,7 @@
             ========================== -->
             <section id="studentReports" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>📘 My Reports</h1>
 
@@ -391,8 +381,7 @@
             ========================== -->
             <section id="groupReport" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>👥 Group Reports</h1>
 
@@ -415,8 +404,7 @@
                         <option value="高校3年">高校3年</option>
                     </select>
 
-                    <div
-                        id="studentCheckboxContainer"
+                    <div id="studentCheckboxContainer"
                         style="margin: 15px 0; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
                         学年を選択すると、ここに生徒一覧が表示されます。
                     </div>
@@ -454,8 +442,7 @@
             ========================== -->
             <section id="createQuiz" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <div class="quiz-create-card quiz-builder">
 
@@ -532,8 +519,7 @@
             ========================== -->
             <section id="takeQuiz" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>🎯 Take Test</h1>
 
@@ -545,8 +531,7 @@
                     <button type="button" onclick="loadSubjectTests('理科')">🔬 理科</button>
                     <button type="button" onclick="loadSubjectTests('社会')">🌏 社会</button>
 
-                    <button type="button"
-                        onclick="showSection('studentResults', this); loadStudentResults();">
+                    <button type="button" onclick="showSection('studentResults', this); loadStudentResults();">
                         🏆 Results
                     </button>
 
@@ -560,8 +545,7 @@
             ========================== -->
             <section id="quizPlayer" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('takeQuiz', this)">← テスト一覧へ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('takeQuiz', this)">← テスト一覧へ戻る</button>
 
                 <h1>🎯 Test</h1>
 
@@ -579,8 +563,7 @@
             ========================== -->
             <section id="studentResults" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>🏆 My Test Results</h1>
 
@@ -590,12 +573,86 @@
 
 
             <!-- =========================
+     USER MANAGEMENT
+========================== -->
+            <section id="userManagement" class="section" style="display: none;">
+
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">
+                    ← ホームへ戻る
+                </button>
+
+                <h1>👤 User Management</h1>
+                <p>HeadMaster専用のユーザー管理画面です。</p>
+
+                <div class="content-card">
+                    <h2>新しいユーザーを追加</h2>
+
+                    <label for="newUsername">ユーザー名</label>
+                    <input type="text" id="newUsername" autocomplete="off" placeholder="ユーザー名を入力">
+
+                    <label for="newPassword">パスワード</label>
+                    <input type="password" id="newPassword" autocomplete="new-password" placeholder="パスワードを入力">
+
+                    <label for="newRole">役割</label>
+                    <select id="newRole">
+                        <option value="student">Student（生徒）</option>
+                        <option value="teacher">Teacher（先生）</option>
+                        <option value="parent">Parent（保護者）</option>
+                        <option value="headmaster">HeadMaster（校長）</option>
+                    </select>
+
+                    <label for="newGrade">学年</label>
+                    <select id="newGrade">
+                        <option value="">指定なし</option>
+                        <option>小学1年</option>
+                        <option>小学2年</option>
+                        <option>小学3年</option>
+                        <option>小学4年</option>
+                        <option>小学5年</option>
+                        <option>小学6年</option>
+                        <option>中学1年</option>
+                        <option>中学2年</option>
+                        <option>中学3年</option>
+                        <option>高校1年</option>
+                        <option>高校2年</option>
+                        <option>高校3年</option>
+                    </select>
+
+                    <label for="newGroupName">グループ名</label>
+                    <input type="text" id="newGroupName" placeholder="任意">
+
+                    <label for="newParentUsername">
+                        保護者のユーザー名（必要な場合）
+                    </label>
+                    <input type="text" id="newParentUsername" placeholder="保護者のユーザー名">
+
+                    <button type="button" onclick="createManagedUser()">
+                        ➕ ユーザーを追加
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <h2>登録済みユーザー</h2>
+
+                    <button type="button" onclick="loadManagedUsers()">
+                        🔄 ユーザー一覧を更新
+                    </button>
+
+                    <div id="managedUserList">
+                        ユーザー一覧はまだ読み込まれていません。
+                    </div>
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
                  TEST RESULTS
             ========================== -->
             <section id="quizResultsSection" class="section" style="display: none;">
 
-                <button type="button" class="back-home-btn"
-                    onclick="showSection('home', this)">← ホームへ戻る</button>
+                <button type="button" class="back-home-btn" onclick="showSection('home', this)">← ホームへ戻る</button>
 
                 <h1>📊 Test Results</h1>
 
@@ -631,4 +688,5 @@
     </script>
 
 </body>
+
 </html>
