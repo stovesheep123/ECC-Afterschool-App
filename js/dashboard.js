@@ -54,7 +54,22 @@ function getSupabaseClient() {
 // ==========================================
 // SECTION NAVIGATION
 // ==========================================
-window.showSection = function (sectionId, element = null) {
+window.showSection = function (sectionId, element) {
+    const user = getCurrentUser();
+
+    if (!user) {
+        alert("ログインしてください");
+        return;
+    }
+
+    const role = normalizeRole(user.role);
+    const allowedSections = getAllowedSections(role);
+
+    if (!allowedSections .includes(sectionId)) {
+        alert("この画面を開く権限はありません。");
+        return;
+    }
+    
     document.querySelectorAll(".section").forEach(section => {
         section.style.display = "none";
     });
@@ -113,123 +128,100 @@ window.showSection = function (sectionId, element = null) {
 // ROLE PERMISSIONS
 // ==========================================
 
+
+function getAllowedSections(role) {
+    const common = ["home", "notifications", "chat"];
+
+    const permissions = {
+        student: [
+            ...common,
+            "studentReports",
+            "takeQuiz",
+            "studentResults"
+        ],
+
+        parent: [
+            ...common,
+            "studentReports"
+        ],
+
+        teacher: [
+            ...common,
+            "notice",
+            "report",
+            "savedReports",
+            "studentReports",
+            "groupReport",
+            "createQuiz",
+            "takeQuiz",
+            "quizPlayer",
+            "studentResults",
+            "quizResultsSection"
+        ],
+
+        headmaster: [
+            "home",
+            "notifications",
+            "chat",
+            "notice",
+            "report",
+            "savedReports",
+            "studentReports",
+            "groupReport",
+            "createQuiz",
+            "takeQuiz",
+            "quizPlayer",
+            "studentResults",
+            "quizResultsSection",
+            "userManagement"
+        ]
+    };
+
+    return permissions[role] || common;
+}
+
 function setupRolePermissions() {
     const user = getCurrentUser();
 
     if (!user) {
-        window.location.href = "index.html";
+        console.warn("ログインユーザーが見つかりません。");
         return;
     }
 
     const role = normalizeRole(user.role);
+    const allowedSections = getAllowedSections(role);
 
-    // 最初にすべてのメニューを非表示にする
-    document.querySelectorAll(".nav-item").forEach(item => {
-        item.style.display = "none";
+    // ホーム画面のメニューを権限に合わせて表示
+    document.querySelectorAll(".dashboard-nav-card").forEach(card => {
+        const match = card.getAttribute("onclick")?.match(
+            /showSection\(['"]([^'"]+)['"]/
+        );
+
+        if (!match) return;
+
+        const sectionId = match[1];
+        card.style.display = allowedSections.includes(sectionId)
+            ? ""
+            : "none";
     });
 
-    // メニューを表示する
-    function showActions(actions) {
-        actions.forEach(action => {
-            document.querySelectorAll(".nav-item").forEach(item => {
-                const onclick = item.getAttribute("onclick") || "";
-
-                if (onclick.includes(action)) {
-                    item.style.display = "";
-                }
-            });
-        });
+    // ログイン中のユーザー情報
+    const label = document.getElementById("currentUserLabel");
+    if (label) {
+        label.textContent = user.username || "";
     }
 
-    // 全ユーザー共通
-    showActions([
-        "home",
-        "notifications",
-        "chat",
-        "logout"
-    ]);
-
-    // Student：生徒向け機能だけ
-    if (role === "student") {
-        showActions([
-            "studentReports",
-            "takeQuiz",
-            "studentResults"
-        ]);
-    }
-
-    // Parent：保護者向け機能
-    if (role === "parent") {
-        showActions([
-            "studentReports"
-        ]);
-    }
-
-    // Teacher：すべての既存機能
-    if (role === "teacher") {
-        showActions([
-            "notice",
-            "report",
-            "studentReports",
-            "savedReports",
-            "groupReport",
-            "createQuiz",
-            "takeQuiz",
-            "studentResults",
-            "quizResultsSection"
-        ]);
-    }
-
-    // HeadMaster：すべての既存機能
-    if (role === "headmaster") {
-        showActions([
-            "notice",
-            "report",
-            "studentReports",
-            "savedReports",
-            "groupReport",
-            "createQuiz",
-            "takeQuiz",
-            "studentResults",
-            "quizResultsSection"
-        ]);
-
-        // HeadMaster専用のユーザー管理メニュー
-        showActions([
-            "userManagement"
-        ]);
-    }
-
-    // ログインユーザー名
-    const userLabel = document.getElementById("currentUserLabel");
-
-    if (userLabel) {
-        userLabel.textContent =
-            user.username || user.name || "ログイン中";
-    }
-
-    // 挨拶
     const greeting = document.getElementById("dashboardGreeting");
-
     if (greeting) {
-        const name = user.name || user.username || "";
-
-        greeting.textContent = name
-            ? `${name} さん、今日も学習を進めましょう。`
-            : "今日も学習を進めましょう。";
+        greeting.textContent = `Welcome back, ${user.username || ""}!`;
     }
 
-    // 日付
     const todayLabel = document.getElementById("todayLabel");
-
     if (todayLabel) {
-        todayLabel.textContent = new Intl.DateTimeFormat("ja-JP", {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
-        }).format(new Date());
+        todayLabel.textContent = new Date().toLocaleDateString("ja-JP");
     }
 }
+
 
 
 // ==========================================
