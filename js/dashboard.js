@@ -1058,3 +1058,335 @@ document.addEventListener("DOMContentLoaded", () => {
         window.showSection("home");
     }
 });
+
+
+/* =========================================
+   HEADMASTER USER MANAGEMENT
+========================================= */
+
+// HeadMasterか確認
+function checkHeadMaster() {
+    const user = getCurrentUser();
+
+    if (!user || normalizeRole(user.role) !== "headmaster") {
+        alert("この機能はHeadMaster専用です。");
+        return false;
+    }
+
+    return true;
+}
+
+// Supabaseクライアントを取得
+function getUserManagementClient() {
+    const client = getSupabaseClient();
+
+    if (!client || typeof client.from !== "function") {
+        alert("Supabaseに接続できません。");
+        return null;
+    }
+
+    return client;
+}
+
+// ユーザー一覧を表示
+window.loadManagedUsers = async function () {
+    if (!checkHeadMaster()) return;
+
+    const client = getUserManagementClient();
+    if (!client) return;
+
+    const list = document.getElementById("managedUserList");
+    if (!list) return;
+
+    list.textContent = "読み込み中...";
+
+    const { data, error } = await client
+        .from("users")
+        .select("id, username, role, password, grade, group_name, parent_username")
+        .order("username");
+
+    if (error) {
+        console.error("ユーザー一覧エラー:", error);
+        list.textContent = "ユーザー一覧を読み込めませんでした: " + error.message;
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        list.textContent = "登録済みユーザーはいません。";
+        return;
+    }
+
+    list.replaceChildren();
+
+    data.forEach(function (user) {
+        const card = document.createElement("div");
+        card.className = "content-card";
+        card.style.marginTop = "15px";
+
+        const title = document.createElement("h3");
+        title.textContent = user.username || "(名前なし)";
+        card.appendChild(title);
+
+        function addInfo(label, value) {
+            const p = document.createElement("p");
+            p.textContent = label + ": " + (value || "未設定");
+            card.appendChild(p);
+        }
+
+        addInfo("役割", user.role);
+        addInfo("学年", user.grade);
+        addInfo("グループ", user.group_name);
+        addInfo("保護者ユーザー名", user.parent_username);
+
+        // 実験用：保存されているパスワード値も表示
+        addInfo("保存されているパスワード値", user.password);
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.textContent = "✏️ 編集";
+        editButton.addEventListener("click", function () {
+            editManagedUser(user);
+        });
+        card.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "🗑️ 削除";
+        deleteButton.style.marginLeft = "8px";
+        deleteButton.addEventListener("click", function () {
+            deleteManagedUser(user);
+        });
+        card.appendChild(deleteButton);
+
+        list.appendChild(card);
+    });
+};
+
+// ユーザーを追加
+window.createManagedUser = async function () {
+    if (!checkHeadMaster()) return;
+
+    const client = getUserManagementClient();
+    if (!client) return;
+
+    const username = document.getElementById("newUsername").value.trim();
+    const password = document.getElementById("newPassword").value;
+    const role = document.getElementById("newRole").value;
+    const grade = document.getElementById("newGrade").value;
+    const groupName = document.getElementById("newGroupName").value.trim();
+    const parentUsername =
+        document.getElementById("newParentUsername").value.trim();
+
+    if (!username || !password) {
+        alert("ユーザー名とパスワードを入力してください。");
+        return;
+    }
+
+    // 新規登録時は重複ユーザー名を防ぐ
+    const { data: existing, error: checkError } = await client
+        .from("users")
+        .select("id")
+        .eq("username", username)
+        .limit(1);
+
+    if (checkError) {
+        alert("ユーザー名を確認できませんでした: " + checkError.message);
+        return;
+    }
+
+    if (existing && existing.length > 0) {
+        alert("このユーザー名はすでに登録されています。");
+        return;
+    }
+
+    const newUser = {
+        username: username,
+        password: password,
+        role: role,
+        grade: grade || null,
+        group_name: groupName || null,
+        parent_username: parentUsername || null
+    };
+
+    // 保護者のIDが見つかった場合は関連付ける
+    if (parentUsername) {
+        const { data: parent, error: parentError } = await client
+            .from("users")
+            .select("id")
+            .eq("username", parentUsername)
+            .eq("role", "parent")
+            .limit(1);
+
+        if (parentError) {
+            alert("保護者情報を確認できませんでした: " + parentError.message);
+            return;
+        }
+
+        if (!parent || parent.length === 0) {
+            alert("指定した保護者ユーザーが見つかりません。");
+            return;
+        }
+
+        newUser.parent_id = parent[0].id;
+    }
+
+    const { error } = await client
+        .from("users")
+        .insert([newUser]);
+
+    if (error) {
+        console.error("ユーザー追加エラー:", error);
+        alert("ユーザーを追加できませんでした: " + error.message);
+        return;
+    }
+
+    alert("ユーザーを追加しました。");
+
+    document.getElementById("newUsername").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("newGroupName").value = "";
+    document.getElementById("newParentUsername").value = "";
+    document.getElementById("newGrade").value = "";
+
+    await loadManagedUsers();
+};
+
+// ユーザーを編集
+async function editManagedUser(user) {
+    if (!checkHeadMaster()) return;
+
+    const client = getUserManagementClient();
+    if (!client) return;
+
+    const username = prompt("新しいユーザー名:", user.username || "");
+    if (username === null) return;
+
+    if (!username.trim()) {
+        alert("ユーザー名を空欄にはできません。");
+        return;
+    }
+
+    const role = prompt(
+        "役割を入力してください: student / teacher / parent / headmaster",
+        user.role || "student"
+    );
+
+    if (role === null) return;
+
+    const normalizedRole = role.trim().toLowerCase();
+    const allowedRoles = ["student", "teacher", "parent", "headmaster"];
+
+    if (!allowedRoles.includes(normalizedRole)) {
+        alert("役割の入力が正しくありません。");
+        return;
+    }
+
+    const grade = prompt("学年:", user.grade || "");
+    if (grade === null) return;
+
+    const groupName = prompt("グループ名:", user.group_name || "");
+    if (groupName === null) return;
+
+    const parentUsername = prompt(
+        "保護者ユーザー名:",
+        user.parent_username || ""
+    );
+
+    if (parentUsername === null) return;
+
+    const password = prompt(
+        "新しいパスワード（変更しない場合は空欄）:",
+        ""
+    );
+
+    if (password === null) return;
+
+    const updatedUser = {
+        username: username.trim(),
+        role: normalizedRole,
+        grade: grade.trim() || null,
+        group_name: groupName.trim() || null,
+        parent_username: parentUsername.trim() || null
+    };
+
+    if (password !== "") {
+        updatedUser.password = password;
+    }
+
+    if (parentUsername.trim()) {
+        const { data: parent, error: parentError } = await client
+            .from("users")
+            .select("id")
+            .eq("username", parentUsername.trim())
+            .eq("role", "parent")
+            .limit(1);
+
+        if (parentError) {
+            alert("保護者情報の確認に失敗しました: " + parentError.message);
+            return;
+        }
+
+        if (!parent || parent.length === 0) {
+            alert("指定した保護者ユーザーが見つかりません。");
+            return;
+        }
+
+        updatedUser.parent_id = parent[0].id;
+    } else {
+        updatedUser.parent_id = null;
+    }
+
+    if (!confirm(user.username + " の情報を更新しますか？")) return;
+
+    const { error } = await client
+        .from("users")
+        .update(updatedUser)
+        .eq("id", user.id);
+
+    if (error) {
+        console.error("ユーザー更新エラー:", error);
+        alert("更新に失敗しました: " + error.message);
+        return;
+    }
+
+    alert("ユーザー情報を更新しました。");
+    await loadManagedUsers();
+}
+
+// ユーザーを削除
+async function deleteManagedUser(user) {
+    if (!checkHeadMaster()) return;
+
+    const currentUser = getCurrentUser();
+
+    // ログイン中の自分自身は削除させない
+    if (currentUser && currentUser.id === user.id) {
+        alert("ログイン中の自分自身は削除できません。");
+        return;
+    }
+
+    if (!confirm(
+        "本当に削除しますか？\n\nユーザー名: " +
+        user.username +
+        "\n\nこの操作は取り消せません。"
+    )) {
+        return;
+    }
+
+    const client = getUserManagementClient();
+    if (!client) return;
+
+    const { error } = await client
+        .from("users")
+        .delete()
+        .eq("id", user.id);
+
+    if (error) {
+        console.error("ユーザー削除エラー:", error);
+        alert("削除に失敗しました: " + error.message);
+        return;
+    }
+
+    alert("ユーザーを削除しました。");
+    await loadManagedUsers();
+}
